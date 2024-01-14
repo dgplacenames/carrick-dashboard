@@ -1,6 +1,6 @@
 var config = {
   geojson: "/carrick.geojson",
-  title: "Congress Park Trees",
+  title: "Carrick Place-Names",
   layerName: "Trees",
   hoverProperty: "species_sim",
   sortProperty: "dbh_2012_inches_diameter_at_breast_height_46",
@@ -8,7 +8,7 @@ var config = {
 };
 
 var properties = [{
-  value: "fulcrum_id",
+  value: "pn",
   label: "Fulcrum ID",
   table: {
     visible: false,
@@ -20,7 +20,7 @@ var properties = [{
   info: false
 },
 {
-  value: "status",
+  value: "parish",
   label: "Status",
   table: {
     visible: true,
@@ -35,103 +35,6 @@ var properties = [{
     values: []
   }
 },
-{
-  value: "congress_park_inventory_zone",
-  label: "Inventory Zone",
-  table: {
-    visible: true,
-    sortable: true
-  },
-  filter: {
-    type: "string",
-    input: "checkbox",
-    vertical: true,
-    multiple: true,
-    operators: ["in", "not_in", "equal", "not_equal"],
-    values: []
-  }
-},
-{
-  value: "2012_inventory_number",
-  label: "Inventory Number",
-  table: {
-    visible: true,
-    sortable: true
-  },
-  filter: {
-    type: "integer"
-  }
-},
-{
-  value: "species_sim",
-  label: "Species",
-  table: {
-    visible: true,
-    sortable: true
-  },
-  filter: {
-    type: "string"
-  }
-},
-{
-  value: "circumference_2012_inches_at_breast_height_",
-  label: "Circumference (inches)",
-  table: {
-    visible: true,
-    sortable: true
-  },
-  filter: {
-    type: "integer"
-  }
-},
-{
-  value: "dbh_2012_inches_diameter_at_breast_height_46",
-  label: "DBH (inches)",
-  table: {
-    visible: true,
-    sortable: true
-  },
-  filter: {
-    type: "integer"
-  }
-},
-{
-  value: "plaque",
-  label: "Plaque",
-  table: {
-    visible: true,
-    sortable: true
-  },
-  filter: {
-    type: "string",
-    input: "radio",
-    operators: ["equal"],
-    values: {
-      "yes": "Yes",
-      "no": "No"
-    }
-  }
-},
-{
-  value: "notes_other_information",
-  label: "Notes",
-  table: {
-    visible: false,
-    sortable: true
-  },
-  filter: {
-    type: "string"
-  }
-},
-{
-  value: "photos_url",
-  label: "Photos",
-  table: {
-    visible: true,
-    sortable: true,
-    formatter: urlFormatter
-  },
-  filter: false
 }];
 
 function drawCharts() {
