@@ -265,7 +265,7 @@ var featureLayer = L.geoJson(null, {
       markerColor = "#1b5fde";
     }
     return L.circleMarker(latlng, {
-      radius: 6,
+      radius: 4,
       weight: 0.2,
       fillColor: markerColor,
       color: "#000000",
@@ -339,8 +339,8 @@ if (document.body.clientWidth <= 767) {
   isCollapsed = false;
 }
 var baseLayers = {
-  "Street Map": mapboxOSM,
-  "Aerial Imagery": mapboxSat
+  "OpenStreetMap": mapboxOSM,
+  "Os 1st ed.": mapboxSat
 };
 var overlayLayers = {
   "<span id='layer-name'>GeoJSON Layer</span>": featureLayer
