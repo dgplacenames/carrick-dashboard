@@ -265,8 +265,8 @@ var featureLayer = L.geoJson(null, {
       markerColor = "#1b5fde";
     }
     return L.circleMarker(latlng, {
-      radius: 2,
-      weight: 0.1,
+      radius: 4,
+      weight: 0.2,
       fillColor: markerColor,
       color: "#000000",
       opacity: 1,
