@@ -35,6 +35,15 @@ var properties = [{
     values: []
   }
 },
+{
+  value: "grid_ref",
+  label: "Grid Reference",
+  table: {
+    visible: true,
+    sortable: false
+  },
+  filter: false
+},		  
 ];
 
 function drawCharts() {
@@ -340,7 +349,7 @@ if (document.body.clientWidth <= 767) {
 }
 var baseLayers = {
   "OpenStreetMap": mapboxOSM,
-  "Os 1st ed.": mapboxSat
+  "OS 1st ed.": mapboxSat
 };
 var overlayLayers = {
   "<span id='layer-name'>GeoJSON Layer</span>": featureLayer
