@@ -1,27 +1,27 @@
 var config = {
   geojson: "carrick2.geojson",
   title: "Carrick Place-Names",
-  layerName: "Trees",
-  hoverProperty: "species_sim",
+  layerName: "Place-Names",
+  hoverProperty: "pn",
   sortProperty: "dbh_2012_inches_diameter_at_breast_height_46",
   sortOrder: "desc"
 };
 
 var properties = [{
   value: "pn",
-  label: "Fulcrum ID",
+  label: "Place-Name",
   table: {
-    visible: false,
+    visible: true,
     sortable: true
   },
   filter: {
     type: "string"
   },
-  info: false
+  info: true
 },
 {
   value: "parish",
-  label: "Status",
+  label: "Parish",
   table: {
     visible: true,
     sortable: true
@@ -265,7 +265,7 @@ var featureLayer = L.geoJson(null, {
       markerColor = "#1b5fde";
     }
     return L.circleMarker(latlng, {
-      radius: 4,
+      radius: 6,
       weight: 0.2,
       fillColor: markerColor,
       color: "#000000",
