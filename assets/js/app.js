@@ -319,10 +319,6 @@ var map = L.map("map", {
   layers: [mapboxOSM, featureLayer, highlightLayer]
 }).fitWorld();
 
-// ESRI geocoder
-var searchControl = L.esri.Geocoding.Controls.geosearch({
-  useMapBounds: 17
-}).addTo(map);
 
 // Info control
 var info = L.control({
