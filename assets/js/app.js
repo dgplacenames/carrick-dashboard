@@ -43,7 +43,19 @@ var properties = [{
     sortable: false
   },
   filter: false
-},		  
+},
+		  {
+  value: "forms",
+  label: "Historical Forms",
+  table: {
+    visible: true,
+    sortable: true
+  },
+  filter: {
+    type: "string"
+  },
+  info: true
+},
 ];
 
 function drawCharts() {
