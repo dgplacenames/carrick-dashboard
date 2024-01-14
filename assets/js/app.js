@@ -1,5 +1,5 @@
 var config = {
-  geojson: "/carrick.geojson",
+  geojson: "carrick.geojson",
   title: "Carrick Place-Names",
   layerName: "Trees",
   hoverProperty: "species_sim",
