@@ -268,7 +268,7 @@ var featureLayer = L.geoJson(null, {
       radius: 2,
       weight: 0.1,
       fillColor: markerColor,
-      color: #000000,
+      color: "#000000",
       opacity: 1,
       fillOpacity: 1
     });
