@@ -35,7 +35,7 @@ var properties = [{
     values: []
   }
 },
-}];
+];
 
 function drawCharts() {
   // Status
