@@ -15,7 +15,8 @@ var properties = [{
     sortable: true
   },
   filter: {
-    type: "string"
+    type: "string",
+    input: "search"
   },
   info: true
 },
