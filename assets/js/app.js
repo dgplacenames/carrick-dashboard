@@ -36,8 +36,8 @@ var properties = [{
   }
 },
 {
-  value: "elements",
-  label: "elements",
+  value: "element",
+  label: "element",
   table: {
     visible: true,
     sortable: true
