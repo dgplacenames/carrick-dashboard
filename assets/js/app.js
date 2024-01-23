@@ -36,7 +36,7 @@ var properties = [{
   }
 },
 {
-  value: "element",
+  value: "elements:element",
   label: "element",
   table: {
     visible: true,
