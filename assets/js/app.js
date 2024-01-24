@@ -36,7 +36,7 @@ var properties = [{
   }
 },
 {
-  value: "elements.element",
+  value: "elements.element.lang",
   label: "elements",
   table: {
     visible: true,
