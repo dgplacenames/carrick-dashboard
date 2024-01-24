@@ -36,7 +36,7 @@ var properties = [{
   }
 },
 {
-  value: "elements.element[]",
+  value: "elements[0].element",
   label: "elements",
   table: {
     visible: true,
