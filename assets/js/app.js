@@ -36,22 +36,6 @@ var properties = [{
   }
 },
 {
-  value: "elements[0].element",
-  label: "elements",
-  table: {
-    visible: true,
-    sortable: true
-  },
-  filter: {
-    type: "string",
-    input: "checkbox",
-    vertical: true,
-    multiple: true,
-    operators: ["in", "not_in", "equal", "not_equal"],
-    values: []
-  }
-},
-{
   value: "grid_ref",
   label: "Grid Reference",
   table: {
