@@ -3,8 +3,8 @@ var config = {
   title: "Carrick Place-Names",
   layerName: "Place-Names",
   hoverProperty: "pn",
-  sortProperty:
-  sortOrder: 
+  sortProperty: ""
+  sortOrder: ""
 };
 
 var properties = [{
