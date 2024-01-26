@@ -3,8 +3,8 @@ var config = {
   title: "Carrick Place-Names",
   layerName: "Place-Names",
   hoverProperty: "pn",
-  sortProperty: "dbh_2012_inches_diameter_at_breast_height_46",
-  sortOrder: "desc"
+  sortProperty:
+  sortOrder: 
 };
 
 var properties = [{
@@ -73,129 +73,6 @@ var properties = [{
   info: true
 },
 ];
-
-function drawCharts() {
-  // Status
-  $(function() {
-    var result = alasql("SELECT status AS label, COUNT(*) AS total FROM ? GROUP BY status", [features]);
-    var columns = $.map(result, function(status) {
-      return [[status.label, status.total]];
-    });
-    var chart = c3.generate({
-        bindto: "#status-chart",
-        data: {
-          type: "pie",
-          columns: columns
-        }
-    });
-  });
-
-  // Zones
-  $(function() {
-    var result = alasql("SELECT congress_park_inventory_zone AS label, COUNT(*) AS total FROM ? GROUP BY congress_park_inventory_zone", [features]);
-    var columns = $.map(result, function(zone) {
-      return [[zone.label, zone.total]];
-    });
-    var chart = c3.generate({
-        bindto: "#zone-chart",
-        data: {
-          type: "pie",
-          columns: columns
-        }
-    });
-  });
-
-  // Size
-  $(function() {
-    var sizes = [];
-    var regeneration = alasql("SELECT 'Regeneration (< 3\")' AS category, COUNT(*) AS total FROM ? WHERE CAST(dbh_2012_inches_diameter_at_breast_height_46 as INT) < 3", [features]);
-    var sapling = alasql("SELECT 'Sapling/poles (1-9\")' AS category, COUNT(*) AS total FROM ? WHERE CAST(dbh_2012_inches_diameter_at_breast_height_46 as INT) BETWEEN 1 AND 9", [features]);
-    var small = alasql("SELECT 'Small trees (10-14\")' AS category, COUNT(*) AS total FROM ? WHERE CAST(dbh_2012_inches_diameter_at_breast_height_46 as INT) BETWEEN 10 AND 14", [features]);
-    var medium = alasql("SELECT 'Medium trees (15-19\")' AS category, COUNT(*) AS total FROM ? WHERE CAST(dbh_2012_inches_diameter_at_breast_height_46 as INT) BETWEEN 15 AND 19", [features]);
-    var large = alasql("SELECT 'Large trees (20-29\")' AS category, COUNT(*) AS total FROM ? WHERE CAST(dbh_2012_inches_diameter_at_breast_height_46 as INT) BETWEEN 20 AND 29", [features]);
-    var giant = alasql("SELECT 'Giant trees (> 29\")' AS category, COUNT(*) AS total FROM ? WHERE CAST(dbh_2012_inches_diameter_at_breast_height_46 as INT) > 29", [features]);
-    sizes.push(regeneration, sapling, small, medium, large, giant);
-    var columns = $.map(sizes, function(size) {
-      return [[size[0].category, size[0].total]];
-    });
-    var chart = c3.generate({
-        bindto: "#size-chart",
-        data: {
-          type: "pie",
-          columns: columns
-        }
-    });
-  });
-
-  // Species
-  $(function() {
-    var result = alasql("SELECT species_sim AS label, COUNT(*) AS total FROM ? GROUP BY species_sim ORDER BY label ASC", [features]);
-    var chart = c3.generate({
-        bindto: "#species-chart",
-        size: {
-          height: 2000
-        },
-        data: {
-          json: result,
-          keys: {
-            x: "label",
-            value: ["total"]
-          },
-          type: "bar"
-        },
-        axis: {
-          rotated: true,
-          x: {
-            type: "category"
-          }
-        },
-        legend: {
-          show: false
-        }
-    });
-  });
-}
-
-$(function() {
-  $(".title").html(config.title);
-  $("#layer-name").html(config.layerName);
-});
-
-function buildConfig() {
-  filters = [];
-  table = [{
-    field: "action",
-    title: "<i class='fa fa-gear'></i>&nbsp;Action",
-    align: "center",
-    valign: "middle",
-    width: "75px",
-    cardVisible: false,
-    switchable: false,
-    formatter: function(value, row, index) {
-      return [
-        '<a class="zoom" href="javascript:void(0)" title="Zoom" style="margin-right: 10px;">',
-          '<i class="fa fa-search-plus"></i>',
-        '</a>',
-        '<a class="identify" href="javascript:void(0)" title="Identify">',
-          '<i class="fa fa-info-circle"></i>',
-        '</a>'
-      ].join("");
-    },
-    events: {
-      "click .zoom": function (e, value, row, index) {
-        map.fitBounds(featureLayer.getLayer(row.leaflet_stamp).getBounds());
-        highlightLayer.clearLayers();
-        highlightLayer.addData(featureLayer.getLayer(row.leaflet_stamp).toGeoJSON());
-      },
-      "click .identify": function (e, value, row, index) {
-        identifyFeature(row.leaflet_stamp);
-        highlightLayer.clearLayers();
-        highlightLayer.addData(featureLayer.getLayer(row.leaflet_stamp).toGeoJSON());
-      }
-    }
-  }];
-
-
 
   $.each(properties, function(index, value) {
     // Filter config
