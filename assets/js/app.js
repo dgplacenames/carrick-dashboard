@@ -440,7 +440,7 @@ map.on("click", function(e) {
 // Table formatter to make links clickable
 function urlFormatter (value, row, index) {
   if (typeof value == "string" && (value.indexOf("http") === 0 || value.indexOf("https") === 0)) {
-    return "<img src='"+value+"' target='_blank'>"+value+">";
+    return "<img src='"+value+"''>";
   }
 }
 
