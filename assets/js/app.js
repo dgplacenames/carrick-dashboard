@@ -254,6 +254,13 @@ var mapboxOSM = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
 });
 
+var satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+  maxZoom: 19,
+  subdomains: ["a", "b", "c", "d"],
+  attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
+});
+
+
 var mapboxSat = L.tileLayer("https://mapseries-tilesets.s3.amazonaws.com/os/6inchfirst/{z}/{x}/{y}.png", {
   maxZoom: 19,
   subdomains: ["a", "b", "c", "d"],
@@ -396,6 +403,7 @@ if (document.body.clientWidth <= 767) {
 }
 var baseLayers = {
   "OpenStreetMap": mapboxOSM,
+  "Esri Satellite": satellite,
   "OS 1st ed.": mapboxSat,
   "OS 2nd ed.": OS2,
   "OS 1:25,000.": OS25,
