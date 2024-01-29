@@ -266,6 +266,12 @@ var OS2 = L.tileLayer("https://api.maptiler.com/tiles/uk-osgb10k1888/{z}/{x}/{y}
   attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
 });
 
+var OS25 = L.tileLayer("https://api.maptiler.com/tiles/uk-osgb25k1937/{z}/{x}/{y}.jpg?key=lctZzs518h1OEqcsh2zL", {
+  maxZoom: 19,
+  subdomains: ["a", "b", "c", "d"],
+  attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
+});
+
 var geological = L.tileLayer("https://mapseries-tilesets.s3.amazonaws.com/geological/oneinchscot/{z}/{x}/{y}.png", {
   maxZoom: 19,
   subdomains: ["a", "b", "c", "d"],
@@ -386,6 +392,7 @@ var baseLayers = {
   "OpenStreetMap": mapboxOSM,
   "OS 1st ed.": mapboxSat,
   "OS 2nd ed.": OS2,
+  "OS 1:25,000.": OS25,
   "OS 1-inch Geology": geological, 
 	
 };
