@@ -72,6 +72,16 @@ var properties = [{
   },
   info: true
 },
+{
+  value: "photos_url",
+  label: "Photos",
+  table: {
+    visible: true,
+    sortable: true,
+    formatter: urlFormatter
+  },
+  filter: false
+}		  
 ];
 
 function drawCharts() {
