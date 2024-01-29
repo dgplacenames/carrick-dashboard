@@ -278,6 +278,12 @@ var geological = L.tileLayer("https://mapseries-tilesets.s3.amazonaws.com/geolog
   attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
 });
 
+var Roy = L.tileLayer("https://mapseries-tilesets.s3.amazonaws.com/roy/lowlands/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  subdomains: ["a", "b", "c", "d"],
+  attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
+});
+
 
 var highlightLayer = L.geoJson(null, {
   pointToLayer: function (feature, latlng) {
@@ -393,7 +399,8 @@ var baseLayers = {
   "OS 1st ed.": mapboxSat,
   "OS 2nd ed.": OS2,
   "OS 1:25,000.": OS25,
-  "OS 1-inch Geology": geological, 
+  "OS 1-inch Geology": geological,
+  "Roy (1752-55)": Roy,
 	
 };
 var overlayLayers = {
