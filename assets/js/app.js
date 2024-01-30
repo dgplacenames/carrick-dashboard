@@ -81,9 +81,9 @@ var properties = [{
     formatter: urlFormatter
   },
   filter: false,
-  table: true,
+  table: false,
   info: true,	
-}		  
+},		  
 {
   value: "image",
   label: "Image",
@@ -92,7 +92,7 @@ var properties = [{
     sortable: true,
   },
   filter: false,
-  table: true,
+  table: false,
   info: true,	
 }
 ];
