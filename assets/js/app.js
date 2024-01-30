@@ -80,8 +80,21 @@ var properties = [{
     sortable: true,
     formatter: urlFormatter
   },
-  filter: false
+  filter: false,
+  table: false,
+  info: true,	
 }		  
+{
+  value: "image",
+  label: "Image",
+  table: {
+    visible: true,
+    sortable: true,
+  },
+  filter: false,
+  table: false,
+  info: true,	
+}
 ];
 
 function drawCharts() {
