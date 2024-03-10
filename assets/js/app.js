@@ -492,7 +492,6 @@ function buildTable() {
     trimOnSearch: false,
     showColumns: true,
     showToggle: true,
-    detailView: true,
     columns: table,
     onClickRow: function (row) {
       // do something!
