@@ -314,7 +314,7 @@ var Roy = L.tileLayer("https://mapseries-tilesets.s3.amazonaws.com/roy/lowlands/
   attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
 });
 
-var LiDAR_4 = L.tileLayer("https://geo.nls.uk/mapdata3/lidar/rgb/phase4/{z}/{x}/{y}.png, {
+var LiDAR_4 = L.tileLayer("https://geo.nls.uk/mapdata3/lidar/rgb/phase4/{z}/{x}/{y}.png", {
   maxZoom: 19,
   subdomains: ["a", "b", "c", "d"],
   attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
