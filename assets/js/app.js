@@ -332,7 +332,7 @@ var LiDAR_1 = L.tileLayer("https://geo.nls.uk/mapdata3/lidar/rgb/phase1/{z}/{x}/
   attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
 });
 
-var LiDAR = L.layerGroup([LiDAR_4, LiDAR_3, LiDAR_1])
+var LiDAR = L.layerGroup([LiDAR_4, LiDAR_3, LiDAR_1, mapboxOSM])
 
 var highlightLayer = L.geoJson(null, {
   pointToLayer: function (feature, latlng) {
