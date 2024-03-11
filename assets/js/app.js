@@ -271,11 +271,6 @@ function buildConfig() {
 }
 
 // Basemap Layers
-var mapboxOSM = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  subdomains: ["a", "b", "c", "d"],
-  attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
-});
 
 var OSM = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
@@ -338,7 +333,7 @@ var LiDAR_1 = L.tileLayer("https://geo.nls.uk/mapdata3/lidar/rgb/phase1/{z}/{x}/
   attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
 });
 
-var LiDAR = L.layerGroup([OSM, LiDAR_4, LiDAR_3, LiDAR_1])
+var LiDAR = L.layerGroup([LiDAR_4, LiDAR_3, LiDAR_1])
 
 var highlightLayer = L.geoJson(null, {
   pointToLayer: function (feature, latlng) {
@@ -422,7 +417,7 @@ $.getJSON(config.geojson, function (data) {
 });
 
 var map = L.map("map", {
-  layers: [mapboxOSM, featureLayer, highlightLayer]
+  layers: [OSM, featureLayer, highlightLayer]
 }).fitWorld();
 
 
@@ -450,17 +445,18 @@ if (document.body.clientWidth <= 767) {
   isCollapsed = false;
 }
 var baseLayers = {
-  "OpenStreetMap": mapboxOSM,
+  "OpenStreetMap": OSM,
   "Esri Satellite": satellite,
   "OS 1st ed.": mapboxSat,
   "OS 2nd ed.": OS2,
   "OS 1:25,000.": OS25,
   "OS 1-inch Geology": geological,
   "Roy (1752-55)": Roy,
-  "LiDAR": LiDAR,
+  
 };
 var overlayLayers = {
-  "<span id='layer-name'>GeoJSON Layer</span>": featureLayer
+  "<span id='layer-name'>GeoJSON Layer</span>": featureLayer,
+  "LiDAR": LiDAR,
 };
 var layerControl = L.control.layers(baseLayers, overlayLayers, {
   collapsed: isCollapsed
