@@ -314,6 +314,25 @@ var Roy = L.tileLayer("https://mapseries-tilesets.s3.amazonaws.com/roy/lowlands/
   attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
 });
 
+var LiDAR_4 = L.tileLayer("https://geo.nls.uk/mapdata3/lidar/rgb/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  subdomains: ["a", "b", "c", "d"],
+  attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
+});
+
+var LiDAR_3 = L.tileLayer("https://geo.nls.uk/mapdata3/lidar/rgb/phase3/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  subdomains: ["a", "b", "c", "d"],
+  attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
+});
+
+var LiDAR_1 = L.tileLayer("https://geo.nls.uk/mapdata3/lidar/rgb/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  subdomains: ["a", "b", "c", "d"],
+  attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
+});
+
+var LiDAR = L.layerGroup([LiDAR_4, LiDAR_3, LiDAR_1])
 
 var highlightLayer = L.geoJson(null, {
   pointToLayer: function (feature, latlng) {
@@ -432,7 +451,10 @@ var baseLayers = {
   "OS 1:25,000.": OS25,
   "OS 1-inch Geology": geological,
   "Roy (1752-55)": Roy,
-	
+  "LiDAR": LiDAR,
+   "LiDAR": LiDAR_4,
+   "LiDAR": LiDAR_3,
+   "LiDAR": LiDAR_3,
 };
 var overlayLayers = {
   "<span id='layer-name'>GeoJSON Layer</span>": featureLayer
