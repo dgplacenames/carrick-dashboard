@@ -452,9 +452,6 @@ var baseLayers = {
   "OS 1-inch Geology": geological,
   "Roy (1752-55)": Roy,
   "LiDAR": LiDAR,
-  "LiDAR": LiDAR_4,
-  "LiDAR": LiDAR_3,
-  "LiDAR": LiDAR_1,
 };
 var overlayLayers = {
   "<span id='layer-name'>GeoJSON Layer</span>": featureLayer
