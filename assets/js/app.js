@@ -277,6 +277,12 @@ var mapboxOSM = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
 });
 
+var OSM = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  subdomains: ["a", "b", "c", "d"],
+  attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
+});
+
 var satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
   maxZoom: 19,
   subdomains: ["a", "b", "c", "d"],
@@ -332,7 +338,7 @@ var LiDAR_1 = L.tileLayer("https://geo.nls.uk/mapdata3/lidar/rgb/phase1/{z}/{x}/
   attribution: 'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>'
 });
 
-var LiDAR = L.layerGroup([mapboxOSM, LiDAR_4, LiDAR_3, LiDAR_1])
+var LiDAR = L.layerGroup([OSM, LiDAR_4, LiDAR_3, LiDAR_1])
 
 var highlightLayer = L.geoJson(null, {
   pointToLayer: function (feature, latlng) {
