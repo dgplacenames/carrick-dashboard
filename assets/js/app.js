@@ -39,7 +39,7 @@ var properties = [{
   }
 },
 		  {
-  value: "elx",
+  value: "elements",
   label: "elements",
   table: {
     visible: true,
