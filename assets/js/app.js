@@ -7,9 +7,6 @@ var config = {
   sortOrder: ""
 };
 
-var res = alasql('SEARCH /elements/element FROM ?',[features]);
-var elx = res.join(" + ");
-
 var properties = [{
   value: "pn",
   label: "Place-Name",
