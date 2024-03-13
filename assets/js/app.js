@@ -36,7 +36,7 @@ var properties = [{
   }
 },
 		  {
-  value: alasql('SEARCH /elements/element FROM ?',[features]);
+  value: alasql('SEARCH /elements/element FROM ?',[features]),
   label: "elements",
   table: {
     visible: true,
