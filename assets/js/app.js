@@ -28,6 +28,11 @@ var properties = [{
   },
   filter: {
     type: "string",
+    input: "checkbox",
+    vertical: true,
+    multiple: true,
+    operators: ["in", "not_in", "equal", "not_equal"],
+    values: []
   }
 },
 		  {
