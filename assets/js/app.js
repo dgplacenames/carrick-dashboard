@@ -38,7 +38,7 @@ var properties = [{
   info: false
 },
 {
-  value: "source",
+  value: "sources",
   label: "Source",
   table: false,
   filter: {
