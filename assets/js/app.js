@@ -29,8 +29,8 @@ var properties = [{
   info: false
 },
 {
-  value: "source",
-  label: "Source",
+  value: "date",
+  label: "Date",
   table: false,
   filter: {
     type: "string"
@@ -38,8 +38,8 @@ var properties = [{
   info: false
 },
 {
-  value: "date",
-  label: "Date",
+  value: "source",
+  label: "Source",
   table: false,
   filter: {
     type: "string"
