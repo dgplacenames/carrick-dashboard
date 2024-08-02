@@ -50,10 +50,12 @@ var properties = [{
   label: "Historical Forms",
   table: {
     visible: true,
-    sortable: true
+    sortable: true,
+    operators: ["contains"]
   },
   filter: {
-    type: "string"
+    type: "string",
+	  
   },
   info: true
 },
