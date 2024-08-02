@@ -1,5 +1,5 @@
 var config = {
-  geojson: "carrick3.geojson",
+  geojson: "carrick4.geojson",
   title: "Carrick Place-Names",
   layerName: "Place-Names",
   hoverProperty: "pn",
@@ -18,6 +18,33 @@ var properties = [{
     type: "string"
   },
   info: true
+},
+{
+  value: "Hist_forms",
+  label: "Forms",
+  table: false,
+  filter: {
+    type: "string"
+  },
+  info: false
+},
+{
+  value: "source",
+  label: "Source",
+  table: false,
+  filter: {
+    type: "string"
+  },
+  info: false
+},
+{
+  value: "date",
+  label: "Date",
+  table: false,
+  filter: {
+    type: "string"
+  },
+  info: false
 },
 {
   value: "parish",
@@ -52,10 +79,7 @@ var properties = [{
     visible: true,
     sortable: true,
   },
-  filter: {
-    type: "string",
-    operators: ["contains", "not_contains", "equal"],
-  },
+  filter: false,
   info: true
 },
 {
