@@ -54,7 +54,7 @@ var properties = [{
   },
   filter: {
     type: "string",
-    operators: ["contains", "not_contains"],
+    operators: ["contains", "not_contains", "equal"],
   },
   info: true
 },
