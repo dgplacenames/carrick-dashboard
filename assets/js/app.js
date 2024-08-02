@@ -1,5 +1,5 @@
 var config = {
-  geojson: "carrick2.geojson",
+  geojson: "carrick3.geojson",
   title: "Carrick Place-Names",
   layerName: "Place-Names",
   hoverProperty: "pn",
@@ -35,22 +35,7 @@ var properties = [{
     values: []
   }
 },
-		  {
-  value: "els",
-  label: "Elements",
-  table: {
-    visible: true,
-    sortable: true
-  },
-  filter: {
-    type: "string",
-    input: "checkbox",
-    vertical: true,
-    multiple: true,
-    operators: ["in", "not_in", "equal", "not_equal"],
-    values: []
-  }
-},
+
 {
   value: "grid_ref",
   label: "Grid Reference",
@@ -61,7 +46,7 @@ var properties = [{
   filter: false
 },
 		  {
-  value: "forms",
+  value: "rel2",
   label: "Historical Forms",
   table: {
     visible: true,
