@@ -51,11 +51,10 @@ var properties = [{
   table: {
     visible: true,
     sortable: true,
-    operators: ["contains"]
   },
   filter: {
     type: "string",
-	  
+    operators: ["contains"],
   },
   info: true
 },
