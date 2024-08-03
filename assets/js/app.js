@@ -21,10 +21,11 @@ var properties = [{
 },
 {
   value: "Hist_forms",
-  label: "Forms",
+  label: "Historical Forms",
   table: false,
   filter: {
-    type: "string"
+    type: "string",
+    operators: ["contains"],
   },
   info: false
 },
