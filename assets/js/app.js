@@ -79,10 +79,7 @@ var properties = [{
 		  {
   value: "rel2",
   label: "Historical Forms",
-  table: {
-    visible: false,
-    sortable: false,
-  },
+  table: false,
   filter: false,
   info: true
 },
