@@ -15,7 +15,8 @@ var properties = [{
     sortable: true
   },
   filter: {
-    type: "string"
+    type: "string",
+    operators: ["equal","begins with","contains"],
   },
   info: true
 },
@@ -34,7 +35,8 @@ var properties = [{
   label: "Date",
   table: false,
   filter: {
-    type: "string"
+    type: "string",
+    operators: ["contains"],
   },
   info: false
 },
@@ -43,7 +45,8 @@ var properties = [{
   label: "Source",
   table: false,
   filter: {
-    type: "string"
+    type: "string",
+    operators: ["contains"],
   },
   info: false
 },
@@ -59,7 +62,7 @@ var properties = [{
     input: "checkbox",
     vertical: true,
     multiple: true,
-    operators: ["in", "not_in", "equal", "not_equal"],
+    operators: ["in", "not_in"],
     values: []
   }
 },
@@ -77,8 +80,8 @@ var properties = [{
   value: "rel2",
   label: "Historical Forms",
   table: {
-    visible: true,
-    sortable: true,
+    visible: false,
+    sortable: false,
   },
   filter: false,
   info: true
