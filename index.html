@@ -198,16 +198,42 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Feature Info</h4>
+            <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Data</h4>
           </div>
-          <div class="modal-body" id="feature-info"></div>
+          <div class="modal-body">
+            <ul class="nav nav-tabs" id="aboutTabs">
+              <li class="active"><a href="#feature-info" data-toggle="tab">General Information</a></li>
+              <li><a href="#hffeature-info" data-toggle="tab">Historical Forms</a></li>
+            </ul>
+            <div class="tab-content" id="aboutTabsContent">
+              <div class="tab-pane fade active in" id="feature-info">
+                <p>A configurable framework for building a geographic "data dashboard" from a GeoJSON file. Open source, MIT licensed, and available on <a href="https://github.com/fulcrumapp/geojson-dashboard" target="_blank">GitHub</a>.</p>
+                <div class="panel panel-primary">
+                  <div class="panel-heading">Features</div>
+                  <ul class="list-group">
+                    <li class="list-group-item">Flexible template built on active open source components</li>
+                    <li class="list-group-item">Entirely client-side, can be hosted for free on <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></li>
+                    <li class="list-group-item">Built on the incredibly popular <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> UI framework</li>
+                    <li class="list-group-item">Maps via <a href="http://leafletjs.com/" target="_blank">Leaflet</a>, the leading open source JavaScript mapping library</li>
+                    <li class="list-group-item">Interactive data table with sorting, searching, column toggling, and data export via the <a href="http://bootstrap-table.wenzhixin.net.cn/" target="_blank">Bootstrap Table</a> plugin</li>
+                    <li class="list-group-item">Advanced, interactive GeoJSON data querying that integrates <a href="http://mistic100.github.io/jQuery-QueryBuilder/index.html" target="_blank">jQuery QueryBuilder</a> with <a href="http://alasql.org/" target="_blank">AlaSQL</a></li>
+                    <li class="list-group-item">Advanced charting via <a href="http://c3js.org/" target="_blank">C3.js</a>, the D3-based reusable chart library</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="hffeature-info" >
+              </div>
+            </div>
+          </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
     </div>
+
+
 
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
