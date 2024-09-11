@@ -10,7 +10,7 @@ var config = {
 var properties = [
   {
     value: "pn",
-    label: "Place-Name",
+    label: "Name",
     table: {
       visible: true,
       sortable: true,
@@ -19,6 +19,47 @@ var properties = [
       type: "string",
       operators: ["equal", "begins with", "contains"],
     },
+    info: true,
+  },
+  {
+    value: "elements",
+    label: "Elements",
+    table: false,
+    filter: false,
+    info: true,
+  },
+  {
+    value: "cat",
+    label: "Categories",
+    table: false,
+    filter: false,
+    info: true,
+  },
+  /*{
+    value: "el_list",
+    label: "Element",
+    table: false,
+    filter: {
+      type: "string",
+      operators: ["contains"],
+    },
+    info: false,
+  },
+  {
+    value: "lang",
+    label: "Language",
+    table: false,
+    filter: {
+      type: "string",
+      operators: ["contains"],
+    },
+    info: false,
+  },*/
+  {
+    value: "notes",
+    label: "Notes",
+    table: false,
+    filter: false,
     info: true,
   },
   {
@@ -70,7 +111,7 @@ var properties = [
 
   {
     value: "grid_ref",
-    label: "Grid Reference",
+    label: "Grid Ref",
     table: {
       visible: true,
       sortable: false,
@@ -652,8 +693,12 @@ function identifyFeature(id) {
 
   var content =
     "<table class='table table-striped table-bordered table-condensed'>";
-    
+
   var hfContent = ""; //another string to stick the historical form content into
+
+  var notesContent ="";
+
+  var name = "";
 
   $.each(featureProperties, function (key, value) {
     if (!value) {
@@ -680,14 +725,21 @@ function identifyFeature(id) {
 
             hfContent += "<tr><td>" + value + "</td></tr>";
           }
+          if (property.label == "Name") {
+            name += "<h4>"+ value + "</h4>";
+          }
         }
       }
     });
   });
 
+
   content += "</table>"; // I think this should actually be </table>
   $("#feature-info").html(content);
   //now we can choose to add in the hf tab if we have any historical forms
+  
+  name 
+  $("#name").html(name);
 
   if (hfContent) {
     // for now just adding as a table underneath the main table with a heading above it
@@ -696,10 +748,10 @@ function identifyFeature(id) {
       "<table class='table table-striped table-bordered table-condensed'>" +
       hfContent +
       "</table>";
-      $("#hffeature-info").html(content);
+    $("#hffeature-info").html(content);
   }
 
-  
+
 
   $("#featureModal").modal("show");
 }
