@@ -382,7 +382,7 @@ var satellite = L.tileLayer(
 var mapboxSat = L.tileLayer(
   "https://mapseries-tilesets.s3.amazonaws.com/os/6inchfirst/{z}/{x}/{y}.png",
   {
-    maxZoom: 19,
+    maxZoom: 16,
     subdomains: ["a", "b", "c", "d"],
     attribution:
       'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
@@ -392,7 +392,7 @@ var mapboxSat = L.tileLayer(
 var OS2 = L.tileLayer(
   "https://api.maptiler.com/tiles/uk-osgb10k1888/{z}/{x}/{y}.jpg?key=lctZzs518h1OEqcsh2zL",
   {
-    maxZoom: 19,
+    maxZoom: 16,
     subdomains: ["a", "b", "c", "d"],
     attribution:
       'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
@@ -402,7 +402,7 @@ var OS2 = L.tileLayer(
 var OS25 = L.tileLayer(
   "https://api.maptiler.com/tiles/uk-osgb25k1937/{z}/{x}/{y}.jpg?key=lctZzs518h1OEqcsh2zL",
   {
-    maxZoom: 19,
+    maxZoom: 16,
     subdomains: ["a", "b", "c", "d"],
     attribution:
       'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
@@ -412,7 +412,7 @@ var OS25 = L.tileLayer(
 var geological = L.tileLayer(
   "https://mapseries-tilesets.s3.amazonaws.com/geological/oneinchscot/{z}/{x}/{y}.png",
   {
-    maxZoom: 19,
+    maxZoom: 16,
     subdomains: ["a", "b", "c", "d"],
     attribution:
       'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
