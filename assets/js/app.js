@@ -8,147 +8,118 @@ var config = {
 };
 
 var properties = [
-  {
-    value: "pn",
-    label: "Name",
-    table: {
-      visible: true,
-      sortable: true,
+    {
+        value: "pn",
+        label: "Name",
+        table: {
+            visible: true,
+            sortable: true,
+        },
+        filter: {
+            type: "string",
+            operators: ["equal", "begins with", "contains"],
+        },
+        info: true,
     },
-    filter: {
-      type: "string",
-      operators: ["equal", "begins with", "contains"],
+    {
+        value: "details.elements", // Adjusted for nested structure
+        label: "Elements",
+        table: false,
+        filter: false,
+        info: true,
     },
-    info: true,
-  },
-  {
-    value: "elements",
-    label: "Elements",
-    table: false,
-    filter: false,
-    info: true,
-  },
-  {
-    value: "cat",
-    label: "Categories",
-    table: false,
-    filter: false,
-    info: true,
-  },
-  /*{
-    value: "el_list",
-    label: "Element",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
+    {
+        value: "details.cat", // Adjusted for nested structure
+        label: "Categories",
+        table: false,
+        filter: false,
+        info: true,
     },
-    info: false,
-  },
-  {
-    value: "lang",
-    label: "Language",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
+    {
+        value: "details.notes", // Adjusted for nested structure
+        label: "Notes",
+        table: false,
+        filter: false,
+        info: true,
     },
-    info: false,
-  },*/
-  {
-    value: "notes",
-    label: "Notes",
-    table: false,
-    filter: false,
-    info: true,
-  },
-  {
-    value: "Hist_forms",
-    label: "Historical Forms",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
+    {
+        value: "details.Hist_forms", // Adjusted for nested structure
+        label: "Historical Forms",
+        table: false,
+        filter: {
+            type: "string",
+            operators: ["contains"],
+        },
+        info: false,
     },
-    info: false,
-  },
-  {
-    value: "date",
-    label: "Date",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
+    {
+        value: "date",
+        label: "Date",
+        table: false,
+        filter: {
+            type: "string",
+            operators: ["contains"],
+        },
+        info: false,
     },
-    info: false,
-  },
-  {
-    value: "sources",
-    label: "Source",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
+    {
+        value: "sources",
+        label: "Source",
+        table: false,
+        filter: {
+            type: "string",
+            operators: ["contains"],
+        },
+        info: false,
     },
-    info: false,
-  },
-  {
-    value: "parish",
-    label: "Parish",
-    table: {
-      visible: true,
-      sortable: true,
+    {
+        value: "parish",
+        label: "Parish",
+        table: {
+            visible: true,
+            sortable: true,
+        },
+        filter: {
+            type: "string",
+            input: "checkbox",
+            vertical: true,
+            multiple: true,
+            operators: ["in", "not_in"],
+            values: [],
+        },
     },
-    filter: {
-      type: "string",
-      input: "checkbox",
-      vertical: true,
-      multiple: true,
-      operators: ["in", "not_in"],
-      values: [],
+    {
+        value: "grid_ref",
+        label: "Grid Ref",
+        table: {
+            visible: true,
+            sortable: false,
+        },
+        filter: false,
     },
-  },
-
-  {
-    value: "grid_ref",
-    label: "Grid Ref",
-    table: {
-      visible: true,
-      sortable: false,
+    {
+        value: "photos_url",
+        label: "Photos",
+        table: {
+            visible: true,
+            sortable: true,
+            formatter: urlFormatter,
+        },
+        filter: false,
+        info: true,
     },
-    filter: false,
-  },
-  {
-    value: "rel2",
-    label: "Historical Forms",
-    table: false,
-    filter: false,
-    info: true,
-  },
-  {
-    value: "photos_url",
-    label: "Photos",
-    table: {
-      visible: true,
-      sortable: true,
-      formatter: urlFormatter,
+    {
+        value: "image",
+        label: "Image",
+        table: {
+            visible: true,
+            sortable: true,
+        },
+        filter: false,
+        info: true,
     },
-    filter: false,
-    table: false,
-    info: true,
-  },
-  {
-    value: "image",
-    label: "Image",
-    table: {
-      visible: true,
-      sortable: true,
-    },
-    filter: false,
-    table: false,
-    info: true,
-  },
 ];
+
 
 function drawCharts() {
   // Status
@@ -538,13 +509,25 @@ var featureLayer = L.geoJson(null, {
 
 // Fetch the GeoJSON file
 $.getJSON(config.geojson, function (data) {
-  geojson = data;
-  features = $.map(geojson.features, function (feature) {
-    return feature.properties;
-  });
-  featureLayer.addData(data);
-  buildConfig();
-  $("#loading-mask").hide();
+    geojson = data;
+    features = $.map(geojson.features, function (feature) {
+        return {
+            pn: feature.properties.pn,
+            elements: feature.properties.details.elements,
+            cat: feature.properties.details.cat,
+            notes: feature.properties.details.notes,
+            Hist_forms: feature.properties.details.Hist_forms,
+            date: feature.properties.date,
+            sources: feature.properties.sources,
+            parish: feature.properties.parish,
+            grid_ref: feature.properties.grid_ref,
+            photos_url: feature.properties.photos_url,
+            image: feature.properties.image
+        };
+    });
+    featureLayer.addData(data);
+    buildConfig();
+    $("#loading-mask").hide();
 });
 
 var map = L.map("map", {
