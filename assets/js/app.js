@@ -512,17 +512,17 @@ $.getJSON(config.geojson, function (data) {
     geojson = data;
     features = $.map(geojson.features, function (feature) {
         return {
-            pn: feature.properties.pn,
-            details.elements: feature.properties.details.elements,
-            cat: feature.properties.details.cat,
-            notes: feature.properties.details.notes,
-            Hist_forms: feature.properties.details.Hist_forms,
-            date: feature.properties.date,
-            sources: feature.properties.sources,
-            parish: feature.properties.parish,
-            grid_ref: feature.properties.grid_ref,
-            photos_url: feature.properties.photos_url,
-            image: feature.properties.image
+            pn: properties.pn,
+            details.elements: properties.details.elements,
+            cat: properties.details.cat,
+            notes: properties.details.notes,
+            Hist_forms: properties.details.Hist_forms,
+            date: properties.date,
+            sources: properties.sources,
+            parish: properties.parish,
+            grid_ref: properties.grid_ref,
+            photos_url: properties.photos_url,
+            image: properties.image
         };
     });
     featureLayer.addData(data);
