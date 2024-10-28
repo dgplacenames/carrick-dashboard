@@ -513,7 +513,7 @@ $.getJSON(config.geojson, function (data) {
     features = $.map(geojson.features, function (feature) {
         return {
             pn: feature.properties.pn,
-            elements: feature.properties.details.elements,
+            details.elements: feature.properties.details.elements,
             cat: feature.properties.details.cat,
             notes: feature.properties.details.notes,
             Hist_forms: feature.properties.details.Hist_forms,
