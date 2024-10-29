@@ -299,11 +299,11 @@ function buildConfig() {
 
   $.each(properties, function (index, value) {
     // Filter config
-    if (value.filter) {
+    if (value.filter && typeof value.filter === "object") {
       var id;
-      if (value.filter.type == "integer") {
+      if (value.filter.type === "integer") {
         id = "cast(properties->" + value.value + " as int)";
-      } else if (value.filter.type == "double") {
+      } else if (value.filter.type === "double") {
         id = "cast(properties->" + value.value + " as double)";
       } else {
         id = "properties->" + value.value;
@@ -312,10 +312,11 @@ function buildConfig() {
         id: id,
         label: value.label,
       });
+
       $.each(value.filter, function (key, val) {
         if (filters[index]) {
           // If values array is empty, fetch all distinct values
-          if (key == "values" && val.length === 0) {
+          if (key === "values" && Array.isArray(val) && val.length === 0) {
             alasql(
               "SELECT DISTINCT(properties->" +
                 value.value +
@@ -335,12 +336,14 @@ function buildConfig() {
         }
       });
     }
+
     // Table config
-    if (value.table) {
+    if (value.table && typeof value.table === "object") {
       table.push({
         field: value.value,
         title: value.label,
       });
+
       $.each(value.table, function (key, val) {
         if (table[index + 1]) {
           table[index + 1][key] = val;
@@ -352,6 +355,7 @@ function buildConfig() {
   buildFilters();
   buildTable();
 }
+
 
 // Basemap Layers
 
