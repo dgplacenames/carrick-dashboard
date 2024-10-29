@@ -13,7 +13,7 @@ function loadGeoJSONData(data) {
 
   // Set config title based on "name" property if available
   if (geojson.name) {
-    config.title = geojson.name;// +  " Place-Names"; // Update config title
+    config.title = geojson.name +  " Place-Names"; // Update config title
     $(".title").html(config.title); // Update any HTML elements showing the title
   }
 
