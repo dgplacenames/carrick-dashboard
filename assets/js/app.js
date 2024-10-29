@@ -147,7 +147,7 @@ var properties = [
       formatter: urlFormatter,
     },
     filter: false,
-    table: true,
+    table: false,
     info: true,
   },
   {
