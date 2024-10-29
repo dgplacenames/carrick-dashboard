@@ -57,6 +57,10 @@ document.getElementById("geojson-upload").addEventListener("change", function (e
 
 // Define a recursive function to extract properties, including from nested objects
 function extractProperties(feature, properties = {}) {
+  // Default to empty strings for combined fields
+  properties["els_combined"] = "";
+  properties["elements_combined"] = "";
+
   Object.keys(feature).forEach((key) => {
     if (key === "elements" && Array.isArray(feature[key])) {
       // Combine each object's "element" field in the "elements" array
@@ -78,6 +82,7 @@ function extractProperties(feature, properties = {}) {
   });
   return properties;
 }
+
 
 
 var properties = [
