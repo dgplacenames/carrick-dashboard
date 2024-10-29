@@ -1,226 +1,372 @@
 var config = {
-  geojson: "carrick2.geojson",
-  title: "Carrick Place-Names",
-  layerName: "Place-Names",
-  hoverProperty: "pn",
-  sortProperty: "",
-  sortOrder: "",
+    geojson: "carrick2.geojson",
+    title: "Carrick Place-Names",
+    layerName: "Place-Names",
+    hoverProperty: "pn",
+    sortProperty: "",
+    sortOrder: "",
 };
 
-// Function to load GeoJSON from user upload
-function loadGeoJSONData(data) {
-  geojson = data;
-
-  // Set config title based on "name" property if available
-  if (geojson.name) {
-    config.title = geojson.name +  " Place-Names"; // Update config title
-    $(".title").html(config.title); // Update any HTML elements showing the title
-  }
-
-  // Clear the existing feature layer and reload it with the new data
-  featureLayer.clearLayers();
-  features = geojson.features.map((feature) =>
-    extractProperties(feature.properties || {})
-  );
-
-  featureLayer.addData(geojson);
-  buildConfig(); // Rebuild filters and table based on new data
-  map.fitBounds(featureLayer.getBounds());
-  $("#loading-mask").hide();
-}
-
-// Event listener for file upload
-document.getElementById("geojson-upload").addEventListener("change", function (e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      try {
-        const data = JSON.parse(event.target.result);
-        
-        // Check if data is a valid GeoJSON
-        if (data.type === "FeatureCollection" && data.features) {
-          loadGeoJSONData(data); // Process the uploaded GeoJSON data
-        } else {
-          alert("Invalid GeoJSON file. Please upload a valid GeoJSON FeatureCollection.");
-        }
-      } catch (error) {
-        console.error("Error reading GeoJSON file:", error);
-        alert("There was an error reading the GeoJSON file. Please check the file format.");
-      }
-    };
-    reader.readAsText(file); // Read file as text
-  }
-});
-
-
-
-// Define a recursive function to extract properties, including from nested objects
-function extractProperties(feature, properties = {}) {
-  // Default to empty strings for combined fields
-  properties["els_combined"] = "";
-  properties["elements_combined"] = "";
-
-  Object.keys(feature).forEach((key) => {
-    if (key === "elements" && Array.isArray(feature[key])) {
-      // Combine each object's "element" field in the "elements" array
-      properties["elements_combined"] = feature[key]
-        .map((element) => `${element.lang}: ${element.element}`)
-        .join(", ");
-    } else if (key === "els" && typeof feature[key] === "object") {
-      // Combine key-value pairs in the "els" object
-      properties["els_combined"] = Object.entries(feature[key])
-        .map(([subKey, subValue]) => `${subKey}: ${subValue}`)
-        .join(", ");
-    } else if (typeof feature[key] === "object" && feature[key] !== null) {
-      // Recursively process other nested objects
-      extractProperties(feature[key], properties);
-    } else {
-      // For non-nested fields, copy directly
-      properties[key] = feature[key];
-    }
-  });
-  return properties;
-}
-
-
-
 var properties = [
-  {
-    value: "Feature",
-    label: "Feature",
-    table: { visible: true, sortable: true },
-    filter: { type: "string", operators: ["contains"] },
-    info: true,
-  },
-  {
-    value: "elements",
-    label: "Elements",
-    table: false,
-    filter: false,
-    info: true,
-  },
-{
-    value: "els",
-    label: "Els",
-    table: { visible: false, sortable: false },
-    filter: false,
-    info: true,
-  },
-  {
-    value: "fid",
-    label: "FID",
-    table: { visible: false, sortable: false },
-    filter: { type: "integer", operators: ["equal", "greater", "less"] },
-    info: true,
-  },
-{
-    value: "elements_combined",
-    label: "Elements Combined",
-    table: { visible: false, sortable: false },
-    filter: false,
-    info: true,
-  },
-  {
-    value: "els_combined",
-    label: "Els Combined",
-    table: { visible: false, sortable: false },
-    filter: false,
-    info: true,
-  },
-  {
-    value: "forms",
-    label: "Forms",
-    table: false,
-    filter: false,
-    info: true,
-  },
-  {
-    value: "grid_ref",
-    label: "Grid Reference",
-    table: { visible: true, sortable: true },
-    filter: { type: "string", operators: ["contains"] },
-    info: true,
-  },
-  {
-    value: "image",
-    label: "Image",
-    table: { visible: false, sortable: false, formatter: urlFormatter },
-    filter: false,
-    info: true,
-  },
-  {
-    value: "lang",
-    label: "Language",
-    table:  { visible: false, sortable: false },
-    filter: { type: "string", operators: ["contains"] },
-    info: true,
-  },
-  {
-    value: "latitude",
-    label: "Latitude",
-    table: { visible: false, sortable: false },
-    filter: { type: "double", operators: ["equal", "greater", "less"] },
-    info: true,
-  },
-  {
-    value: "longitude",
-    label: "Longitude",
-    table: { visible: false, sortable: false },
-    filter: { type: "double", operators: ["equal", "greater", "less"] },
-    info: true,
-  },
-  {
-    value: "osgb_east",
-    label: "OSGB East",
-    table: { visible: false, sortable: false },
-    filter: { type: "integer", operators: ["equal", "greater", "less"] },
-    info: true,
-  },
-  {
-    value: "osgb_north",
-    label: "OSGB North",
-    table: { visible: false, sortable: false },
-    filter: { type: "integer", operators: ["equal", "greater", "less"] },
-    info: true,
-  },
-  {
-    value: "parish",
-    label: "Parish",
-    table: { visible: true, sortable: true },
-    filter: { type: "string", input: "checkbox", multiple: true, operators: ["in", "not_in"] },
-    info: true,
-  },
-  {
-    value: "photos_url",
-    label: "Photos URL",
-    table: { visible: false, sortable: false, formatter: urlFormatter },
-    filter: false,
-    info: true,
-  },
-  {
-    value: "pn",
-    label: "Place Name",
-    table: { visible: true, sortable: true },
-    filter: { type: "string", operators: ["equal", "begins with", "contains"] },
-    info: true,
-  },
-  {
-    value: "pn_disambig",
-    label: "Disambiguation",
-    table: false,
-    filter: false,
-    info: true,
-  },
-  {
-    value: "pn_id",
-    label: "Place Name ID",
-    table: { visible: true, sortable: true },
-    filter: { type: "integer", operators: ["equal", "greater", "less"] },
-    info: true,
-  }
+    {
+        value: "pn",
+        label: "Name",
+        table: {
+            visible: true,
+            sortable: true,
+        },
+        filter: {
+            type: "string",
+            operators: ["equal", "begins with", "contains"],
+        },
+        info: true,
+    },
+    {
+        value: "details.elements", // Adjusted for nested structure
+        label: "Elements",
+        table: false,
+        filter: false,
+        info: true,
+    },
+    {
+        value: "details.cat", // Adjusted for nested structure
+        label: "Categories",
+        table: false,
+        filter: false,
+        info: true,
+    },
+    {
+        value: "details.notes", // Adjusted for nested structure
+        label: "Notes",
+        table: false,
+        filter: false,
+        info: true,
+    },
+    {
+        value: "details.Hist_forms", // Adjusted for nested structure
+        label: "Historical Forms",
+        table: false,
+        filter: {
+            type: "string",
+            operators: ["contains"],
+        },
+        info: false,
+    },
+    {
+        value: "date",
+        label: "Date",
+        table: false,
+        filter: {
+            type: "string",
+            operators: ["contains"],
+        },
+        info: false,
+    },
+    {
+        value: "sources",
+        label: "Source",
+        table: false,
+        filter: {
+            type: "string",
+            operators: ["contains"],
+        },
+        info: false,
+    },
+    {
+        value: "parish",
+        label: "Parish",
+        table: {
+            visible: true,
+            sortable: true,
+        },
+        filter: {
+            type: "string",
+            input: "checkbox",
+            vertical: true,
+            multiple: true,
+            operators: ["in", "not_in"],
+            values: [],
+        },
+    },
+    {
+        value: "grid_ref",
+        label: "Grid Ref",
+        table: {
+            visible: true,
+            sortable: false,
+        },
+        filter: false,
+    },
+    {
+        value: "photos_url",
+        label: "Photos",
+        table: {
+            visible: true,
+            sortable: true,
+            formatter: urlFormatter,
+        },
+        filter: false,
+        info: true,
+    },
+    {
+        value: "image",
+        label: "Image",
+        table: {
+            visible: true,
+            sortable: true,
+        },
+        filter: false,
+        info: true,
+    },
 ];
 
+// Basemap Layers
+var OSM = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    subdomains: ["a", "b", "c", "d"],
+    attribution:
+        'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
+});
+
+var satellite = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {
+        maxZoom: 19,
+        subdomains: ["a", "b", "c", "d"],
+        attribution:
+            'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
+    }
+);
+
+var mapboxSat = L.tileLayer(
+    "https://mapseries-tilesets.s3.amazonaws.com/os/6inchfirst/{z}/{x}/{y}.png",
+    {
+        maxZoom: 16,
+        subdomains: ["a", "b", "c", "d"],
+        attribution:
+            'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
+    }
+);
+
+var OS2 = L.tileLayer(
+    "https://api.maptiler.com/tiles/uk-osgb10k1888/{z}/{x}/{y}.jpg?key=lctZzs518h1OEqcsh2zL",
+    {
+        maxZoom: 16,
+        subdomains: ["a", "b", "c", "d"],
+        attribution:
+            'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
+    }
+);
+
+var OS25 = L.tileLayer(
+    "https://api.maptiler.com/tiles/uk-osgb25k1937/{z}/{x}/{y}.jpg?key=lctZzs518h1OEqcsh2zL",
+    {
+        maxZoom: 16,
+        subdomains: ["a", "b", "c", "d"],
+        attribution:
+            'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
+    }
+);
+
+var geological = L.tileLayer(
+    "https://mapseries-tilesets.s3.amazonaws.com/geological/oneinchscot/{z}/{x}/{y}.png",
+    {
+        maxZoom: 16,
+        subdomains: ["a", "b", "c", "d"],
+        attribution:
+            'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
+    }
+);
+
+var Roy = L.tileLayer(
+    "https://mapseries-tilesets.s3.amazonaws.com/roy/lowlands/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+        subdomains: ["a", "b", "c", "d"],
+        attribution:
+            'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
+    }
+);
+
+var LiDAR_4 = L.tileLayer(
+    "https://geo.nls.uk/mapdata3/lidar/rgb/phase4/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+        subdomains: ["a", "b", "c", "d"],
+        attribution:
+            'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
+    }
+);
+
+var LiDAR_3 = L.tileLayer(
+    "https://geo.nls.uk/mapdata3/lidar/rgb/phase3/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+        subdomains: ["a", "b", "c", "d"],
+        attribution:
+            'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
+    }
+);
+
+var LiDAR_1 = L.tileLayer(
+    "https://geo.nls.uk/mapdata3/lidar/rgb/phase1/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+        subdomains: ["a", "b", "c", "d"],
+        attribution:
+            'Basemap <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox © OpenStreetMap</a>',
+    }
+);
+
+var LiDAR = L.layerGroup([LiDAR_4, LiDAR_3, LiDAR_1]);
+
+var highlightLayer = L.geoJson(null, {
+    pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, {
+            radius: 5,
+            color: "#FFF",
+            weight: 2,
+            opacity: 1,
+            fillColor: "#00FFFF",
+            fillOpacity: 1,
+            clickable: false,
+        });
+    },
+    style: function (feature) {
+        return {
+            color: "#00FFFF",
+            weight: 2,
+            opacity: 1,
+            fillColor: "#00FFFF",
+            fillOpacity: 0.5,
+            clickable: false,
+        };
+    },
+});
+
+var featureLayer = L.geoJson(null, {
+    filter: function (feature, layer) {
+        return (
+            feature.geometry.coordinates[0] !== 0 &&
+            feature.geometry.coordinates[1] !== 0
+        );
+    },
+    pointToLayer: function (feature, latlng) {
+        var markerColor = feature.properties["marker-color"] || "#1b5fde";
+        return L.circleMarker(latlng, {
+            radius: 4,
+            weight: 0.2,
+            fillColor: markerColor,
+            color: "#000000",
+            opacity: 1,
+            fillOpacity: 1,
+        });
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties) {
+            layer.on({
+                click: function (e) {
+                    identifyFeature(L.stamp(layer));
+                    highlightLayer.clearLayers();
+                    highlightLayer.addData(
+                        featureLayer.getLayer(L.stamp(layer)).toGeoJSON()
+                    );
+                },
+                mouseover: function (e) {
+                    if (config.hoverProperty) {
+                        $(".info-control").html(feature.properties[config.hoverProperty]);
+                        $(".info-control").show();
+                    }
+                },
+                mouseout: function (e) {
+                    $(".info-control").hide();
+                },
+            });
+        }
+    },
+});
+
+// Fetch the GeoJSON file
+$.getJSON(config.geojson, function (data) {
+    geojson = data;
+    features = $.map(geojson.features, function (feature) {
+        return {
+            pn: feature.properties.pn,
+            elements: feature.properties.details.elements,
+            cat: feature.properties.details.cat,
+            notes: feature.properties.details.notes,
+            Hist_forms: feature.properties.details.Hist_forms,
+            date: feature.properties.date,
+            sources: feature.properties.sources,
+            parish: feature.properties.parish,
+            grid_ref: feature.properties.grid_ref,
+            photos_url: feature.properties.photos_url,
+            image: feature.properties.image
+        };
+    });
+    featureLayer.addData(data);
+    buildConfig();
+    $("#loading-mask").hide();
+});
+
+var map = L.map("map", {
+    layers: [OSM, featureLayer, highlightLayer],
+}).fitWorld();
+
+// Info control
+var info = L.control({
+    position: "bottomleft",
+});
+
+// Custom info hover control
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create("div", "info-control");
+    this.update();
+    return this._div;
+};
+info.update = function (props) {
+    this._div.innerHTML = "";
+};
+info.addTo(map);
+$(".info-control").hide();
+
+// Larger screens get expanded layer control
+var isCollapsed = document.body.clientWidth <= 767;
+var baseLayers = {
+    OpenStreetMap: OSM,
+    "Esri Satellite": satellite,
+    "OS 1st ed.": mapboxSat,
+    "OS 2nd ed.": OS2,
+    "OS 1:25,000.": OS25,
+    "OS 1-inch Geology": geological,
+    "Roy (1752-55)": Roy,
+};
+var overlayLayers = {
+    "<span id='layer-name'>GeoJSON Layer</span>": featureLayer,
+    LiDAR: LiDAR,
+};
+var layerControl = L.control.layers(baseLayers, overlayLayers, {
+    collapsed: isCollapsed,
+}).addTo(map);
+
+// Filter table to only show features in current map bounds
+map.on("moveend", function (e) {
+    syncTable();
+});
+
+map.on("click", function (e) {
+    highlightLayer.clearLayers();
+});
+
+// Table formatter to make links clickable
+function urlFormatter(value, row, index) {
+    if (
+        typeof value == "string" &&
+        (value.indexOf("http") === 0 || value.indexOf("https") === 0)
+    ) {
+        return "<img src='" + value + "'>";
+    }
+}
 
 function drawCharts() {
   // Status
@@ -378,11 +524,11 @@ function buildConfig() {
 
   $.each(properties, function (index, value) {
     // Filter config
-    if (value.filter && typeof value.filter === "object") {
+    if (value.filter) {
       var id;
-      if (value.filter.type === "integer") {
+      if (value.filter.type == "integer") {
         id = "cast(properties->" + value.value + " as int)";
-      } else if (value.filter.type === "double") {
+      } else if (value.filter.type == "double") {
         id = "cast(properties->" + value.value + " as double)";
       } else {
         id = "properties->" + value.value;
@@ -391,11 +537,10 @@ function buildConfig() {
         id: id,
         label: value.label,
       });
-
       $.each(value.filter, function (key, val) {
         if (filters[index]) {
           // If values array is empty, fetch all distinct values
-          if (key === "values" && Array.isArray(val) && val.length === 0) {
+          if (key == "values" && val.length === 0) {
             alasql(
               "SELECT DISTINCT(properties->" +
                 value.value +
@@ -415,14 +560,12 @@ function buildConfig() {
         }
       });
     }
-
     // Table config
-    if (value.table && typeof value.table === "object") {
+    if (value.table) {
       table.push({
         field: value.value,
         title: value.label,
       });
-
       $.each(value.table, function (key, val) {
         if (table[index + 1]) {
           table[index + 1][key] = val;
@@ -434,7 +577,6 @@ function buildConfig() {
   buildFilters();
   buildTable();
 }
-
 
 // Basemap Layers
 
@@ -612,12 +754,12 @@ var featureLayer = L.geoJson(null, {
   },
 });
 
-// Fetch the GeoJSON file and process nested properties
+// Fetch the GeoJSON file
 $.getJSON(config.geojson, function (data) {
   geojson = data;
-  features = geojson.features.map((feature) =>
-    extractProperties(feature.properties || {})
-  );
+  features = $.map(geojson.features, function (feature) {
+    return feature.properties;
+  });
   featureLayer.addData(data);
   buildConfig();
   $("#loading-mask").hide();
@@ -741,111 +883,96 @@ function buildTable() {
   });
 }
 
-function syncTable(filterTerm = "") {
-  let filteredFeatures = [];
-
-  // Loop through each feature layer to collect features within the map's current bounds
+function syncTable() {
+  tableFeatures = [];
   featureLayer.eachLayer(function (layer) {
-    // Only add features within the map's current bounds
-    if (map.getBounds().contains(layer.getBounds())) {
-      // Combine "els" properties into a single string for filtering if not already set
-      if (!layer.feature.properties.els_combined && layer.feature.properties.els) {
-        layer.feature.properties.els_combined = Object.entries(layer.feature.properties.els)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(", ");
-      }
-
-      // Apply filter to "els_combined" if a filter term is provided
-      if (
-        filterTerm === "" || // No filter term, include all features
-        (layer.feature.properties.els_combined &&
-          layer.feature.properties.els_combined.includes(filterTerm))
-      ) {
-        // Add a unique ID and push to filteredFeatures
-        layer.feature.properties.leaflet_stamp = L.stamp(layer);
-        filteredFeatures.push(layer.feature);
+    layer.feature.properties.leaflet_stamp = L.stamp(layer);
+    if (map.hasLayer(featureLayer)) {
+      if (map.getBounds().contains(layer.getBounds())) {
+        tableFeatures.push(layer.feature.properties);
       }
     }
   });
-
-  // Clear the map's feature layer and reload it with only the filtered features
-  featureLayer.clearLayers();
-  featureLayer.addData(filteredFeatures);
-
-  // Load the filtered features' properties into the table
-  const tableData = filteredFeatures.map(feature => feature.properties);
-  $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableData)));
-
-  // Update the feature count display
-  const featureCount = tableData.length;
-  $("#feature-count").html(
-    `${featureCount} visible ${featureCount === 1 ? "feature" : "features"}`
-  );
+  $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableFeatures)));
+  var featureCount = $("#table").bootstrapTable("getData").length;
+  if (featureCount == 1) {
+    $("#feature-count").html(
+      $("#table").bootstrapTable("getData").length + " visible feature"
+    );
+  } else {
+    $("#feature-count").html(
+      $("#table").bootstrapTable("getData").length + " visible features"
+    );
+  }
 }
 
-
-
 function identifyFeature(id) {
-  // Retrieve the feature and extract all properties (including nested ones)
-  var feature = featureLayer.getLayer(id).feature;
-  var featureProperties = extractProperties(feature.properties || {});
+  var featureProperties = featureLayer.getLayer(id).feature.properties;
 
-  // HTML content for the main table
   var content =
     "<table class='table table-striped table-bordered table-condensed'>";
-  var hfContent = ""; // HTML for historical forms if needed
-  var name = ""; // Name to display as a title
 
-  // Loop through each property and display in the modal, handling specific cases
+  var hfContent = ""; //another string to stick the historical form content into
+
+  var notesContent ="";
+
+  var name = "";
+
   $.each(featureProperties, function (key, value) {
     if (!value) {
       value = "";
     }
 
-    // Convert URLs to clickable links if needed
     if (
-      typeof value === "string" &&
-      (value.startsWith("http") || value.startsWith("https"))
+      typeof value == "string" &&
+      (value.indexOf("http") === 0 || value.indexOf("https") === 0)
     ) {
-      value = `<a href="${value}" target="_blank">${value}</a>`;
+      value = "<a href='" + value + "' target='_blank'>" + value + "</a>";
     }
 
-    // Match property label with the defined properties for display
     $.each(properties, function (index, property) {
-      if (key === property.value) {
+      if (key == property.value) {
         if (property.info !== false) {
-          // Separate handling for regular properties and "Historical Forms"
-          if (property.label !== "Historical Forms") {
-            content += `<tr><th>${property.label}</th><td>${value}</td></tr>`;
+          if (property.label != "Historical Forms") {
+            //regular properties here
+
+            content +=
+              "<tr><th>" + property.label + "</th><td>" + value + "</td></tr>";
           } else {
-            hfContent += `<tr><td>${value}</td></tr>`;
+            //if we have a historical form we handle this separately (could be a completely different layout if required - here we have a table that just displays the values)
+
+            hfContent += "<tr><td>" + value + "</td></tr>";
           }
-          // Title display for "Name" field
-          if (property.label === "Name") {
-            name = `<h4>${value}</h4>`;
+          if (property.label == "Name") {
+            name += "<h4>"+ value + "</h4>";
           }
         }
       }
     });
   });
 
-  content += "</table>";
+
+  content += "</table>"; // I think this should actually be </table>
   $("#feature-info").html(content);
+  //now we can choose to add in the hf tab if we have any historical forms
+  
+  name 
   $("#name").html(name);
 
-  // Add Historical Forms table if there is content
   if (hfContent) {
-    hfContent =
+    // for now just adding as a table underneath the main table with a heading above it
+
+    content =
       "<table class='table table-striped table-bordered table-condensed'>" +
       hfContent +
       "</table>";
-    $("#hffeature-info").html(hfContent);
+    $("#hffeature-info").html(content);
   }
 
-  // Show the modal dialog with the feature information
+
+
   $("#featureModal").modal("show");
 }
-
 
 function switchView(view) {
   if (view == "split") {
@@ -975,34 +1102,3 @@ $("#download-pdf-btn").click(function () {
 $("#chartModal").on("shown.bs.modal", function (e) {
   drawCharts();
 });
-
-function filterByLanguage() {
-  // Get the selected language from the dropdown
-  const selectedLanguage = document.getElementById("language-filter").value;
-  
-  if (selectedLanguage) {
-    // Filter features by the selected language
-    syncTable(selectedLanguage);
-  } else {
-    // If no language selected, reload all features
-    featureLayer.clearLayers();
-    featureLayer.addData(geojson.features);
-    syncTable();
-  }
-}
-
-// Updated filterLanguage function to filter based on `elements->lang` with AlaSQL
-function filterLanguage(lang) {
-  const query = `
-    SELECT features.*
-    FROM ? AS features
-    OUTER APPLY features->elements AS el
-    WHERE el->lang LIKE '%' + ? + '%'
-  `;
-  
-  alasql(query, [geojson.features, lang], function (filteredFeatures) {
-    featureLayer.clearLayers();        // Clear existing layers
-    featureLayer.addData(filteredFeatures); // Add filtered data to the map
-    syncTable();                       // Synchronize with the table
-  });
-}
