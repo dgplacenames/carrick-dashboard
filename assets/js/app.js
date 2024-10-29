@@ -1,11 +1,53 @@
 var config = {
-  geojson: "carrick2.geojson",
+  geojson: "",
   title: "Carrick Place-Names",
   layerName: "Place-Names",
   hoverProperty: "pn",
   sortProperty: "",
   sortOrder: "",
 };
+
+// Function to handle new GeoJSON data and reset layers
+function loadGeoJSONData(data) {
+  // Parse and process the GeoJSON file as with the initial load
+  geojson = data;
+
+  // Clear the existing feature layer and reload it with the new data
+  featureLayer.clearLayers();
+  features = geojson.features.map((feature) =>
+    extractProperties(feature.properties || {})
+  );
+
+  featureLayer.addData(geojson);
+  buildConfig(); // Rebuild filters and table based on new data
+  map.fitBounds(featureLayer.getBounds());
+  $("#loading-mask").hide();
+}
+
+// Event listener for file upload
+document.getElementById("geojson-upload").addEventListener("change", function (e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      try {
+        const data = JSON.parse(event.target.result);
+        
+        // Check if data is a valid GeoJSON
+        if (data.type === "FeatureCollection" && data.features) {
+          loadGeoJSONData(data); // Process the uploaded GeoJSON data
+        } else {
+          alert("Invalid GeoJSON file. Please upload a valid GeoJSON FeatureCollection.");
+        }
+      } catch (error) {
+        console.error("Error reading GeoJSON file:", error);
+        alert("There was an error reading the GeoJSON file. Please check the file format.");
+      }
+    };
+    reader.readAsText(file); // Read file as text
+  }
+});
+
 
 // Define a recursive function to extract properties, including from nested objects
 function extractProperties(feature, properties = {}) {
