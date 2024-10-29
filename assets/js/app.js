@@ -784,17 +784,6 @@ function syncTable(filterTerm = "") {
 }
 
 
-  // Update the table with the features in the current map bounds and matching the filter term
-  $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableFeatures)));
-
-  // Update the feature count display
-  const featureCount = tableFeatures.length;
-  $("#feature-count").html(
-    `${featureCount} visible ${featureCount === 1 ? "feature" : "features"}`
-  );
-}
-
-
 
 function identifyFeature(id) {
   // Retrieve the feature and extract all properties (including nested ones)
