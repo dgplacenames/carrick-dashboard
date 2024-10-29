@@ -1,5 +1,5 @@
 var config = {
-  geojson: "carrick4.geojson",
+  geojson: "carrick2.geojson",
   title: "Carrick Place-Names",
   layerName: "Place-Names",
   hoverProperty: "pn",
@@ -7,119 +7,161 @@ var config = {
   sortOrder: "",
 };
 
-var properties = [
-    {
-        value: "pn",
-        label: "Name",
-        table: {
-            visible: true,
-            sortable: true,
-        },
-        filter: {
-            type: "string",
-            operators: ["equal", "begins with", "contains"],
-        },
-        info: true,
-    },
-    {
-        value: "details.elements", // Adjusted for nested structure
-        label: "Elements",
-        table: false,
-        filter: false,
-        info: true,
-    },
-    {
-        value: "details.cat", // Adjusted for nested structure
-        label: "Categories",
-        table: false,
-        filter: false,
-        info: true,
-    },
-    {
-        value: "details.notes", // Adjusted for nested structure
-        label: "Notes",
-        table: false,
-        filter: false,
-        info: true,
-    },
-    {
-        value: "details.Hist_forms", // Adjusted for nested structure
-        label: "Historical Forms",
-        table: false,
-        filter: {
-            type: "string",
-            operators: ["contains"],
-        },
-        info: false,
-    },
-    {
-        value: "date",
-        label: "Date",
-        table: false,
-        filter: {
-            type: "string",
-            operators: ["contains"],
-        },
-        info: false,
-    },
-    {
-        value: "sources",
-        label: "Source",
-        table: false,
-        filter: {
-            type: "string",
-            operators: ["contains"],
-        },
-        info: false,
-    },
-    {
-        value: "parish",
-        label: "Parish",
-        table: {
-            visible: true,
-            sortable: true,
-        },
-        filter: {
-            type: "string",
-            input: "checkbox",
-            vertical: true,
-            multiple: true,
-            operators: ["in", "not_in"],
-            values: [],
-        },
-    },
-    {
-        value: "grid_ref",
-        label: "Grid Ref",
-        table: {
-            visible: true,
-            sortable: false,
-        },
-        filter: false,
-    },
-    {
-        value: "photos_url",
-        label: "Photos",
-        table: {
-            visible: true,
-            sortable: true,
-            formatter: urlFormatter,
-        },
-        filter: false,
-        info: true,
-    },
-    {
-        value: "image",
-        label: "Image",
-        table: {
-            visible: true,
-            sortable: true,
-        },
-        filter: false,
-        info: true,
-    },
-];
+// Define a recursive function to extract properties, including from nested objects
+function extractProperties(feature, properties = {}) {
+  Object.keys(feature).forEach((key) => {
+    if (typeof feature[key] === "object" && feature[key] !== null) {
+      // Recursively add nested properties
+      extractProperties(feature[key], properties);
+    } else {
+      properties[key] = feature[key];
+    }
+  });
+  return properties;
+}
 
+var properties = [
+  {
+    value: "pn",
+    label: "Name",
+    table: {
+      visible: true,
+      sortable: true,
+    },
+    filter: {
+      type: "string",
+      operators: ["equal", "begins with", "contains"],
+    },
+    info: true,
+  },
+  {
+    value: "elements",
+    label: "Elements",
+    table: false,
+    filter: false,
+    info: true,
+  },
+  {
+    value: "cat",
+    label: "Categories",
+    table: false,
+    filter: false,
+    info: true,
+  },
+  /*{
+    value: "el_list",
+    label: "Element",
+    table: false,
+    filter: {
+      type: "string",
+      operators: ["contains"],
+    },
+    info: false,
+  },
+  {
+    value: "lang",
+    label: "Language",
+    table: false,
+    filter: {
+      type: "string",
+      operators: ["contains"],
+    },
+    info: false,
+  },*/
+  {
+    value: "notes",
+    label: "Notes",
+    table: false,
+    filter: false,
+    info: true,
+  },
+  {
+    value: "Hist_forms",
+    label: "Historical Forms",
+    table: false,
+    filter: {
+      type: "string",
+      operators: ["contains"],
+    },
+    info: false,
+  },
+  {
+    value: "date",
+    label: "Date",
+    table: false,
+    filter: {
+      type: "string",
+      operators: ["contains"],
+    },
+    info: false,
+  },
+  {
+    value: "sources",
+    label: "Source",
+    table: false,
+    filter: {
+      type: "string",
+      operators: ["contains"],
+    },
+    info: false,
+  },
+  {
+    value: "parish",
+    label: "Parish",
+    table: {
+      visible: true,
+      sortable: true,
+    },
+    filter: {
+      type: "string",
+      input: "checkbox",
+      vertical: true,
+      multiple: true,
+      operators: ["in", "not_in"],
+      values: [],
+    },
+  },
+
+  {
+    value: "grid_ref",
+    label: "Grid Ref",
+    table: {
+      visible: true,
+      sortable: false,
+    },
+    filter: false,
+  },
+  {
+    value: "rel2",
+    label: "Historical Forms",
+    table: false,
+    filter: false,
+    info: true,
+  },
+  {
+    value: "photos_url",
+    label: "Photos",
+    table: {
+      visible: true,
+      sortable: true,
+      formatter: urlFormatter,
+    },
+    filter: false,
+    table: false,
+    info: true,
+  },
+  {
+    value: "image",
+    label: "Image",
+    table: {
+      visible: true,
+      sortable: true,
+    },
+    filter: false,
+    table: false,
+    info: true,
+  },
+];
 
 function drawCharts() {
   // Status
@@ -507,27 +549,15 @@ var featureLayer = L.geoJson(null, {
   },
 });
 
-// Fetch the GeoJSON file
+// Fetch the GeoJSON file and process nested properties
 $.getJSON(config.geojson, function (data) {
-    geojson = data;
-    features = $.map(geojson.features, function (feature) {
-        return {
-            pn: properties.pn,
-            details.elements: properties.details.elements,
-            cat: properties.details.cat,
-            notes: properties.details.notes,
-            Hist_forms: properties.details.Hist_forms,
-            date: properties.date,
-            sources: properties.sources,
-            parish: properties.parish,
-            grid_ref: properties.grid_ref,
-            photos_url: properties.photos_url,
-            image: properties.image
-        };
-    });
-    featureLayer.addData(data);
-    buildConfig();
-    $("#loading-mask").hide();
+  geojson = data;
+  features = geojson.features.map((feature) =>
+    extractProperties(feature.properties || {})
+  );
+  featureLayer.addData(data);
+  buildConfig();
+  $("#loading-mask").hide();
 });
 
 var map = L.map("map", {
@@ -672,72 +702,66 @@ function syncTable() {
 }
 
 function identifyFeature(id) {
-  var featureProperties = featureLayer.getLayer(id).feature.properties;
+  // Retrieve the feature and extract all properties (including nested ones)
+  var feature = featureLayer.getLayer(id).feature;
+  var featureProperties = extractProperties(feature.properties || {});
 
+  // HTML content for the main table
   var content =
     "<table class='table table-striped table-bordered table-condensed'>";
+  var hfContent = ""; // HTML for historical forms if needed
+  var name = ""; // Name to display as a title
 
-  var hfContent = ""; //another string to stick the historical form content into
-
-  var notesContent ="";
-
-  var name = "";
-
+  // Loop through each property and display in the modal, handling specific cases
   $.each(featureProperties, function (key, value) {
     if (!value) {
       value = "";
     }
 
+    // Convert URLs to clickable links if needed
     if (
-      typeof value == "string" &&
-      (value.indexOf("http") === 0 || value.indexOf("https") === 0)
+      typeof value === "string" &&
+      (value.startsWith("http") || value.startsWith("https"))
     ) {
-      value = "<a href='" + value + "' target='_blank'>" + value + "</a>";
+      value = `<a href="${value}" target="_blank">${value}</a>`;
     }
 
+    // Match property label with the defined properties for display
     $.each(properties, function (index, property) {
-      if (key == property.value) {
+      if (key === property.value) {
         if (property.info !== false) {
-          if (property.label != "Historical Forms") {
-            //regular properties here
-
-            content +=
-              "<tr><th>" + property.label + "</th><td>" + value + "</td></tr>";
+          // Separate handling for regular properties and "Historical Forms"
+          if (property.label !== "Historical Forms") {
+            content += `<tr><th>${property.label}</th><td>${value}</td></tr>`;
           } else {
-            //if we have a historical form we handle this separately (could be a completely different layout if required - here we have a table that just displays the values)
-
-            hfContent += "<tr><td>" + value + "</td></tr>";
+            hfContent += `<tr><td>${value}</td></tr>`;
           }
-          if (property.label == "Name") {
-            name += "<h4>"+ value + "</h4>";
+          // Title display for "Name" field
+          if (property.label === "Name") {
+            name = `<h4>${value}</h4>`;
           }
         }
       }
     });
   });
 
-
-  content += "</table>"; // I think this should actually be </table>
+  content += "</table>";
   $("#feature-info").html(content);
-  //now we can choose to add in the hf tab if we have any historical forms
-  
-  name 
   $("#name").html(name);
 
+  // Add Historical Forms table if there is content
   if (hfContent) {
-    // for now just adding as a table underneath the main table with a heading above it
-
-    content =
+    hfContent =
       "<table class='table table-striped table-bordered table-condensed'>" +
       hfContent +
       "</table>";
-    $("#hffeature-info").html(content);
+    $("#hffeature-info").html(hfContent);
   }
 
-
-
+  // Show the modal dialog with the feature information
   $("#featureModal").modal("show");
 }
+
 
 function switchView(view) {
   if (view == "split") {
