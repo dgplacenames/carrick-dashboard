@@ -1,5 +1,5 @@
 var config = {
-  geojson: "blank.geojson",
+  geojson: "carrick2.geojson",
   title: "Carrick Place-Names",
   layerName: "Place-Names",
   hoverProperty: "pn",
@@ -7,10 +7,15 @@ var config = {
   sortOrder: "",
 };
 
-// Function to handle new GeoJSON data and reset layers
+// Function to load GeoJSON from user upload
 function loadGeoJSONData(data) {
-  // Parse and process the GeoJSON file as with the initial load
   geojson = data;
+
+  // Set config title based on "name" property if available
+  if (geojson.name) {
+    config.title = geojson.name +  " Place-Names"; // Update config title
+    $(".title").html(config.title); // Update any HTML elements showing the title
+  }
 
   // Clear the existing feature layer and reload it with the new data
   featureLayer.clearLayers();
