@@ -121,7 +121,7 @@ var properties = [
   {
     value: "lang",
     label: "Language",
-    table: true,
+    table:  { visible: true, sortable: true },
     filter: { type: "string", operators: ["contains"] },
     info: true,
   },
