@@ -111,14 +111,14 @@ var properties = [
   },
 {
     value: "elements_combined",
-    label: "Elements",
+    label: "Elements Combined",
     table: { visible: true, sortable: false },
     filter: false,
     info: true,
   },
   {
     value: "els_combined",
-    label: "Els",
+    label: "Els Combined",
     table: { visible: true, sortable: false },
     filter: false,
     info: true,
