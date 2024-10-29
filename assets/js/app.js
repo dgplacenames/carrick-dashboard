@@ -86,7 +86,7 @@ var properties = [
   {
     value: "els",
     label: "Els",
-    table: true,
+    table: { visible: true, sortable: false },
     filter: false,
     info: true,
   },
