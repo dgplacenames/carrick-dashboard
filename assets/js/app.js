@@ -22,16 +22,10 @@ function extractProperties(feature, properties = {}) {
 
 var properties = [
   {
-    value: "pn",
-    label: "Name",
-    table: {
-      visible: true,
-      sortable: true,
-    },
-    filter: {
-      type: "string",
-      operators: ["equal", "begins with", "contains"],
-    },
+    value: "Feature",
+    label: "Feature",
+    table: { visible: true, sortable: true },
+    filter: { type: "string", operators: ["contains"] },
     info: true,
   },
   {
@@ -42,126 +36,112 @@ var properties = [
     info: true,
   },
   {
-    value: "cat",
-    label: "Categories",
-    table: false,
-    filter: false,
-    info: true,
-  },
-  /*{
-    value: "el_list",
-    label: "Element",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
-    },
-    info: false,
-  },
-  {
-    value: "lang",
-    label: "Language",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
-    },
-    info: false,
-  },*/
-  {
-    value: "notes",
-    label: "Notes",
+    value: "els",
+    label: "Els",
     table: false,
     filter: false,
     info: true,
   },
   {
-    value: "Hist_forms",
-    label: "Historical Forms",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
-    },
-    info: false,
+    value: "fid",
+    label: "FID",
+    table: { visible: true, sortable: true },
+    filter: { type: "integer", operators: ["equal", "greater", "less"] },
+    info: true,
   },
   {
-    value: "date",
-    label: "Date",
+    value: "forms",
+    label: "Forms",
     table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
-    },
-    info: false,
+    filter: false,
+    info: true,
   },
-  {
-    value: "sources",
-    label: "Source",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
-    },
-    info: false,
-  },
-  {
-    value: "parish",
-    label: "Parish",
-    table: {
-      visible: true,
-      sortable: true,
-    },
-    filter: {
-      type: "string",
-      input: "checkbox",
-      vertical: true,
-      multiple: true,
-      operators: ["in", "not_in"],
-      values: [],
-    },
-  },
-
   {
     value: "grid_ref",
-    label: "Grid Ref",
-    table: {
-      visible: true,
-      sortable: false,
-    },
-    filter: false,
-  },
-  {
-    value: "rel2",
-    label: "Historical Forms",
-    table: false,
-    filter: false,
-    info: true,
-  },
-  {
-    value: "photos_url",
-    label: "Photos",
-    table: {
-      visible: true,
-      sortable: true,
-      formatter: urlFormatter,
-    },
-    filter: false,
-    table: false,
+    label: "Grid Reference",
+    table: { visible: true, sortable: true },
+    filter: { type: "string", operators: ["contains"] },
     info: true,
   },
   {
     value: "image",
     label: "Image",
-    table: {
-      visible: true,
-      sortable: true,
-    },
+    table: { visible: true, sortable: true, formatter: urlFormatter },
     filter: false,
-    table: false,
     info: true,
   },
+  {
+    value: "lang",
+    label: "Language",
+    table: false,
+    filter: { type: "string", operators: ["contains"] },
+    info: true,
+  },
+  {
+    value: "latitude",
+    label: "Latitude",
+    table: { visible: true, sortable: true },
+    filter: { type: "double", operators: ["equal", "greater", "less"] },
+    info: true,
+  },
+  {
+    value: "longitude",
+    label: "Longitude",
+    table: { visible: true, sortable: true },
+    filter: { type: "double", operators: ["equal", "greater", "less"] },
+    info: true,
+  },
+  {
+    value: "osgb_east",
+    label: "OSGB East",
+    table: { visible: true, sortable: true },
+    filter: { type: "integer", operators: ["equal", "greater", "less"] },
+    info: true,
+  },
+  {
+    value: "osgb_north",
+    label: "OSGB North",
+    table: { visible: true, sortable: true },
+    filter: { type: "integer", operators: ["equal", "greater", "less"] },
+    info: true,
+  },
+  {
+    value: "parish",
+    label: "Parish",
+    table: { visible: true, sortable: true },
+    filter: { type: "string", input: "checkbox", multiple: true, operators: ["in", "not_in"] },
+    info: true,
+  },
+  {
+    value: "photos_url",
+    label: "Photos URL",
+    table: { visible: true, sortable: true, formatter: urlFormatter },
+    filter: false,
+    info: true,
+  },
+  {
+    value: "pn",
+    label: "Place Name",
+    table: { visible: true, sortable: true },
+    filter: { type: "string", operators: ["equal", "begins with", "contains"] },
+    info: true,
+  },
+  {
+    value: "pn_disambig",
+    label: "Disambiguation",
+    table: false,
+    filter: false,
+    info: true,
+  },
+  {
+    value: "pn_id",
+    label: "Place Name ID",
+    table: { visible: true, sortable: true },
+    filter: { type: "integer", operators: ["equal", "greater", "less"] },
+    info: true,
+  }
 ];
+
 
 function drawCharts() {
   // Status
