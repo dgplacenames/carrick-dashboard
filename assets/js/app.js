@@ -109,9 +109,16 @@ var properties = [
     filter: { type: "integer", operators: ["equal", "greater", "less"] },
     info: true,
   },
+{
+    value: "elements_combined",
+    label: "Elements",
+    table: { visible: true, sortable: false },
+    filter: false,
+    info: true,
+  },
   {
     value: "els_combined",
-    label: "Elements Combined",
+    label: "Els",
     table: { visible: true, sortable: false },
     filter: false,
     info: true,
