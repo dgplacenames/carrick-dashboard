@@ -59,11 +59,12 @@ document.getElementById("geojson-upload").addEventListener("change", function (e
 function extractProperties(feature, properties = {}) {
   Object.keys(feature).forEach((key) => {
     if (key === 'els' && Array.isArray(feature[key])) {
-      console.log('Processing els:', feature[key]); // Debugging line
+      // Combine the 'els' entries into a single string
       properties[key] = feature[key]
-        .map(el => `${el.SSE} (${el.enG})`)
-        .join(', ');
+        .map(el => `${el.SSE} (${el.enG})`) // Format as "SSE (enG)"
+        .join(', '); // Join with a comma
     } else if (typeof feature[key] === "object" && feature[key] !== null) {
+      // Recursively add nested properties
       extractProperties(feature[key], properties);
     } else {
       properties[key] = feature[key];
