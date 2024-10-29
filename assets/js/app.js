@@ -954,3 +954,34 @@ $("#download-pdf-btn").click(function () {
 $("#chartModal").on("shown.bs.modal", function (e) {
   drawCharts();
 });
+
+function filterByLanguage() {
+  // Get the selected language from the dropdown
+  const selectedLanguage = document.getElementById("language-filter").value;
+  
+  if (selectedLanguage) {
+    // Filter features by the selected language
+    filterLanguage(selectedLanguage);
+  } else {
+    // If no language selected, reload all features
+    featureLayer.clearLayers();
+    featureLayer.addData(geojson.features);
+    syncTable();
+  }
+}
+
+// Updated filterLanguage function to filter based on `elements->lang` with AlaSQL
+function filterLanguage(lang) {
+  const query = `
+    SELECT features.*
+    FROM ? AS features
+    OUTER APPLY features->elements AS el
+    WHERE el->lang LIKE '%' + ? + '%'
+  `;
+  
+  alasql(query, [geojson.features, lang], function (filteredFeatures) {
+    featureLayer.clearLayers();        // Clear existing layers
+    featureLayer.addData(filteredFeatures); // Add filtered data to the map
+    syncTable();                       // Synchronize with the table
+  });
+}
