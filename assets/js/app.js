@@ -61,6 +61,12 @@ function extractProperties(feature, properties = {}) {
     if (typeof feature[key] === "object" && feature[key] !== null) {
       // Recursively add nested properties
       extractProperties(feature[key], properties);
+	  if (typeof feature[key] === "object" && feature[key] !== null) {
+		  // Recursively add nested properties
+		  extractProperties(feature[key], properties);
+		} else {
+		  properties[key] = feature[key];
+		}
     } else {
       properties[key] = feature[key];
     }
