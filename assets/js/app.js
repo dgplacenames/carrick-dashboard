@@ -741,20 +741,34 @@ function buildTable() {
   });
 }
 
-function syncTable() {
+function syncTable(filterTerm = "") {
   let tableFeatures = [];
 
   // Loop through each feature layer to collect features within the map's current bounds
   featureLayer.eachLayer(function (layer) {
     // Only add features within the map's current bounds
     if (map.getBounds().contains(layer.getBounds())) {
-      // Include a unique ID for each feature if needed, such as a "fid" property
-      layer.feature.properties.leaflet_stamp = L.stamp(layer);
-      tableFeatures.push(layer.feature.properties);
+      // Combine "els" properties into a single string for filtering if not already set
+      if (!layer.feature.properties.els_combined && layer.feature.properties.els) {
+        layer.feature.properties.els_combined = Object.entries(layer.feature.properties.els)
+          .map(([key, value]) => `${key}: ${value}`)
+          .join(", ");
+      }
+
+      // Apply filter to "els_combined" if a filter term is provided
+      if (
+        filterTerm === "" || // No filter term, include all features
+        (layer.feature.properties.els_combined &&
+          layer.feature.properties.els_combined.includes(filterTerm))
+      ) {
+        // Add a unique ID and push to table features
+        layer.feature.properties.leaflet_stamp = L.stamp(layer);
+        tableFeatures.push(layer.feature.properties);
+      }
     }
   });
 
-  // Update the table with the features in the current map bounds
+  // Update the table with the features in the current map bounds and matching the filter term
   $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableFeatures)));
 
   // Update the feature count display
@@ -763,6 +777,7 @@ function syncTable() {
     `${featureCount} visible ${featureCount === 1 ? "feature" : "features"}`
   );
 }
+
 
 
 function identifyFeature(id) {
@@ -962,7 +977,7 @@ function filterByLanguage() {
   
   if (selectedLanguage) {
     // Filter features by the selected language
-    filterLanguage(selectedLanguage);
+    syncTable(selectedLanguage);
   } else {
     // If no language selected, reload all features
     featureLayer.clearLayers();
