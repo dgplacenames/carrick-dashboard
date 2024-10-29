@@ -110,7 +110,7 @@ var properties = [
   {
     value: "fid",
     label: "FID",
-    table: { visible: true, sortable: true },
+    table: { visible: false, sortable: false },
     filter: { type: "integer", operators: ["equal", "greater", "less"] },
     info: true,
   },
