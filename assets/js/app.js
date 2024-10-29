@@ -54,6 +54,7 @@ document.getElementById("geojson-upload").addEventListener("change", function (e
 });
 
 
+
 // Define a recursive function to extract properties, including from nested objects
 function extractProperties(feature, properties = {}) {
   Object.keys(feature).forEach((key) => {
