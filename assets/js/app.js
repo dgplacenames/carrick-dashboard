@@ -742,27 +742,28 @@ function buildTable() {
 }
 
 function syncTable() {
-  tableFeatures = [];
+  let tableFeatures = [];
+
+  // Loop through each feature layer to collect features within the map's current bounds
   featureLayer.eachLayer(function (layer) {
-    layer.feature.properties.leaflet_stamp = L.stamp(layer);
-    if (map.hasLayer(featureLayer)) {
-      if (map.getBounds().contains(layer.getBounds())) {
-        tableFeatures.push(layer.feature.properties);
-      }
+    // Only add features within the map's current bounds
+    if (map.getBounds().contains(layer.getBounds())) {
+      // Include a unique ID for each feature if needed, such as a "fid" property
+      layer.feature.properties.leaflet_stamp = L.stamp(layer);
+      tableFeatures.push(layer.feature.properties);
     }
   });
+
+  // Update the table with the features in the current map bounds
   $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableFeatures)));
-  var featureCount = $("#table").bootstrapTable("getData").length;
-  if (featureCount == 1) {
-    $("#feature-count").html(
-      $("#table").bootstrapTable("getData").length + " visible feature"
-    );
-  } else {
-    $("#feature-count").html(
-      $("#table").bootstrapTable("getData").length + " visible features"
-    );
-  }
+
+  // Update the feature count display
+  const featureCount = tableFeatures.length;
+  $("#feature-count").html(
+    `${featureCount} visible ${featureCount === 1 ? "feature" : "features"}`
+  );
 }
+
 
 function identifyFeature(id) {
   // Retrieve the feature and extract all properties (including nested ones)
