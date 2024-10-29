@@ -59,7 +59,9 @@ function extractProperties(feature, properties = {}) {
   Object.keys(feature).forEach((key) => {
     if (key === 'els' && Array.isArray(feature[key])) {
       // Combine the 'els' entries into a single string
-      properties[key] = feature[key].map(el => `${el.SSE} (${el.enG})`).join(', ');
+      properties[key] = feature[key]
+        .map(el => `${el.SSE} (${el.enG})`) // Format as "SSE (enG)"
+        .join(', '); // Join with a comma
     } else if (typeof feature[key] === "object" && feature[key] !== null) {
       // Recursively add nested properties
       extractProperties(feature[key], properties);
@@ -85,13 +87,13 @@ var properties = [
     filter: false,
     info: true,
   },
-  {
-    value: "els",
-    label: "Els",
-    table: { visible: true, sortable: false },
-    filter: false,
-    info: true,
-  },
+{
+  value: "els",
+  label: "Els",
+  table: { visible: true, sortable: false },
+  filter: false,
+  info: true,
+}
   {
     value: "fid",
     label: "FID",
