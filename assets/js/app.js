@@ -58,17 +58,21 @@ document.getElementById("geojson-upload").addEventListener("change", function (e
 // Define a recursive function to extract properties, including from nested objects
 function extractProperties(feature, properties = {}) {
   Object.keys(feature).forEach((key) => {
-    if (typeof feature[key] === "object" && feature[key] !== null) {
-      if (key === "els") {
-        // Concatenate key-value pairs within "els"
-        properties["els_combined"] = Object.entries(feature[key])
-          .map(([subKey, subValue]) => `${subKey}: ${subValue}`)
-          .join(", ");
-      } else {
-        // Recursively add nested properties
-        extractProperties(feature[key], properties);
-      }
+    if (key === "elements" && Array.isArray(feature[key])) {
+      // Combine each object's "element" field in the "elements" array
+      properties["elements_combined"] = feature[key]
+        .map((element) => `${element.lang}: ${element.element}`)
+        .join(", ");
+    } else if (key === "els" && typeof feature[key] === "object") {
+      // Combine key-value pairs in the "els" object
+      properties["els_combined"] = Object.entries(feature[key])
+        .map(([subKey, subValue]) => `${subKey}: ${subValue}`)
+        .join(", ");
+    } else if (typeof feature[key] === "object" && feature[key] !== null) {
+      // Recursively process other nested objects
+      extractProperties(feature[key], properties);
     } else {
+      // For non-nested fields, copy directly
       properties[key] = feature[key];
     }
   });
