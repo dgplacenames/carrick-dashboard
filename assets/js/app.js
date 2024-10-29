@@ -106,6 +106,13 @@ var properties = [
     info: true,
   },
   {
+    value: "els_combined",
+    label: "Elements Combined",
+    table: { visible: true, sortable: false },
+    filter: false,
+    info: true,
+  },
+  {
     value: "forms",
     label: "Forms",
     table: false,
