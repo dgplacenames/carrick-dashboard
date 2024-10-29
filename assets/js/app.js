@@ -742,7 +742,7 @@ function buildTable() {
 }
 
 function syncTable(filterTerm = "") {
-  let tableFeatures = [];
+  let filteredFeatures = [];
 
   // Loop through each feature layer to collect features within the map's current bounds
   featureLayer.eachLayer(function (layer) {
@@ -761,12 +761,28 @@ function syncTable(filterTerm = "") {
         (layer.feature.properties.els_combined &&
           layer.feature.properties.els_combined.includes(filterTerm))
       ) {
-        // Add a unique ID and push to table features
+        // Add a unique ID and push to filteredFeatures
         layer.feature.properties.leaflet_stamp = L.stamp(layer);
-        tableFeatures.push(layer.feature.properties);
+        filteredFeatures.push(layer.feature);
       }
     }
   });
+
+  // Clear the map's feature layer and reload it with only the filtered features
+  featureLayer.clearLayers();
+  featureLayer.addData(filteredFeatures);
+
+  // Load the filtered features' properties into the table
+  const tableData = filteredFeatures.map(feature => feature.properties);
+  $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableData)));
+
+  // Update the feature count display
+  const featureCount = tableData.length;
+  $("#feature-count").html(
+    `${featureCount} visible ${featureCount === 1 ? "feature" : "features"}`
+  );
+}
+
 
   // Update the table with the features in the current map bounds and matching the filter term
   $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableFeatures)));
