@@ -31,7 +31,7 @@ function loadGeoJSONData(data) {
 
 function fileLoader(file){
 	if (file) {
-	$("#loading-mask").show();
+	//$("#loading-mask").show();
     const reader = new FileReader();
     reader.onload = function (event) {
       try {
@@ -60,6 +60,7 @@ function fileLoader(file){
 // Event listener for file upload
 document.getElementById("geojson-upload").addEventListener("change", function (e) {
   const file = e.target.files[0];
+  $("#loading-mask").show();
   fileLoader(file);
 });
 
@@ -1083,8 +1084,9 @@ $("#geojson-dropdown").on("change", function () {
 
     if (selectedFilePath) {
         $("#loading-mask").show(); // Show loading spinner
-
+		$.getJSON(selectedFilePath, function (data){
         // Fetch the selected GeoJSON file
         fileLoader(selectedFilePath);
+		}
     }
 });
