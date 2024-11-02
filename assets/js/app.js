@@ -29,10 +29,8 @@ function loadGeoJSONData(data) {
   $("#loading-mask").hide();
 }
 
-// Event listener for file upload
-document.getElementById("geojson-upload").addEventListener("change", function (e) {
-  const file = e.target.files[0];
-  if (file) {
+function fileLoader(file){
+	if (file) {
 	$("#loading-mask").show();
     const reader = new FileReader();
     reader.onload = function (event) {
@@ -56,6 +54,13 @@ document.getElementById("geojson-upload").addEventListener("change", function (e
     };
     reader.readAsText(file); // Read file as text
   }
+}
+
+
+// Event listener for file upload
+document.getElementById("geojson-upload").addEventListener("change", function (e) {
+  const file = e.target.files[0];
+  fileLoader(file);
 });
 
 
@@ -1080,12 +1085,6 @@ $("#geojson-dropdown").on("change", function () {
         $("#loading-mask").show(); // Show loading spinner
 
         // Fetch the selected GeoJSON file
-        $.getJSON(selectedFilePath, function (data) {
-            loadGeoJSONData(data); // Use existing function to load the GeoJSON data
-            $("#loading-mask").hide(); // Hide loading spinner
-        }).fail(function () {
-            alert("Failed to load the selected GeoJSON file.");
-            $("#loading-mask").hide();
-        });
+        fileLoader(selectedFilePath);
     }
 });
