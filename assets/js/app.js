@@ -1,11 +1,4 @@
-var config = {
-  geojson: "carrick2.geojson",
-  title: "Carrick Place-Names",
-  layerName: "Place-Names",
-  hoverProperty: "pn",
-  sortProperty: "",
-  sortOrder: "",
-};
+
 
 // Function to load GeoJSON from user upload
 function loadGeoJSONData(data) {
