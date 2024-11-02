@@ -422,17 +422,17 @@ function buildConfig() {
     }
 
     // Table config
-    if (value.table && typeof value.table === "object") {
-      table.push({
-        field: value.value,
-        title: value.label,
-      });
+    if (value.table && typeof value.table === "object" && value.table.visible) {
+        table.push({
+            field: value.value,
+            title: value.label,
+        });
 
-      $.each(value.table, function (key, val) {
-        if (table[index + 1]) {
-          table[index + 1][key] = val;
-        }
-      });
+        $.each(value.table, function (key, val) {
+            if (table[index + 1]) {
+                table[index + 1][key] = val;
+            }
+        });
     }
   });
 
