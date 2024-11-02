@@ -1,4 +1,11 @@
-
+var config = {
+  geojson: "",
+  title: "",
+  layerName: "Place-Names",
+  hoverProperty: "pn",
+  sortProperty: "",
+  sortOrder: "",
+};
 
 // Function to load GeoJSON from user upload
 function loadGeoJSONData(data) {
@@ -1072,13 +1079,13 @@ $("#geojson-dropdown").on("change", function () {
     if (selectedFilePath) {
         $("#loading-mask").show(); // Show loading spinner
 
-        // Fetch the selected GeoJSON file
+        // Fetch the selected GeoJSON file and load it
         $.getJSON(selectedFilePath, function (data) {
-            loadGeoJSONData(data); // Use existing function to load the GeoJSON data
+            loadGeoJSONData(data); // Load the data using the existing function
             $("#loading-mask").hide(); // Hide loading spinner
         }).fail(function () {
             alert("Failed to load the selected GeoJSON file.");
-            $("#loading-mask").hide();
+            $("#loading-mask").hide(); // Hide spinner on error
         });
     }
 });
