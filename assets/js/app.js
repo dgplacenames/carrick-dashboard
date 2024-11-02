@@ -33,18 +33,23 @@ function loadGeoJSONData(data) {
 document.getElementById("geojson-upload").addEventListener("change", function (e) {
   const file = e.target.files[0];
   if (file) {
+	$("#loading-mask").show();
     const reader = new FileReader();
     reader.onload = function (event) {
       try {
         const data = JSON.parse(event.target.result);
         
         // Check if data is a valid GeoJSON
-        if (data.type === "FeatureCollection" && data.features) {
+        if (data.type === "FeatureCollection" && data.features) {			
           loadGeoJSONData(data); // Process the uploaded GeoJSON data
+		  $("#loading-mask").hide();
         } else {
+			$("#loading-mask").hide();
           alert("Invalid GeoJSON file. Please upload a valid GeoJSON FeatureCollection.");
+		  
         }
       } catch (error) {
+		$("#loading-mask").hide();
         console.error("Error reading GeoJSON file:", error);
         alert("There was an error reading the GeoJSON file. Please check the file format.");
       }
