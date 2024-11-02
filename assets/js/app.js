@@ -1051,34 +1051,24 @@ function filterLanguage(lang) {
   });
 }
 
-const availableGeoJSONFiles = [
-    { name: "Carrick Place-Names", path: "carrick2.geojson" },
-    { name: "Sample GeoJSON 1", path: "blank.geojson" },
-    { name: "carrick4", path: "carrick4.geojson" },
-    // Add more files as needed
-];
-
 $(document).ready(function () {
+    const availableGeoJSONFiles = [
+		{ name: "Carrick Place-Names", path: "carrick2.geojson" },
+		{ name: "Sample GeoJSON 1", path: "blank.geojson" },
+		{ name: "carrick4", path: "carrick4.geojson" },
+		// Add more files as needed
+	];
+
+
     const dropdown = $("#geojson-dropdown");
-    
+    if (dropdown.length === 0) {
+        console.error("Dropdown element with ID #geojson-dropdown not found.");
+        return;
+    }
+
+    // Populate dropdown and log each addition
     availableGeoJSONFiles.forEach(file => {
+        console.log("Adding file to dropdown:", file);
         dropdown.append(new Option(file.name, file.path));
     });
-});
-
-$("#geojson-dropdown").on("change", function () {
-    const selectedFilePath = $(this).val();
-
-    if (selectedFilePath) {
-        $("#loading-mask").show(); // Show loading spinner
-
-        // Fetch the selected GeoJSON file
-        $.getJSON(selectedFilePath, function (data) {
-            loadGeoJSONData(data); // Use existing function to load the GeoJSON data
-            $("#loading-mask").hide(); // Hide loading spinner
-        }).fail(function () {
-            alert("Failed to load the selected GeoJSON file.");
-            $("#loading-mask").hide();
-        });
-    }
 });
