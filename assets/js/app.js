@@ -1073,19 +1073,3 @@ $(document).ready(function () {
     });
 });
 
-$("#geojson-dropdown").on("change", function () {
-    const selectedFilePath = $(this).val();
-
-    if (selectedFilePath) {
-        $("#loading-mask").show(); // Show loading spinner
-
-        // Fetch the selected GeoJSON file and load it
-        $.getJSON(selectedFilePath, function (data) {
-            loadGeoJSONData(data); // Load the data using the existing function
-            $("#loading-mask").hide(); // Hide loading spinner
-        }).fail(function () {
-            alert("Failed to load the selected GeoJSON file.");
-            $("#loading-mask").hide(); // Hide spinner on error
-        });
-    }
-});
