@@ -1055,7 +1055,6 @@ $(document).ready(function () {
     const availableGeoJSONFiles = [
 		{ name: "Carrick Place-Names", path: "carrick2.geojson" },
 		{ name: "Sample GeoJSON 1", path: "blank.geojson" },
-		{ name: "carrick4", path: "carrick4.geojson" },
 		// Add more files as needed
 	];
 
