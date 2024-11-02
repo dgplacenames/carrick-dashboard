@@ -714,37 +714,76 @@ function applyFilter() {
 }
 
 function buildTable() {
-  $("#table").bootstrapTable({
-    cache: false,
-    height: $("#table-container").height(),
-    undefinedText: "",
-    striped: false,
-    pagination: false,
-    minimumCountColumns: 1,
-    sortName: config.sortProperty,
-    sortOrder: config.sortOrder,
-    toolbar: "#toolbar",
-    search: true,
-    trimOnSearch: false,
-    showColumns: true,
-    showToggle: true,
-    columns: table,
-    onClickRow: function (row) {
-      // do something!
-    },
-    onDblClickRow: function (row) {
-      // do something!
-    },
-  });
+    // Log current `properties` to verify their `visible` status
+    console.log("Current properties configuration:", properties);
 
-  map.fitBounds(featureLayer.getBounds());
+    // Prepare a fresh table configuration array with visible columns only
+    const tableConfig = [];
 
-  $(window).resize(function () {
-    $("#table").bootstrapTable("resetView", {
-      height: $("#table-container").height(),
+    // Optional: Add an action column if required
+    tableConfig.push({
+        field: "action",
+        title: "<i class='fa fa-gear'></i>&nbsp;Action",
+        align: "center",
+        valign: "middle",
+        width: "75px",
+        cardVisible: false,
+        switchable: false,
+        formatter: function (value, row, index) {
+            return [
+                '<a class="zoom" href="javascript:void(0)" title="Zoom" style="margin-right: 10px;">',
+                '<i class="fa fa-search-plus"></i>',
+                "</a>",
+                '<a class="identify" href="javascript:void(0)" title="Identify">',
+                '<i class="fa fa-info-circle"></i>',
+                "</a>",
+            ].join("");
+        },
     });
-  });
+
+    // Populate tableConfig with properties marked as visible
+    properties.forEach((prop) => {
+        if (prop.table && prop.table.visible) {
+            tableConfig.push({
+                field: prop.value,
+                title: prop.label,
+                sortable: prop.table.sortable || false,
+            });
+        }
+    });
+
+    // Ensure the table is properly configured with visible columns
+    console.log("Table configuration:", tableConfig);
+
+    // Clear existing table data and columns, then reinitialize it with filtered columns
+    $("#table").bootstrapTable("destroy").bootstrapTable({
+        cache: false,                // Prevents caching of column settings
+        columns: tableConfig,         // Use filtered columns array
+        height: $("#table-container").height(),
+        undefinedText: "",
+        striped: false,
+        pagination: false,
+        minimumCountColumns: 1,
+        sortName: config.sortProperty,
+        sortOrder: config.sortOrder,
+        toolbar: "#toolbar",
+        search: true,
+        trimOnSearch: false,
+        showColumns: true,
+        showToggle: true,
+        onClickRow: function (row) {
+            // Handle row click
+        },
+    });
+
+    // Reattach resize event to reset view on window resize
+    $(window).resize(function () {
+        $("#table").bootstrapTable("resetView", {
+            height: $("#table-container").height(),
+        });
+    });
 }
+
 
 function syncTable(filterTerm = "") {
   let filteredFeatures = [];
