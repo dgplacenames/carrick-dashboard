@@ -1,5 +1,5 @@
 var config = {
-  geojson: "",
+  geojson: "blank.geojson",
   title: "",
   layerName: "Place-Names",
   hoverProperty: "pn",
