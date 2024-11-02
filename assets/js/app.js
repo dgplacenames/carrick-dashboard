@@ -1050,3 +1050,35 @@ function filterLanguage(lang) {
     syncTable();                       // Synchronize with the table
   });
 }
+
+const availableGeoJSONFiles = [
+    { name: "Carrick Place-Names", path: "carrick2.geojson" },
+    { name: "Sample GeoJSON 1", path: "blank.geojson" },
+    { name: "carrick4", path: "carrick4.geojson" },
+    // Add more files as needed
+];
+
+$(document).ready(function () {
+    const dropdown = $("#geojson-dropdown");
+    
+    availableGeoJSONFiles.forEach(file => {
+        dropdown.append(new Option(file.name, file.path));
+    });
+});
+
+$("#geojson-dropdown").on("change", function () {
+    const selectedFilePath = $(this).val();
+
+    if (selectedFilePath) {
+        $("#loading-mask").show(); // Show loading spinner
+
+        // Fetch the selected GeoJSON file
+        $.getJSON(selectedFilePath, function (data) {
+            loadGeoJSONData(data); // Use existing function to load the GeoJSON data
+            $("#loading-mask").hide(); // Hide loading spinner
+        }).fail(function () {
+            alert("Failed to load the selected GeoJSON file.");
+            $("#loading-mask").hide();
+        });
+    }
+});
