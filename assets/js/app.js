@@ -60,7 +60,7 @@ function fileLoader(file){
 // Event listener for file upload
 document.getElementById("geojson-upload").addEventListener("change", function (e) {
   const file = e.target.files[0];
-  $("#loading-mask").show();
+  //$("#loading-mask").show();
   fileLoader(file);
 });
 
