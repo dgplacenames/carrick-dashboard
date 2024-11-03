@@ -1079,14 +1079,14 @@ $("#geojson-dropdown").on("change", function () {
     if (selectedFilePath) {
         $("#loading-mask").show(); // Show loading spinner
 
-        // Fetch the selected GeoJSON file and load it
         $.getJSON(selectedFilePath, function (data) {
-            //loadGeoJSONData(data); // Load the data using the existing function
-			console.log("Data read: ", data);
-            $("#loading-mask").hide(); // Hide loading spinner
-        }).fail(function () {
-            alert("Failed to load the selected GeoJSON file.");
-            $("#loading-mask").hide(); // Hide spinner on error
-        });
+		  geojson = data;
+		  features = geojson.features.map((feature) =>
+			extractProperties(feature.properties || {})
+		  );
+		  featureLayer.addData(data);
+		  buildConfig();
+		  $("#loading-mask").hide();
+		});
     }
 });
