@@ -1,6 +1,6 @@
 var config = {
   geojson: "carrick2.geojson",
-  title: "",
+  title: "Test",
   layerName: "Place-Names",
   hoverProperty: "pn",
   sortProperty: "",
