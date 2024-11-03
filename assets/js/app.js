@@ -1078,7 +1078,6 @@ $("#geojson-dropdown").on("change", function () {
 
     if (selectedFilePath) {
         $("#loading-mask").show(); // Show loading spinner
-
         // Fetch the selected GeoJSON file and load it
         $.getJSON(selectedFilePath, function (data) {
             $("#loading-mask").hide(); // Hide loading spinner
