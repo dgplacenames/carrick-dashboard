@@ -1,5 +1,5 @@
 var config = {
-  geojson: "carrick2.geojson",
+  geojson: "blank.geojson",
   title: "Place-Names",
   layerName: "Place-Names",
   hoverProperty: "pn",
@@ -626,10 +626,6 @@ $.getJSON(config.geojson, function (data) {
   featureLayer.addData(data);
   buildConfig();
   $("#loading-mask").hide();
-  featureLayer.clearLayers();
-  features = geojson.features.map((feature) =>
-    extractProperties(feature.properties || {})
-  );
 });
 
 var map = L.map("map", {
@@ -1059,7 +1055,7 @@ function filterLanguage(lang) {
 $(document).ready(function () {
     const availableGeoJSONFiles = [
 		{ name: "Carrick Place-Names", path: "carrick2.geojson" },
-		{ name: "Sample GeoJSON 1", path: "blank.geojson" },
+		{ name: "Sample GeoJSON 1", path: "simple.geojson" },
 		// Add more files as needed
 	];
 

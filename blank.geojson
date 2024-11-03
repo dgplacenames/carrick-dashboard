@@ -4,7 +4,6 @@
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
 { 
-"type": "Feature", 
-"properties": { "fid": 1, "pn_id": 1, "pn": "Abbeymill ", "pn_disambig": "Abbeymill_Kirkoswald", "parish": "Kirkoswald", "osgb_east": 227178.9, "osgb_north": 608355.4, "latitude": 55.33877, "longitude": -4.72651, "grid_ref": "NS271083", "lang": "SSE", "Feature": "building","elements":[{"eid":"1","certainty":"1","role":"Specific","eorder":"1","joiner":"+","lang":"SSE","element":"abbey","pos":"N"},{"eid":"2","certainty":"1","role":"Generic","eorder":"2","joiner":"","lang":"SSE","element":"mill","pos":"N"}]},"geometry": { "type": "Point", "coordinates": [ -4.726470498835803, 55.338772793942134 ] } } 
+} 
 
 ]}
