@@ -1054,8 +1054,8 @@ function filterLanguage(lang) {
 
 $(document).ready(function () {
     const availableGeoJSONFiles = [
-		{ name: "Carrick Place-Names", path: "https://connor-sebastian-s.github.io/carrick-dashboard/carrick2.geojson" },
-		{ name: "Sample GeoJSON 1", path: "https://connor-sebastian-s.github.io/carrick-dashboard/simple.geojson" },
+		{ name: "Carrick Place-Names", path: "carrick2.geojson" },
+		{ name: "Sample GeoJSON 1", path: "simple.geojson" },
 		// Add more files as needed
 	];
 
@@ -1074,7 +1074,7 @@ $(document).ready(function () {
 });
 
 $("#geojson-dropdown").on("change", function () {
-    const selectedFilePath = $(this).val();
+    const selectedFilePath = $(this).path();
 
     if (selectedFilePath) {
         $("#loading-mask").show(); // Show loading spinner
