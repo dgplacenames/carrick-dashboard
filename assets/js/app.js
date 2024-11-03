@@ -1,5 +1,5 @@
 var config = {
-  geojson: "blank.geojson",
+  geojson: "carrick2.geojson",
   title: "Test",
   layerName: "Place-Names",
   hoverProperty: "pn",
@@ -623,7 +623,7 @@ $.getJSON(config.geojson, function (data) {
   features = geojson.features.map((feature) =>
     extractProperties(feature.properties || {})
   );
-  featureLayer.addData(data);
+  //featureLayer.addData(data);
   buildConfig();
   $("#loading-mask").hide();
 });
