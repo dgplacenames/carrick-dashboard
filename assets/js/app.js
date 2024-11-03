@@ -1073,7 +1073,7 @@ $(document).ready(function () {
     });
 });
 
-/* $("#geojson-dropdown").on("change", function () {
+ $("#geojson-dropdown").on("change", function () {
     const selectedFilePath = $(this).val();
 
     if (selectedFilePath) {
@@ -1087,4 +1087,4 @@ $(document).ready(function () {
             $("#loading-mask").hide(); // Hide spinner on error
         });
     }
-}); */
+}); 
