@@ -1080,8 +1080,31 @@ $("#geojson-dropdown").on("change", function () {
         $("#loading-mask").show(); // Show loading spinner
 
         // Fetch the selected GeoJSON file and load it
-        $.getJSON(selectedFilePath, function (data) {
-            loadGeoJSONData(data); // Load the data using the existing function
+        $.getJSON(selectedFilePath, function (file) {
+             if (file) {
+				$("#loading-mask").show();
+				const reader = new FileReader();
+				reader.onload = function (event) {
+				  try {
+					const data = JSON.parse(event.target.result);
+					
+					// Check if data is a valid GeoJSON
+					if (data.type === "FeatureCollection" && data.features) {			
+					  loadGeoJSONData(data); // Process the uploaded GeoJSON data
+					  $("#loading-mask").hide();
+					} else {
+						$("#loading-mask").hide();
+					  alert("Invalid GeoJSON file. Please upload a valid GeoJSON FeatureCollection.");
+					  
+					}
+				  } catch (error) {
+					$("#loading-mask").hide();
+					console.error("Error reading GeoJSON file:", error);
+					alert("There was an error reading the GeoJSON file. Please check the file format.");
+				  }
+				};
+				reader.readAsText(file); // Read file as text
+			  }
             $("#loading-mask").hide(); // Hide loading spinner
         }).fail(function () {
             alert("Failed to load the selected GeoJSON file.");
