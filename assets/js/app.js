@@ -1082,9 +1082,22 @@ $("#geojson-dropdown").on("change", function () {
         $("#loading-mask").show(); // Show loading spinner
 
         $.getJSON(selectedFilePath, function (data) {
-		  geojson = data;
-		  loadGeoJSONData(geojson);
-		  $("#loading-mask").hide();
+			// Set config title based on "name" property if available
+			if (data.name) {
+				config.title = data.name +  " Place-Names"; // Update config title
+				$(".title").html(config.title); // Update any HTML elements showing the title
+			}
+
+			// Clear the existing feature layer and reload it with the new data
+			featureLayer.clearLayers();
+			features = data.features.map((feature) =>
+			extractProperties(feature.properties || {})
+			);
+
+			featureLayer.addData(data);
+			buildConfig(); // Rebuild filters and table based on new data
+			map.fitBounds(featureLayer.getBounds());
+			$("#loading-mask").hide();
 		});
     }
 });
