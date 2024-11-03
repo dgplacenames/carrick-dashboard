@@ -1075,7 +1075,6 @@ $(document).ready(function () {
 
 $("#geojson-dropdown").on("change", function () {
     const selectedFilePath = $(this).val();
-
     if (selectedFilePath) {
         $("#loading-mask").show(); // Show loading spinner
         // Fetch the selected GeoJSON file and load it
