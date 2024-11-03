@@ -716,6 +716,7 @@ function applyFilter() {
 function buildTable() {
     // Log current `properties` to verify their `visible` status
     console.log("Current properties configuration:", properties);
+	featureLayer.clearLayers();
 
     // Prepare a fresh table configuration array with visible columns only
     const tableConfig = [];
