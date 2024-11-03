@@ -1074,6 +1074,7 @@ $(document).ready(function () {
 });
 
 $("#geojson-dropdown").on("change", function () {
+	featureLayer.clearLayers();
     const selectedFilePath = $(this).val();
 	console.log("Path:", selectedFilePath);
 
