@@ -625,8 +625,8 @@ $.getJSON(config.geojson, function (data) {
   );
   featureLayer.addData(data);
   buildConfig();
-  //featureLayer.clearLayers();
   $("#loading-mask").hide();
+  featureLayer.clearLayers();
 });
 
 var map = L.map("map", {
