@@ -1082,11 +1082,7 @@ $("#geojson-dropdown").on("change", function () {
 
         $.getJSON(selectedFilePath, function (data) {
 		  geojson = data;
-		  features = geojson.features.map((feature) =>
-			extractProperties(feature.properties || {})
-		  );
-		  featureLayer.addData(data);
-		  buildConfig();
+		  loadGeoJSONData(geojson);
 		  $("#loading-mask").hide();
 		});
     }
