@@ -1074,7 +1074,8 @@ $(document).ready(function () {
 });
 
 $("#geojson-dropdown").on("change", function () {
-    const selectedFilePath = $(this).path();
+    const selectedFilePath = $(this).val();
+	console.log("Path:", selectedFilePath);
 
     if (selectedFilePath) {
         $("#loading-mask").show(); // Show loading spinner
