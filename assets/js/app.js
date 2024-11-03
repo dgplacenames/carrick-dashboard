@@ -618,15 +618,15 @@ var featureLayer = L.geoJson(null, {
 });
 
 // Fetch the GeoJSON file and process nested properties
-$.getJSON(config.geojson, function (data) {
-  geojson = data;
-  features = geojson.features.map((feature) =>
-    extractProperties(feature.properties || {})
-  );
-  featureLayer.addData(data);
-  buildConfig();
-  $("#loading-mask").hide();
-});
+// $.getJSON(config.geojson, function (data) {
+  // geojson = data;
+  // features = geojson.features.map((feature) =>
+    // extractProperties(feature.properties || {})
+  // );
+  // featureLayer.addData(data);
+  // buildConfig();
+  // $("#loading-mask").hide();
+// });
 
 var map = L.map("map", {
   layers: [OSM, featureLayer, highlightLayer],
