@@ -815,14 +815,27 @@ function buildTable() {
     });
 }
 
-function zoomToFeature(leafletStamp) {
-  // Attempt to find the layer by leaflet_stamp ID
-  featureLayer.getLayer(leafletStamp);
+// Create a mapping dictionary when adding layers
+const layerMap = {};
 
-	// Zoom to and highlight the found feature
-	map.fitBounds(featureLayer.getBounds());
-	highlightLayer.clearLayers();
-	highlightLayer.addData(featureLayer.toGeoJSON());
+featureLayer.eachLayer(function (layer) {
+  const id = L.stamp(layer); // Get the leaflet_stamp
+  layer.feature.properties.leaflet_stamp = id;
+  layerMap[id] = layer; // Map id to layer
+});
+
+// Update zoomToFeature to use the custom mapping
+function zoomToFeature(leafletStamp) {
+  const layer = layerMap[leafletStamp]; // Retrieve layer from the custom map
+
+  if (layer) {
+    // Zoom to and highlight the found feature
+    map.fitBounds(layer.getBounds());
+    highlightLayer.clearLayers();
+    highlightLayer.addData(layer.toGeoJSON());
+  } else {
+    console.error("Feature not found on the map for leaflet_stamp:", leafletStamp);
+  }
 }
 
 
