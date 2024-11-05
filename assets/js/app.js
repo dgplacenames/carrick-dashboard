@@ -1047,6 +1047,11 @@ function filterByLanguage() {
     featureLayer.addData(geojson.features);
     syncTable();
   }
+  if (selectedLanguage == "All Languages") {
+	featureLayer.clearLayers();
+	featureLayer.addData(geojson.features);
+	syncTable();
+  }
 }
 
 // Updated filterLanguage function to filter based on `elements->lang` with AlaSQL
