@@ -1054,6 +1054,11 @@ function filterByLanguage() {
     featureLayer.addData(geojson.features); // Reload all features from GeoJSON
     syncTable(); // Synchronize the table with all features
   } else if (selectedLanguage) {
+	  
+	  const filteredFeatures = geojson.features.filter(feature =>
+      feature.properties && feature.properties.lang === selectedLanguage
+    );
+	
     featureLayer.clearLayers();
     featureLayer.addData(filteredFeatures); // Add only the filtered features to the layer
     syncTable(selectedLanguage); // Synchronize the table with the filtered features
