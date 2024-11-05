@@ -802,44 +802,35 @@ function buildTable() {
 function syncTable(filterTerm = "") {
   let filteredFeatures = [];
 
-  // Loop through each feature layer to collect features within the map's current bounds
+  // Collect features within the map's bounds
   featureLayer.eachLayer(function (layer) {
-    // Only add features within the map's current bounds
-    if (map.getBounds().contains(layer.getBounds())) {
-      // Combine "els" properties into a single string for filtering if not already set
-      if (!layer.feature.properties.els_combined && layer.feature.properties.els) {
-        layer.feature.properties.els_combined = Object.entries(layer.feature.properties.els)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(", ");
-      }
-
-      // Apply filter to "els_combined" if a filter term is provided
+    // Check if the feature is within map bounds
+    if (map.getBounds().contains(layer.getLatLng())) {
+      // Optionally apply a filter term if provided
       if (
-        filterTerm === "" || // No filter term, include all features
+        filterTerm === "" || // No filter term
         (layer.feature.properties.els_combined &&
           layer.feature.properties.els_combined.includes(filterTerm))
       ) {
-        // Add a unique ID and push to filteredFeatures
-        layer.feature.properties.leaflet_stamp = L.stamp(layer);
         filteredFeatures.push(layer.feature);
       }
     }
   });
 
-  // Clear the map's feature layer and reload it with only the filtered features
+  // Reload featureLayer with filtered features (if needed)
   featureLayer.clearLayers();
   featureLayer.addData(filteredFeatures);
 
-  // Load the filtered features' properties into the table
-  const tableData = filteredFeatures.map(feature => feature.properties);
+  // Update the table with the filtered data
+  const tableData = filteredFeatures.map((feature) => feature.properties);
   $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableData)));
 
   // Update the feature count display
-  const featureCount = tableData.length;
   $("#feature-count").html(
-    `${featureCount} visible ${featureCount === 1 ? "feature" : "features"}`
+    `${tableData.length} visible ${tableData.length === 1 ? "feature" : "features"}`
   );
 }
+
 
 
 
@@ -1035,22 +1026,22 @@ $("#chartModal").on("shown.bs.modal", function (e) {
 });
 
 function filterByLanguage() {
-  // Get the selected language from the dropdown
   const selectedLanguage = document.getElementById("language-filter").value;
   
-  if (selectedLanguage) {
-    // Filter features by the selected language
-    syncTable(selectedLanguage);
-  } else {
-    // If no language selected, reload all features
+  // If "All Languages" is selected, reload the full dataset
+  if (selectedLanguage === "All Languages") {
+    featureLayer.clearLayers
+    featureLayer.addData(geojson.features); // Reload all features from GeoJSON
+    syncTable(); // Synchronize the table with all features
+  } else if (selectedLanguage) {
+    // Filter features by selected language
+    const filteredFeatures = geojson.features.filter(feature => 
+      feature.properties.lang === selectedLanguage
+    );
+    
     featureLayer.clearLayers();
-    featureLayer.addData(geojson.features);
-    syncTable();
-  }
-  if (selectedLanguage == "All Languages") {
-	featureLayer.clearLayers();
-	featureLayer.addData(geojson.features);
-	syncTable();
+    featureLayer.addData(filteredFeatures); // Add only the filtered features to the layer
+    syncTable(selectedLanguage); // Synchronize the table with the filtered features
   }
 }
 
