@@ -822,7 +822,7 @@ function zoomToFeature(leafletStamp) {
 	// Zoom to and highlight the found feature
 	map.fitBounds(featureLayer.getBounds());
 	highlightLayer.clearLayers();
-	highlightLayer.addData(layer.toGeoJSON());
+	highlightLayer.addData(featureLayer.toGeoJSON());
 }
 
 
