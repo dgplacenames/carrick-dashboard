@@ -787,7 +787,6 @@ function buildTable() {
 		onClickRow: function (row) {
 			  // Zoom to the feature when a row is clicked
 			  console.log(row.leaflet_stamp);
-			  zoomToFeature();
 			},
     });
 
@@ -797,16 +796,6 @@ function buildTable() {
             height: $("#table-container").height(),
         });
     });
-}
-
-function zoomToFeature() {
-
-    
-	// Loop through each feature layer to collect features within the map's current bounds
-  featureLayer.eachLayer(function (layer) {
-    // Only add features within the map's current bounds
-    if (map.getBounds().contains(layer.getBounds()))
-		map.fitBounds(featureLayer.getBounds());
 }
 
 
