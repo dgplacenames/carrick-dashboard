@@ -131,7 +131,7 @@ var properties = [
     label: "Els Combined",
     table: { visible: false, sortable: false },
     filter: false,
-    info: false,
+    info: true,
   },
   {
     value: "forms",
@@ -145,21 +145,21 @@ var properties = [
     label: "Grid Reference",
     table: { visible: true, sortable: true },
     filter: { type: "string", operators: ["contains"] },
-    info: false,
+    info: true,
   },
   {
     value: "image",
     label: "Image",
     table: { visible: false, sortable: false, formatter: urlFormatter },
     filter: false,
-    info: false,
+    info: true,
   },
   {
     value: "lang",
     label: "Language",
     table:  { visible: false, sortable: false },
     filter: { type: "string", operators: ["contains"] },
-    info: false,
+    info: true,
   },
   {
     value: "latitude",
