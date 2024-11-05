@@ -1056,9 +1056,9 @@ function filterByLanguage() {
   } else if (selectedLanguage) {
     syncTable(selectedLanguage)
     
-    //featureLayer.clearLayers();
-    //featureLayer.addData(filteredFeatures); // Add only the filtered features to the layer
-    //syncTable(selectedLanguage); // Synchronize the table with the filtered features
+    featureLayer.clearLayers();
+    featureLayer.addData(filteredFeatures); // Add only the filtered features to the layer
+    syncTable(selectedLanguage); // Synchronize the table with the filtered features
   }
 }
 
