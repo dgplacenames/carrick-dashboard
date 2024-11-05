@@ -341,6 +341,23 @@ $(function () {
   $("#layer-name").html(config.layerName);
 });
 
+function simulateFeatureClick(leafletId) {
+  // Retrieve the feature layer using its Leaflet ID (leaflet_stamp)
+  const featureLayer = window.featureLayer.getLayer(leafletId);
+
+  if (featureLayer) {
+    // Highlight the feature
+    window.highlightLayer.clearLayers();
+    window.highlightLayer.addData(featureLayer.toGeoJSON());
+
+    // Trigger the click event programmatically
+    featureLayer.fire('click');
+  } else {
+    console.error("Feature with the specified ID not found.");
+  }
+}
+
+
 function buildConfig() {
   filters = [];
   table = [
@@ -366,7 +383,8 @@ function buildConfig() {
         "click .zoom": function (e, value, row, index) {
 			const layer = featureLayer.getLayer(row.leaflet_stamp);
 			if (layer) {
-			  map.fitBounds(layer.getBounds());
+			  //map.fitBounds(layer.getBounds());
+			  simulateFeatureClick(row.leaflet_stamp);
 			  //highlightLayer.clearLayers();
 			  //highlightLayer.addData(layer.toGeoJSON());
 			} else {
