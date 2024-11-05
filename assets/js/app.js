@@ -1024,7 +1024,7 @@ $("#download-pdf-btn").click(function () {
 $("#chartModal").on("shown.bs.modal", function (e) {
   drawCharts();
 });
-
+/* 
 function filterByLanguage() {
   // Get the selected language from the dropdown
   const selectedLanguage = document.getElementById("language-filter").value;
@@ -1043,7 +1043,7 @@ function filterByLanguage() {
 	featureLayer.addData(geojson.features);
 	syncTable();
   }
-}
+} */
 
 function filterByLanguage() {
   const selectedLanguage = document.getElementById("language-filter").value;
@@ -1054,8 +1054,6 @@ function filterByLanguage() {
     featureLayer.addData(geojson.features); // Reload all features from GeoJSON
     syncTable(); // Synchronize the table with all features
   } else if (selectedLanguage) {
-    syncTable(selectedLanguage)
-    
     featureLayer.clearLayers();
     featureLayer.addData(filteredFeatures); // Add only the filtered features to the layer
     syncTable(selectedLanguage); // Synchronize the table with the filtered features
