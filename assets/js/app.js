@@ -804,11 +804,11 @@ function syncTable(filterTerm = "") {
 
   // Collect features within the map's bounds
   featureLayer.eachLayer(function (layer) {
-    // Check if the feature is within map bounds
+    // Only add features within the map's current bounds
     if (map.getBounds().contains(layer.getLatLng())) {
-      // Optionally apply a filter term if provided
+      // Apply filter if a filter term is provided, otherwise add all features
       if (
-        filterTerm === "" || // No filter term
+        filterTerm === "" || // No filter term, include all features
         (layer.feature.properties.els_combined &&
           layer.feature.properties.els_combined.includes(filterTerm))
       ) {
@@ -817,19 +817,17 @@ function syncTable(filterTerm = "") {
     }
   });
 
-  // Reload featureLayer with filtered features (if needed)
-  featureLayer.clearLayers();
-  featureLayer.addData(filteredFeatures);
-
-  // Update the table with the filtered data
+  // Update the table with all features if no filter term is provided
   const tableData = filteredFeatures.map((feature) => feature.properties);
   $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableData)));
 
-  // Update the feature count display
+  // Update feature count display
+  const featureCount = tableData.length;
   $("#feature-count").html(
-    `${tableData.length} visible ${tableData.length === 1 ? "feature" : "features"}`
+    `${featureCount} visible ${featureCount === 1 ? "feature" : "features"}`
   );
 }
+
 
 
 
@@ -1047,23 +1045,27 @@ function filterByLanguage() {
 
 function filterByLanguage() {
   const selectedLanguage = document.getElementById("language-filter").value;
-  
-  // If "All Languages" is selected, reload the full dataset
-  if (selectedLanguage === "All Languages") {
-    featureLayer.clearLayers
+
+  if (selectedLanguage === "All Languages" || !selectedLanguage) {
+    // Clear featureLayer and reload all features for "All Languages"
+    featureLayer.clearLayers();
     featureLayer.addData(geojson.features); // Reload all features from GeoJSON
+
     syncTable(); // Synchronize the table with all features
-  } else if (selectedLanguage) {
-	  
-	  const filteredFeatures = geojson.features.filter(feature =>
+  } else {
+    // Filter features by selected language, if defined
+    const filteredFeatures = geojson.features.filter(feature =>
       feature.properties && feature.properties.lang === selectedLanguage
     );
-	
+
+    // Clear and reload featureLayer with only the filtered features
     featureLayer.clearLayers();
-    featureLayer.addData(filteredFeatures); // Add only the filtered features to the layer
+    featureLayer.addData(filteredFeatures);
+    
     syncTable(selectedLanguage); // Synchronize the table with the filtered features
   }
 }
+
 
 // Updated filterLanguage function to filter based on `elements->lang` with AlaSQL
 function filterLanguage(lang) {
