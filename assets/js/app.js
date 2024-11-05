@@ -817,16 +817,12 @@ function buildTable() {
 
 function zoomToFeature(leafletStamp) {
   // Attempt to find the layer by leaflet_stamp ID
-  const layer = featureLayer.getLayer(leafletStamp);
+  featureLayer.getLayer(leafletStamp);
 
-  if (layer) {
-    // Zoom to and highlight the found feature
-    map.fitBounds(layer.getBounds());
-    highlightLayer.clearLayers();
-    highlightLayer.addData(layer.toGeoJSON());
-  } else {
-    console.error("Feature not found on the map for leaflet_stamp:", leafletStamp);
-  }
+	// Zoom to and highlight the found feature
+	map.fitBounds(featureLayer.getBounds());
+	highlightLayer.clearLayers();
+	highlightLayer.addData(layer.toGeoJSON());
 }
 
 
