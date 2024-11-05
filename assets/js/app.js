@@ -362,13 +362,13 @@ function buildConfig() {
   filters = [];
   table = [
     {
-      field: "action",
-      title: "<i class='fa fa-gear'></i>&nbsp;Action",
-      align: "center",
-      valign: "middle",
-      width: "75px",
-      cardVisible: false,
-      switchable: false,
+      //field: "action",
+      //title: "<i class='fa fa-gear'></i>&nbsp;Action",
+      //align: "center",
+      //valign: "middle",
+      //width: "75px",
+      //cardVisible: false,
+      //switchable: false,
       /* formatter: function (value, row, index) {
         return [
           '<a class="zoom" href="javascript:void(0)" title="Zoom" style="margin-right: 10px;">',
