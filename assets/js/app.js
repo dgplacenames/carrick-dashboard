@@ -367,8 +367,8 @@ function buildConfig() {
 			const layer = featureLayer.getLayer(row.leaflet_stamp);
 			if (layer) {
 			  map.fitBounds(layer.getBounds());
-			  highlightLayer.clearLayers();
-			  highlightLayer.addData(layer.toGeoJSON());
+			  //highlightLayer.clearLayers();
+			  //highlightLayer.addData(layer.toGeoJSON());
 			} else {
 			  console.error("Layer not found for zoom action.");
 			}
@@ -377,8 +377,8 @@ function buildConfig() {
 			const layer = featureLayer.getLayer(row.leaflet_stamp);
 			if (layer) {
 			  identifyFeature(row.leaflet_stamp);
-			  highlightLayer.clearLayers();
-			  highlightLayer.addData(layer.toGeoJSON());
+			  //highlightLayer.clearLayers();
+			  //highlightLayer.addData(layer.toGeoJSON());
 			} else {
 			  console.error("Layer not found for identify action.");
 			}
