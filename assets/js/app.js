@@ -746,7 +746,7 @@ function buildTable() {
     const tableConfig = [];
 
     // Optional: Add an action column if required
-    tableConfig.push({
+    /* tableConfig.push({
         field: "action",
         title: "<i class='fa fa-gear'></i>&nbsp;Action",
         align: "center",
@@ -764,7 +764,7 @@ function buildTable() {
                 "</a>",
             ].join("");
         },
-    });
+    }); */
 
     // Populate tableConfig with properties marked as visible
     properties.forEach((prop) => {
@@ -796,9 +796,10 @@ function buildTable() {
         trimOnSearch: false,
         showColumns: true,
         showToggle: true,
-        onClickRow: function (row) {
-            // Handle row click
-        },
+		onClickRow: function (row) {
+			  // Zoom to the feature when a row is clicked
+			  zoomToFeature(row.leaflet_stamp);
+			},
     });
 
     // Reattach resize event to reset view on window resize
