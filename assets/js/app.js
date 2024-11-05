@@ -1026,6 +1026,26 @@ $("#chartModal").on("shown.bs.modal", function (e) {
 });
 
 function filterByLanguage() {
+  // Get the selected language from the dropdown
+  const selectedLanguage = document.getElementById("language-filter").value;
+  
+  if (selectedLanguage) {
+    // Filter features by the selected language
+    syncTable(selectedLanguage);
+  } else {
+    // If no language selected, reload all features
+    featureLayer.clearLayers();
+    featureLayer.addData(geojson.features);
+    syncTable();
+  }
+  if (selectedLanguage === "All Languages") {
+	featureLayer.clearLayers();
+	featureLayer.addData(geojson.features);
+	syncTable();
+  }
+}
+
+function filterByLanguage() {
   const selectedLanguage = document.getElementById("language-filter").value;
   
   // If "All Languages" is selected, reload the full dataset
@@ -1035,8 +1055,8 @@ function filterByLanguage() {
     syncTable(); // Synchronize the table with all features
   } else if (selectedLanguage) {
     // Filter features by selected language
-    const filteredFeatures = geojson.features.filter(feature => 
-      feature.properties.lang === selectedLanguage
+    const filteredFeatures = geojson.features.filter(feature =>
+      feature.properties && feature.properties.lang === selectedLanguage
     );
     
     featureLayer.clearLayers();
