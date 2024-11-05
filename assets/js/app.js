@@ -341,22 +341,6 @@ $(function () {
   $("#layer-name").html(config.layerName);
 });
 
-function simulateFeatureClick(leafletId) {
-  // Retrieve the feature layer using its Leaflet ID (leaflet_stamp)
-  const featureLayer = window.featureLayer.getLayer(leafletId);
-
-  if (featureLayer) {
-    // Highlight the feature
-    window.highlightLayer.clearLayers();
-    window.highlightLayer.addData(featureLayer.toGeoJSON());
-
-    // Trigger the click event programmatically
-    featureLayer.fire('click');
-  } else {
-    console.error("Feature with the specified ID not found.");
-  }
-}
-
 
 function buildConfig() {
   filters = [];
@@ -803,7 +787,7 @@ function buildTable() {
 		onClickRow: function (row) {
 			  // Zoom to the feature when a row is clicked
 			  console.log(row.leaflet_stamp);
-			  zoomToFeature(row.leaflet_stamp);
+			  zoomToFeature();
 			},
     });
 
@@ -815,17 +799,14 @@ function buildTable() {
     });
 }
 
-function zoomToFeature(leafletStamp) {
-  const layer = layerMap[leafletStamp]; // Retrieve layer from the custom map
+function zoomToFeature() {
 
-  if (layer) {
-    // Zoom to and highlight the found feature
-    map.fitBounds(layer.getBounds());
-    //highlightLayer.clearLayers();
-    //highlightLayer.addData(layer.toGeoJSON());
-  } else {
-    console.error("Feature not found on the map for leaflet_stamp:", leafletStamp);
-  }
+    
+	// Loop through each feature layer to collect features within the map's current bounds
+  featureLayer.eachLayer(function (layer) {
+    // Only add features within the map's current bounds
+    if (map.getBounds().contains(layer.getBounds()))
+		map.fitBounds(featureLayer.getBounds());
 }
 
 
