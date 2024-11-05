@@ -1054,14 +1054,11 @@ function filterByLanguage() {
     featureLayer.addData(geojson.features); // Reload all features from GeoJSON
     syncTable(); // Synchronize the table with all features
   } else if (selectedLanguage) {
-    // Filter features by selected language
-    const filteredFeatures = geojson.features.filter(feature =>
-      feature.properties && feature.properties.lang === selectedLanguage
-    );
+    syncTable(selectedLanguage)
     
-    featureLayer.clearLayers();
-    featureLayer.addData(filteredFeatures); // Add only the filtered features to the layer
-    syncTable(selectedLanguage); // Synchronize the table with the filtered features
+    //featureLayer.clearLayers();
+    //featureLayer.addData(filteredFeatures); // Add only the filtered features to the layer
+    //syncTable(selectedLanguage); // Synchronize the table with the filtered features
   }
 }
 
