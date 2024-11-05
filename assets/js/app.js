@@ -810,6 +810,16 @@ function buildTable() {
     });
 }
 
+function zoomToFeature(leafletStamp) {
+  const layer = featureLayer.getLayer(leafletStamp);
+  if (layer) {
+    map.fitBounds(layer.getBounds());
+    highlightLayer.clearLayers();
+    highlightLayer.addData(layer.toGeoJSON());
+  } else {
+    console.error("Feature not found on the map.");
+  }
+}
 
 function syncTable(filterTerm = "") {
   let filteredFeatures = [];
