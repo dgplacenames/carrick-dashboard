@@ -60,21 +60,14 @@
                 <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" name="view" id="graph-only"><i class="fa fa-table"></i> Table View</a></li>
               </ul>
             </li>
-            <li><a id="filter-btn" href="#" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="fa fa-filter fa-white"></i> Filter Data</a></li>
+			
+			
+				/* Adjusting navbar item alignment if needed */
+.navbar-nav .nav-item .form-control {
+  height: auto;
+  padding: 0.375rem 0.75rem;
+}
 
-
-				<input type="file" class="form-control" id="geojson-upload" accept=".geojson">
-			  
-				<select id="language-filter" onchange="filterByLanguage()">
-				  <option value="">All Languages</option>
-				  <option value="SSE">SSE</option>
-				  <option value="enG">enG</option>
-				  <option value="Gaelic">Gaelic</option>
-				</select>
-				
-				<select id="geojson-dropdown">
-					<option value="">Select a GeoJSON file</option>
-				</select>
 		
 
           </ul>
