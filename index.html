@@ -62,12 +62,40 @@
             </li>
 			
 			
-				/* Adjusting navbar item alignment if needed */
-.navbar-nav .nav-item .form-control {
-  height: auto;
-  padding: 0.375rem 0.75rem;
-}
+<!-- Navbar item for Filter button -->
+      <li class="nav-item">
+        <a id="filter-btn" href="#" class="nav-link" data-toggle="collapse" data-target=".navbar-collapse.in">
+          <i class="fa fa-filter fa-white"></i> Filter Data
+        </a>
+      </li>
+      
+      <!-- Navbar item for file upload (wrap with div for consistent styling) -->
+      <li class="nav-item">
+        <div class="nav-link p-0">
+          <input type="file" class="form-control" id="geojson-upload" accept=".geojson">
+        </div>
+      </li>
 
+      <!-- Navbar item for language filter dropdown -->
+      <li class="nav-item">
+        <div class="nav-link p-0">
+          <select id="language-filter" class="form-control" onchange="filterByLanguage()">
+            <option value="">All Languages</option>
+            <option value="SSE">SSE</option>
+            <option value="enG">enG</option>
+            <option value="Gaelic">Gaelic</option>
+          </select>
+        </div>
+      </li>
+
+      <!-- Navbar item for GeoJSON file dropdown -->
+      <li class="nav-item">
+        <div class="nav-link p-0">
+          <select id="geojson-dropdown" class="form-control">
+            <option value="">Select a GeoJSON file</option>
+          </select>
+        </div>
+      </li>
 		
 
           </ul>
