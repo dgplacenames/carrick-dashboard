@@ -459,6 +459,10 @@ function buildConfig() {
         });
     }
   });
+  
+  featureLayer.eachLayer(function (layer) {
+	  layer.feature.properties.leaflet_stamp = L.stamp(layer);
+	});
 
   buildFilters();
   buildTable();
@@ -811,15 +815,19 @@ function buildTable() {
 }
 
 function zoomToFeature(leafletStamp) {
+  // Attempt to find the layer by leaflet_stamp ID
   const layer = featureLayer.getLayer(leafletStamp);
+
   if (layer) {
+    // Zoom to and highlight the found feature
     map.fitBounds(layer.getBounds());
     highlightLayer.clearLayers();
     highlightLayer.addData(layer.toGeoJSON());
   } else {
-    console.error("Feature not found on the map.");
+    console.error("Feature not found on the map for leaflet_stamp:", leafletStamp);
   }
 }
+
 
 function syncTable(filterTerm = "") {
   let filteredFeatures = [];
