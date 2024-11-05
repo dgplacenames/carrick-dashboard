@@ -802,7 +802,7 @@ function buildTable() {
         showToggle: true,
 		onClickRow: function (row) {
 			  // Zoom to the feature when a row is clicked
-			  consolelog(row.leaflet_stamp);
+			  console.log(row.leaflet_stamp);
 			  zoomToFeature(row.leaflet_stamp);
 			},
     });
