@@ -369,7 +369,7 @@ function buildConfig() {
       width: "75px",
       cardVisible: false,
       switchable: false,
-      formatter: function (value, row, index) {
+      /* formatter: function (value, row, index) {
         return [
           '<a class="zoom" href="javascript:void(0)" title="Zoom" style="margin-right: 10px;">',
           '<i class="fa fa-search-plus"></i>',
@@ -401,7 +401,7 @@ function buildConfig() {
 			  console.error("Layer not found for identify action.");
 			}
 		  },
-      },
+      }, */
     },
   ];
 
@@ -462,42 +462,6 @@ function buildConfig() {
 
   buildFilters();
   buildTable();
-  
-// Bind click events for zoom and identify after table is built
-  $(document).on("click", ".zoom", function (e) {
-    const rowIndex = $(this).closest("tr").data("index");
-    const row = $("#table").bootstrapTable("getData")[rowIndex];
-    handleZoom(row.leaflet_stamp);
-  });
-
-  $(document).on("click", ".identify", function (e) {
-    const rowIndex = $(this).closest("tr").data("index");
-    const row = $("#table").bootstrapTable("getData")[rowIndex];
-    handleIdentify(row.leaflet_stamp);
-  });
-}
-
-// Separate handlers for clarity
-function handleZoom(leafletStamp) {
-  const layer = featureLayer.getLayer(leafletStamp);
-  if (layer) {
-    map.fitBounds(layer.getBounds());
-    highlightLayer.clearLayers();
-    highlightLayer.addData(layer.toGeoJSON());
-  } else {
-    console.error("Layer not found for zoom action.");
-  }
-}
-
-function handleIdentify(leafletStamp) {
-  const layer = featureLayer.getLayer(leafletStamp);
-  if (layer) {
-    identifyFeature(leafletStamp);
-    highlightLayer.clearLayers();
-    highlightLayer.addData(layer.toGeoJSON());
-  } else {
-    console.error("Layer not found for identify action.");
-  }
 }
 
 
