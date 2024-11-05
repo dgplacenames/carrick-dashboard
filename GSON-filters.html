@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Load JSON from File</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jQuery-QueryBuilder/2.6.1/css/query-builder.default.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-QueryBuilder/2.6.1/js/query-builder.standalone.min.js"></script>
+</head>
+<body>
+    <input type="file" id="file-input" accept=".geojson,.json" />
+    <div id="builder"></div>
+    <button id="apply-filter">Apply Filter</button>
+    <pre id="output"></pre>
+
+    <script>
+        let geojsonData;
+
+        // Load JSON from file input
+        document.getElementById('file-input').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    geojsonData = JSON.parse(e.target.result);
+                    console.log("GeoJSON data loaded:", geojsonData);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // QueryBuilder initialization and filter function
+        function getNestedValue(obj, path) {
+            return path.split('.').reduce((acc, key) => {
+                const [prop, index] = key.match(/(\w+)(?:\[(\d+)\])?/).slice(1);
+                return acc && acc[prop] ? (index ? acc[prop][index] : acc[prop]) : undefined;
+            }, obj);
+        }
+
+        $('#builder').queryBuilder({
+            filters: [
+                {
+                    id: 'properties.pn_id',
+                    label: 'Place ID',
+                    type: 'integer',
+                    operators: ['equal', 'not_equal']
+                },
+                {
+                    id: 'properties.elements[0].role',
+                    label: 'First Element Role',
+                    type: 'string',
+                    operators: ['equal', 'not_equal', 'contains']
+                }
+            ],
+            operators: [
+                {
+                    type: 'equal',
+                    nb_inputs: 1,
+                    apply_to: ['integer', 'string'],
+                    func: (v1, v2) => v1 === v2
+                },
+                {
+                    type: 'contains',
+                    nb_inputs: 1,
+                    apply_to: ['string'],
+                    func: (v1, v2) => v1 && v1.includes(v2)
+                }
+            ]
+        });
+
+        function filterData(data, rules) {
+            return data.filter(item => {
+                return rules.rules.every(rule => {
+                    const fieldValue = getNestedValue(item, rule.field);
+                    const operatorFunc = $('#builder').queryBuilder('getOperator', rule.operator).func;
+                    return operatorFunc(fieldValue, rule.value);
+                });
+            });
+        }
+
+        $('#apply-filter').on('click', function() {
+            if (!geojsonData) {
+                alert('Please load a JSON file first.');
+                return;
+            }
+            const rules = $('#builder').queryBuilder('getRules');
+            if (!$.isEmptyObject(rules)) {
+                const filteredData = filterData(geojsonData.features, rules);
+                $('#output').text(JSON.stringify(filteredData, null, 2));
+            } else {
+                $('#output').text('No valid rules');
+            }
+        });
+    </script>
+</body>
+</html>

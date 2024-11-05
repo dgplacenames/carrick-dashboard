@@ -1,154 +1,231 @@
 var config = {
-  geojson: "carrick4.geojson",
-  title: "Carrick Place-Names",
+  geojson: "blank.geojson",
+  title: "Place-Names",
   layerName: "Place-Names",
   hoverProperty: "pn",
   sortProperty: "",
   sortOrder: "",
 };
 
+// Function to load GeoJSON from user upload
+function loadGeoJSONData(data) {
+  geojson = data;
+
+  // Set config title based on "name" property if available
+  if (geojson.name) {
+    config.title = geojson.name +  " Place-Names"; // Update config title
+    $(".title").html(config.title); // Update any HTML elements showing the title
+  }
+
+  // Clear the existing feature layer and reload it with the new data
+  featureLayer.clearLayers();
+  features = geojson.features.map((feature) =>
+    extractProperties(feature.properties || {})
+  );
+
+  featureLayer.addData(geojson);
+  buildConfig(); // Rebuild filters and table based on new data
+  map.fitBounds(featureLayer.getBounds());
+  $("#loading-mask").hide();
+}
+
+// Event listener for file upload
+document.getElementById("geojson-upload").addEventListener("change", function (e) {
+  const file = e.target.files[0];
+  if (file) {
+	$("#loading-mask").show();
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      try {
+        const data = JSON.parse(event.target.result);
+        
+        // Check if data is a valid GeoJSON
+        if (data.type === "FeatureCollection" && data.features) {			
+          loadGeoJSONData(data); // Process the uploaded GeoJSON data
+		  $("#loading-mask").hide();
+        } else {
+			$("#loading-mask").hide();
+          alert("Invalid GeoJSON file. Please upload a valid GeoJSON FeatureCollection.");
+		  
+        }
+      } catch (error) {
+		$("#loading-mask").hide();
+        console.error("Error reading GeoJSON file:", error);
+        alert("There was an error reading the GeoJSON file. Please check the file format.");
+      }
+    };
+    reader.readAsText(file); // Read file as text
+  }
+});
+
+
+
+// Define a recursive function to extract properties, including from nested objects
+function extractProperties(feature, properties = {}) {
+  // Default to empty strings for combined fields
+  properties["els_combined"] = "";
+  properties["elements_combined"] = "";
+
+  Object.keys(feature).forEach((key) => {
+    if (key === "elements" && Array.isArray(feature[key])) {
+      // Combine each object's "element" field in the "elements" array
+      properties["elements_combined"] = feature[key]
+        .map((element) => `${element.lang}: ${element.element}`)
+        .join(", ");
+    } else if (key === "els" && typeof feature[key] === "object") {
+      // Combine key-value pairs in the "els" object
+      properties["els_combined"] = Object.entries(feature[key])
+        .map(([subKey, subValue]) => `${subKey}: ${subValue}`)
+        .join(", ");
+    } else if (typeof feature[key] === "object" && feature[key] !== null) {
+      // Recursively process other nested objects
+      extractProperties(feature[key], properties);
+    } else {
+      // For non-nested fields, copy directly
+      properties[key] = feature[key];
+    }
+  });
+  return properties;
+}
+
+
+
 var properties = [
   {
-    value: "pn",
-    label: "Name",
-    table: {
-      visible: true,
-      sortable: true,
-    },
-    filter: {
-      type: "string",
-      operators: ["equal", "begins with", "contains"],
-    },
-    info: true,
+    value: "Feature",
+    label: "Feature",
+    table: { visible: true, sortable: true },
+    filter: { type: "string", operators: ["contains"] },
+    info: false,
   },
   {
     value: "elements",
     label: "Elements",
     table: false,
     filter: false,
-    info: true,
+    info: false,
   },
-  {
-    value: "cat",
-    label: "Categories",
-    table: false,
+{
+    value: "els",
+    label: "Els",
+    table: { visible: false, sortable: false },
     filter: false,
-    info: true,
-  },
-  /*{
-    value: "el_list",
-    label: "Element",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
-    },
     info: false,
   },
   {
-    value: "lang",
-    label: "Language",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
-    },
+    value: "fid",
+    label: "FID",
+    table: { visible: false, sortable: false },
+    filter: { type: "integer", operators: ["equal", "greater", "less"] },
     info: false,
-  },*/
+  },
+{
+    value: "elements_combined",
+    label: "Elements Combined",
+    table: { visible: false, sortable: false },
+    filter: false,
+    info: false,
+  },
   {
-    value: "notes",
-    label: "Notes",
-    table: false,
+    value: "els_combined",
+    label: "Els Combined",
+    table: { visible: false, sortable: false },
     filter: false,
     info: true,
   },
   {
-    value: "Hist_forms",
-    label: "Historical Forms",
+    value: "forms",
+    label: "Forms",
     table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
-    },
+    filter: false,
     info: false,
   },
-  {
-    value: "date",
-    label: "Date",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
-    },
-    info: false,
-  },
-  {
-    value: "sources",
-    label: "Source",
-    table: false,
-    filter: {
-      type: "string",
-      operators: ["contains"],
-    },
-    info: false,
-  },
-  {
-    value: "parish",
-    label: "Parish",
-    table: {
-      visible: true,
-      sortable: true,
-    },
-    filter: {
-      type: "string",
-      input: "checkbox",
-      vertical: true,
-      multiple: true,
-      operators: ["in", "not_in"],
-      values: [],
-    },
-  },
-
   {
     value: "grid_ref",
-    label: "Grid Ref",
-    table: {
-      visible: true,
-      sortable: false,
-    },
-    filter: false,
-  },
-  {
-    value: "rel2",
-    label: "Historical Forms",
-    table: false,
-    filter: false,
-    info: true,
-  },
-  {
-    value: "photos_url",
-    label: "Photos",
-    table: {
-      visible: true,
-      sortable: true,
-      formatter: urlFormatter,
-    },
-    filter: false,
-    table: false,
+    label: "Grid Reference",
+    table: { visible: true, sortable: true },
+    filter: { type: "string", operators: ["contains"] },
     info: true,
   },
   {
     value: "image",
     label: "Image",
-    table: {
-      visible: true,
-      sortable: true,
-    },
+    table: { visible: false, sortable: false, formatter: urlFormatter },
     filter: false,
-    table: false,
     info: true,
   },
+  {
+    value: "lang",
+    label: "Language",
+    table:  { visible: false, sortable: false },
+    filter: { type: "string", operators: ["contains"] },
+    info: true,
+  },
+  {
+    value: "latitude",
+    label: "Latitude",
+    table: { visible: false, sortable: false },
+    filter: { type: "double", operators: ["equal", "greater", "less"] },
+    info: true,
+  },
+  {
+    value: "longitude",
+    label: "Longitude",
+    table: { visible: false, sortable: false },
+    filter: { type: "double", operators: ["equal", "greater", "less"] },
+    info: true,
+  },
+  {
+    value: "osgb_east",
+    label: "OSGB East",
+    table: { visible: false, sortable: false },
+    filter: { type: "integer", operators: ["equal", "greater", "less"] },
+    info: false,
+  },
+  {
+    value: "osgb_north",
+    label: "OSGB North",
+    table: { visible: false, sortable: false },
+    filter: { type: "integer", operators: ["equal", "greater", "less"] },
+    info: false,
+  },
+  {
+    value: "parish",
+    label: "Parish",
+    table: { visible: true, sortable: true },
+    filter: { type: "string", input: "checkbox", multiple: true, operators: ["in", "not_in"] },
+    info: true,
+  },
+  {
+    value: "photos_url",
+    label: "Photos URL",
+    table: { visible: false, sortable: false, formatter: urlFormatter },
+    filter: false,
+    info: true,
+  },
+  {
+    value: "pn",
+    label: "Place Name",
+    table: { visible: true, sortable: true },
+    filter: { type: "string", operators: ["equal", "begins with", "contains"] },
+    info: true,
+  },
+  {
+    value: "pn_disambig",
+    label: "Disambiguation",
+    table: false,
+    filter: false,
+    info: false,
+  },
+  {
+    value: "pn_id",
+    label: "Place Name ID",
+    table: { visible: true, sortable: true },
+    filter: { type: "integer", operators: ["equal", "greater", "less"] },
+    info: true,
+  }
 ];
+
 
 function drawCharts() {
   // Status
@@ -264,18 +341,19 @@ $(function () {
   $("#layer-name").html(config.layerName);
 });
 
+
 function buildConfig() {
   filters = [];
   table = [
     {
-      field: "action",
-      title: "<i class='fa fa-gear'></i>&nbsp;Action",
-      align: "center",
-      valign: "middle",
-      width: "75px",
-      cardVisible: false,
-      switchable: false,
-      formatter: function (value, row, index) {
+      //field: "action",
+      //title: "<i class='fa fa-gear'></i>&nbsp;Action",
+      //align: "center",
+      //valign: "middle",
+      //width: "75px",
+      //cardVisible: false,
+      //switchable: false,
+      /* formatter: function (value, row, index) {
         return [
           '<a class="zoom" href="javascript:void(0)" title="Zoom" style="margin-right: 10px;">',
           '<i class="fa fa-search-plus"></i>',
@@ -287,30 +365,37 @@ function buildConfig() {
       },
       events: {
         "click .zoom": function (e, value, row, index) {
-          map.fitBounds(featureLayer.getLayer(row.leaflet_stamp).getBounds());
-          highlightLayer.clearLayers();
-          highlightLayer.addData(
-            featureLayer.getLayer(row.leaflet_stamp).toGeoJSON()
-          );
-        },
+			const layer = featureLayer.getLayer(row.leaflet_stamp);
+			if (layer) {
+			  //map.fitBounds(layer.getBounds());
+			  simulateFeatureClick(row.leaflet_stamp);
+			  //highlightLayer.clearLayers();
+			  //highlightLayer.addData(layer.toGeoJSON());
+			} else {
+			  console.error("Layer not found for zoom action.");
+			}
+		  },
         "click .identify": function (e, value, row, index) {
-          identifyFeature(row.leaflet_stamp);
-          highlightLayer.clearLayers();
-          highlightLayer.addData(
-            featureLayer.getLayer(row.leaflet_stamp).toGeoJSON()
-          );
-        },
-      },
+			const layer = featureLayer.getLayer(row.leaflet_stamp);
+			if (layer) {
+			  identifyFeature(row.leaflet_stamp);
+			  //highlightLayer.clearLayers();
+			  //highlightLayer.addData(layer.toGeoJSON());
+			} else {
+			  console.error("Layer not found for identify action.");
+			}
+		  },
+      }, */
     },
   ];
 
   $.each(properties, function (index, value) {
     // Filter config
-    if (value.filter) {
+    if (value.filter && typeof value.filter === "object") {
       var id;
-      if (value.filter.type == "integer") {
+      if (value.filter.type === "integer") {
         id = "cast(properties->" + value.value + " as int)";
-      } else if (value.filter.type == "double") {
+      } else if (value.filter.type === "double") {
         id = "cast(properties->" + value.value + " as double)";
       } else {
         id = "properties->" + value.value;
@@ -319,10 +404,11 @@ function buildConfig() {
         id: id,
         label: value.label,
       });
+
       $.each(value.filter, function (key, val) {
         if (filters[index]) {
           // If values array is empty, fetch all distinct values
-          if (key == "values" && val.length === 0) {
+          if (key === "values" && Array.isArray(val) && val.length === 0) {
             alasql(
               "SELECT DISTINCT(properties->" +
                 value.value +
@@ -342,23 +428,30 @@ function buildConfig() {
         }
       });
     }
+
     // Table config
-    if (value.table) {
-      table.push({
-        field: value.value,
-        title: value.label,
-      });
-      $.each(value.table, function (key, val) {
-        if (table[index + 1]) {
-          table[index + 1][key] = val;
-        }
-      });
+    if (value.table && typeof value.table === "object" && value.table.visible) {
+        table.push({
+            field: value.value,
+            title: value.label,
+        });
+
+        $.each(value.table, function (key, val) {
+            if (table[index + 1]) {
+                table[index + 1][key] = val;
+            }
+        });
     }
   });
+  
+  featureLayer.eachLayer(function (layer) {
+	  layer.feature.properties.leaflet_stamp = L.stamp(layer);
+	});
 
   buildFilters();
   buildTable();
 }
+
 
 // Basemap Layers
 
@@ -536,12 +629,12 @@ var featureLayer = L.geoJson(null, {
   },
 });
 
-// Fetch the GeoJSON file
+// Fetch the GeoJSON file and process nested properties
 $.getJSON(config.geojson, function (data) {
   geojson = data;
-  features = $.map(geojson.features, function (feature) {
-    return feature.properties;
-  });
+  features = geojson.features.map((feature) =>
+    extractProperties(feature.properties || {})
+  );
   featureLayer.addData(data);
   buildConfig();
   $("#loading-mask").hide();
@@ -633,128 +726,173 @@ function applyFilter() {
 }
 
 function buildTable() {
-  $("#table").bootstrapTable({
-    cache: false,
-    height: $("#table-container").height(),
-    undefinedText: "",
-    striped: false,
-    pagination: false,
-    minimumCountColumns: 1,
-    sortName: config.sortProperty,
-    sortOrder: config.sortOrder,
-    toolbar: "#toolbar",
-    search: true,
-    trimOnSearch: false,
-    showColumns: true,
-    showToggle: true,
-    columns: table,
-    onClickRow: function (row) {
-      // do something!
-    },
-    onDblClickRow: function (row) {
-      // do something!
-    },
-  });
+    // Log current `properties` to verify their `visible` status
+    console.log("Current properties configuration:", properties);
+	//featureLayer.clearLayers();
 
-  map.fitBounds(featureLayer.getBounds());
+    // Prepare a fresh table configuration array with visible columns only
+    const tableConfig = [];
 
-  $(window).resize(function () {
-    $("#table").bootstrapTable("resetView", {
-      height: $("#table-container").height(),
+    // Optional: Add an action column if required
+    /* tableConfig.push({
+        field: "action",
+        title: "<i class='fa fa-gear'></i>&nbsp;Action",
+        align: "center",
+        valign: "middle",
+        width: "75px",
+        cardVisible: false,
+        switchable: false,
+        formatter: function (value, row, index) {
+            return [
+                '<a class="zoom" href="javascript:void(0)" title="Zoom" style="margin-right: 10px;">',
+                '<i class="fa fa-search-plus"></i>',
+                "</a>",
+                '<a class="identify" href="javascript:void(0)" title="Identify">',
+                '<i class="fa fa-info-circle"></i>',
+                "</a>",
+            ].join("");
+        },
+    }); */
+
+    // Populate tableConfig with properties marked as visible
+    properties.forEach((prop) => {
+        if (prop.table && prop.table.visible) {
+            tableConfig.push({
+                field: prop.value,
+                title: prop.label,
+                sortable: prop.table.sortable || false,
+            });
+        }
     });
-  });
+
+    // Ensure the table is properly configured with visible columns
+    console.log("Table configuration:", tableConfig);
+
+    // Clear existing table data and columns, then reinitialize it with filtered columns
+    $("#table").bootstrapTable("destroy").bootstrapTable({
+        cache: false,                // Prevents caching of column settings
+        columns: tableConfig,         // Use filtered columns array
+        height: $("#table-container").height(),
+        undefinedText: "",
+        striped: false,
+        pagination: false,
+        minimumCountColumns: 1,
+        sortName: config.sortProperty,
+        sortOrder: config.sortOrder,
+        toolbar: "#toolbar",
+        search: true,
+        trimOnSearch: false,
+        showColumns: true,
+        showToggle: true,
+		onClickRow: function (row) {
+			  // Zoom to the feature when a row is clicked
+			  console.log(row.leaflet_stamp);
+			},
+    });
+
+    // Reattach resize event to reset view on window resize
+    $(window).resize(function () {
+        $("#table").bootstrapTable("resetView", {
+            height: $("#table-container").height(),
+        });
+    });
 }
 
-function syncTable() {
-  tableFeatures = [];
+
+function syncTable(filterTerm = "") {
+  let filteredFeatures = [];
+
+  // Collect features within the map's bounds
   featureLayer.eachLayer(function (layer) {
-    layer.feature.properties.leaflet_stamp = L.stamp(layer);
-    if (map.hasLayer(featureLayer)) {
-      if (map.getBounds().contains(layer.getBounds())) {
-        tableFeatures.push(layer.feature.properties);
+    // Only add features within the map's current bounds
+    if (map.getBounds().contains(layer.getLatLng())) {
+      // Apply filter if a filter term is provided, otherwise add all features
+      if (
+        filterTerm === "" || // No filter term, include all features
+        (layer.feature.properties.els_combined &&
+          layer.feature.properties.els_combined.includes(filterTerm))
+      ) {
+        filteredFeatures.push(layer.feature);
       }
     }
   });
-  $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableFeatures)));
-  var featureCount = $("#table").bootstrapTable("getData").length;
-  if (featureCount == 1) {
-    $("#feature-count").html(
-      $("#table").bootstrapTable("getData").length + " visible feature"
-    );
-  } else {
-    $("#feature-count").html(
-      $("#table").bootstrapTable("getData").length + " visible features"
-    );
-  }
+
+  // Update the table with all features if no filter term is provided
+  const tableData = filteredFeatures.map((feature) => feature.properties);
+  $("#table").bootstrapTable("load", JSON.parse(JSON.stringify(tableData)));
+
+  // Update feature count display
+  const featureCount = tableData.length;
+  $("#feature-count").html(
+    `${featureCount} visible ${featureCount === 1 ? "feature" : "features"}`
+  );
 }
 
-function identifyFeature(id) {
-  var featureProperties = featureLayer.getLayer(id).feature.properties;
 
+
+
+
+function identifyFeature(id) {
+  // Retrieve the feature and extract all properties (including nested ones)
+  var feature = featureLayer.getLayer(id).feature;
+  var featureProperties = extractProperties(feature.properties || {});
+
+  // HTML content for the main table
   var content =
     "<table class='table table-striped table-bordered table-condensed'>";
+  var hfContent = ""; // HTML for historical forms if needed
+  var name = ""; // Name to display as a title
 
-  var hfContent = ""; //another string to stick the historical form content into
-
-  var notesContent ="";
-
-  var name = "";
-
+  // Loop through each property and display in the modal, handling specific cases
   $.each(featureProperties, function (key, value) {
     if (!value) {
       value = "";
     }
 
+    // Convert URLs to clickable links if needed
     if (
-      typeof value == "string" &&
-      (value.indexOf("http") === 0 || value.indexOf("https") === 0)
+      typeof value === "string" &&
+      (value.startsWith("http") || value.startsWith("https"))
     ) {
-      value = "<a href='" + value + "' target='_blank'>" + value + "</a>";
+      value = `<a href="${value}" target="_blank">${value}</a>`;
     }
 
+    // Match property label with the defined properties for display
     $.each(properties, function (index, property) {
-      if (key == property.value) {
+      if (key === property.value) {
         if (property.info !== false) {
-          if (property.label != "Historical Forms") {
-            //regular properties here
-
-            content +=
-              "<tr><th>" + property.label + "</th><td>" + value + "</td></tr>";
+          // Separate handling for regular properties and "Historical Forms"
+          if (property.label !== "Historical Forms") {
+            content += `<tr><th>${property.label}</th><td>${value}</td></tr>`;
           } else {
-            //if we have a historical form we handle this separately (could be a completely different layout if required - here we have a table that just displays the values)
-
-            hfContent += "<tr><td>" + value + "</td></tr>";
+            hfContent += `<tr><td>${value}</td></tr>`;
           }
-          if (property.label == "Name") {
-            name += "<h4>"+ value + "</h4>";
+          // Title display for "Name" field
+          if (property.label === "Name") {
+            name = `<h4>${value}</h4>`;
           }
         }
       }
     });
   });
 
-
-  content += "</table>"; // I think this should actually be </table>
+  content += "</table>";
   $("#feature-info").html(content);
-  //now we can choose to add in the hf tab if we have any historical forms
-  
-  name 
   $("#name").html(name);
 
+  // Add Historical Forms table if there is content
   if (hfContent) {
-    // for now just adding as a table underneath the main table with a heading above it
-
-    content =
+    hfContent =
       "<table class='table table-striped table-bordered table-condensed'>" +
       hfContent +
       "</table>";
-    $("#hffeature-info").html(content);
+    $("#hffeature-info").html(hfContent);
   }
 
-
-
+  // Show the modal dialog with the feature information
   $("#featureModal").modal("show");
 }
+
 
 function switchView(view) {
   if (view == "split") {
@@ -883,4 +1021,114 @@ $("#download-pdf-btn").click(function () {
 
 $("#chartModal").on("shown.bs.modal", function (e) {
   drawCharts();
+});
+/* 
+function filterByLanguage() {
+  // Get the selected language from the dropdown
+  const selectedLanguage = document.getElementById("language-filter").value;
+  
+  if (selectedLanguage) {
+    // Filter features by the selected language
+    syncTable(selectedLanguage);
+  } else {
+    // If no language selected, reload all features
+    featureLayer.clearLayers();
+    featureLayer.addData(geojson.features);
+    syncTable();
+  }
+  if (selectedLanguage === "All Languages") {
+	featureLayer.clearLayers();
+	featureLayer.addData(geojson.features);
+	syncTable();
+  }
+} */
+
+function filterByLanguage() {
+  const selectedLanguage = document.getElementById("language-filter").value;
+
+  if (selectedLanguage === "All Languages" || !selectedLanguage) {
+    // Clear featureLayer and reload all features for "All Languages"
+    featureLayer.clearLayers();
+    featureLayer.addData(geojson.features); // Reload all features from GeoJSON
+
+    syncTable(); // Synchronize the table with all features
+  } else {
+    // Filter features by selected language, if defined
+    const filteredFeatures = geojson.features.filter(feature =>
+      feature.properties && feature.properties.lang === selectedLanguage
+    );
+
+    // Clear and reload featureLayer with only the filtered features
+    featureLayer.clearLayers();
+    featureLayer.addData(filteredFeatures);
+    
+    syncTable(selectedLanguage); // Synchronize the table with the filtered features
+  }
+}
+
+
+// Updated filterLanguage function to filter based on `elements->lang` with AlaSQL
+function filterLanguage(lang) {
+  const query = `
+    SELECT features.*
+    FROM ? AS features
+    OUTER APPLY features->elements AS el
+    WHERE el->lang LIKE '%' + ? + '%'
+  `;
+  
+  alasql(query, [geojson.features, lang], function (filteredFeatures) {
+    featureLayer.clearLayers();        // Clear existing layers
+    featureLayer.addData(filteredFeatures); // Add filtered data to the map
+    syncTable();                       // Synchronize with the table
+  });
+}
+
+$(document).ready(function () {
+    const availableGeoJSONFiles = [
+		{ name: "Carrick Place-Names", path: "carrick2.geojson" },
+		{ name: "Sample GeoJSON 1", path: "simple.geojson" },
+		// Add more files as needed
+	];
+
+
+    const dropdown = $("#geojson-dropdown");
+    if (dropdown.length === 0) {
+        console.error("Dropdown element with ID #geojson-dropdown not found.");
+        return;
+    }
+
+    // Populate dropdown and log each addition
+    availableGeoJSONFiles.forEach(file => {
+        console.log("Adding file to dropdown:", file);
+        dropdown.append(new Option(file.name, file.path));
+    });
+});
+
+$("#geojson-dropdown").on("change", function () {
+	featureLayer.clearLayers();
+    const selectedFilePath = $(this).val();
+	console.log("Path:", selectedFilePath);
+
+    if (selectedFilePath) {
+        $("#loading-mask").show(); // Show loading spinner
+
+        $.getJSON(selectedFilePath, function (data) {
+			// Set config title based on "name" property if available
+			if (data.name) {
+				config.title = data.name +  " Place-Names"; // Update config title
+				$(".title").html(config.title); // Update any HTML elements showing the title
+			}
+
+			// Clear the existing feature layer and reload it with the new data
+			featureLayer.clearLayers();
+			features = data.features.map((feature) =>
+			extractProperties(feature.properties || {})
+			);
+
+			featureLayer.addData(data);
+			buildConfig(); // Rebuild filters and table based on new data
+			map.fitBounds(featureLayer.getBounds());
+			$("#loading-mask").hide();
+		});
+    }
 });
