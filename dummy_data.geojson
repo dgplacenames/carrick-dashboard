@@ -1,0 +1,735 @@
+{
+  "type": "FeatureCollection",
+  "name": "carrick_placenames",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.706, 55.343]
+      },
+      "properties": {
+        "pn_id": "1",
+        "pn": "Wee Burn",
+        "parish": "Borgue",
+        "gridref": "NS271083",
+        "osgb_east": "243040.1",
+        "osgb_north": "605398.4",
+        "loc_certainty": "1",
+        "altitude": "340",
+        "notes": "A small stream running through moorland, first recorded in early mapping.",
+        "elements": [
+          {
+            "element": "wee",
+            "language": "Scots",
+            "certainty": "1",
+            "role": "specific",
+            "order": "1"
+          },
+          {
+            "element": "burn",
+            "language": "Scots",
+            "certainty": "1",
+            "role": "generic",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "weeburn",
+            "date": "1891",
+            "source": "OS 1st ed."
+          },
+          {
+            "historic_form": "wee b.",
+            "date": "1654",
+            "source": "Blaeu, Carrikt"
+          }
+        ],
+        "categories": ["waterway", "size"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.721, 55.358]
+      },
+      "properties": {
+        "pn_id": "2",
+        "pn": "Craigmore",
+        "parish": "Borgue",
+        "gridref": "NS255098",
+        "osgb_east": "242500.0",
+        "osgb_north": "607200.0",
+        "loc_certainty": "2",
+        "altitude": "125",
+        "notes": "Large rocky outcrop with evidence of early settlement.",
+        "elements": [
+          {
+            "element": "craig",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "generic",
+            "order": "1"
+          },
+          {
+            "element": "mòr",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "specific",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Craigmor",
+            "date": "1775",
+            "source": "Roy Military Survey"
+          },
+          {
+            "historic_form": "Craig More",
+            "date": "1832",
+            "source": "OS 1st ed."
+          }
+        ],
+        "categories": ["topographic", "size"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.698, 55.351]
+      },
+      "properties": {
+        "pn_id": "3",
+        "pn": "Balnakettle",
+        "parish": "Kirkcudbright",
+        "gridref": "NS276090",
+        "osgb_east": "243800.0",
+        "osgb_north": "606400.0",
+        "loc_certainty": "1",
+        "altitude": "85",
+        "notes": "Former settlement site, now farmland. Contains archaeological remains.",
+        "elements": [
+          {
+            "element": "baile",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "generic",
+            "order": "1"
+          },
+          {
+            "element": "na",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "specific",
+            "order": "2"
+          },
+          {
+            "element": "ceatail",
+            "language": "Gaelic",
+            "certainty": "2",
+            "role": "specific",
+            "order": "3"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Balnaketil",
+            "date": "1684",
+            "source": "Retour, Kirkcudbright"
+          },
+          {
+            "historic_form": "Balnakettle",
+            "date": "1750",
+            "source": "Estate Map"
+          }
+        ],
+        "categories": ["settlement"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.689, 55.334]
+      },
+      "properties": {
+        "pn_id": "4",
+        "pn": "Kirk Hill",
+        "parish": "Borgue",
+        "gridref": "NS285075",
+        "osgb_east": "244500.0",
+        "osgb_north": "604600.0",
+        "loc_certainty": "1",
+        "altitude": "95",
+        "notes": "Site of medieval church, ruins still visible.",
+        "elements": [
+          {
+            "element": "kirk",
+            "language": "Scots",
+            "certainty": "1",
+            "role": "specific",
+            "order": "1"
+          },
+          {
+            "element": "hill",
+            "language": "English",
+            "certainty": "1",
+            "role": "generic",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Kyrkhill",
+            "date": "1456",
+            "source": "Charter, Dundrennan"
+          },
+          {
+            "historic_form": "Kirk Hill",
+            "date": "1775",
+            "source": "Roy Military Survey"
+          }
+        ],
+        "categories": ["religious", "topographic"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.715, 55.328]
+      },
+      "properties": {
+        "pn_id": "5",
+        "pn": "Blackwater",
+        "parish": "Borgue",
+        "gridref": "NS260070",
+        "osgb_east": "242100.0",
+        "osgb_north": "604000.0",
+        "loc_certainty": "1",
+        "altitude": "45",
+        "notes": "Dark-colored stream, possibly stained by peat.",
+        "elements": [
+          {
+            "element": "black",
+            "language": "English",
+            "certainty": "1",
+            "role": "specific",
+            "order": "1"
+          },
+          {
+            "element": "water",
+            "language": "English",
+            "certainty": "1",
+            "role": "generic",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Black Water",
+            "date": "1832",
+            "source": "OS 1st ed."
+          }
+        ],
+        "categories": ["waterway"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.728, 55.345]
+      },
+      "properties": {
+        "pn_id": "6",
+        "pn": "Drumfin",
+        "parish": "Borgue",
+        "gridref": "NS248085",
+        "osgb_east": "241200.0",
+        "osgb_north": "605800.0",
+        "loc_certainty": "2",
+        "altitude": "180",
+        "notes": "Ridge formation with distinctive white stones.",
+        "elements": [
+          {
+            "element": "druim",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "generic",
+            "order": "1"
+          },
+          {
+            "element": "fionn",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "specific",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Drumfyne",
+            "date": "1775",
+            "source": "Roy Military Survey"
+          },
+          {
+            "historic_form": "Drumfin",
+            "date": "1845",
+            "source": "OS 6-inch"
+          }
+        ],
+        "categories": ["topographic"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.692, 55.367]
+      },
+      "properties": {
+        "pn_id": "7",
+        "pn": "Millbrae",
+        "parish": "Kirkcudbright",
+        "gridref": "NS282107",
+        "osgb_east": "244200.0",
+        "osgb_north": "608000.0",
+        "loc_certainty": "1",
+        "altitude": "65",
+        "notes": "Sloping ground above old mill site.",
+        "elements": [
+          {
+            "element": "mill",
+            "language": "English",
+            "certainty": "1",
+            "role": "specific",
+            "order": "1"
+          },
+          {
+            "element": "brae",
+            "language": "Scots",
+            "certainty": "1",
+            "role": "generic",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Mill Bray",
+            "date": "1775",
+            "source": "Roy Military Survey"
+          },
+          {
+            "historic_form": "Millbrae",
+            "date": "1850",
+            "source": "OS 6-inch"
+          }
+        ],
+        "categories": ["topographic"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.735, 55.339]
+      },
+      "properties": {
+        "pn_id": "8",
+        "pn": "Loch Dubh",
+        "parish": "Borgue",
+        "gridref": "NS241079",
+        "osgb_east": "240500.0",
+        "osgb_north": "605200.0",
+        "loc_certainty": "1",
+        "altitude": "155",
+        "notes": "Small dark loch surrounded by moorland.",
+        "elements": [
+          {
+            "element": "loch",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "generic",
+            "order": "1"
+          },
+          {
+            "element": "dubh",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "specific",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Loch Dhu",
+            "date": "1775",
+            "source": "Roy Military Survey"
+          },
+          {
+            "historic_form": "Loch Dubh",
+            "date": "1832",
+            "source": "OS 1st ed."
+          }
+        ],
+        "categories": ["waterway"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.701, 55.361]
+      },
+      "properties": {
+        "pn_id": "9",
+        "pn": "High Street",
+        "parish": "Kirkcudbright",
+        "gridref": "NS273101",
+        "osgb_east": "243600.0",
+        "osgb_north": "607400.0",
+        "loc_certainty": "1",
+        "altitude": "25",
+        "notes": "Main thoroughfare of historic town center.",
+        "elements": [
+          {
+            "element": "high",
+            "language": "English",
+            "certainty": "1",
+            "role": "specific",
+            "order": "1"
+          },
+          {
+            "element": "street",
+            "language": "English",
+            "certainty": "1",
+            "role": "generic",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "High Strete",
+            "date": "1592",
+            "source": "Burgh Records"
+          },
+          {
+            "historic_form": "High Street",
+            "date": "1775",
+            "source": "Roy Military Survey"
+          }
+        ],
+        "categories": ["settlement"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.712, 55.354]
+      },
+      "properties": {
+        "pn_id": "10",
+        "pn": "Muir of Borgue",
+        "parish": "Borgue",
+        "gridref": "NS265094",
+        "osgb_east": "242800.0",
+        "osgb_north": "606800.0",
+        "loc_certainty": "3",
+        "altitude": "210",
+        "notes": "Extensive moorland area, formerly common grazing.",
+        "elements": [
+          {
+            "element": "muir",
+            "language": "Scots",
+            "certainty": "1",
+            "role": "generic",
+            "order": "1"
+          },
+          {
+            "element": "of",
+            "language": "English",
+            "certainty": "1",
+            "role": "joiner",
+            "order": "2"
+          },
+          {
+            "element": "Borgue",
+            "language": "Gaelic",
+            "certainty": "2",
+            "role": "specific",
+            "order": "3"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Muire of Borgew",
+            "date": "1684",
+            "source": "Retour, Kirkcudbright"
+          },
+          {
+            "historic_form": "Muir of Borgue",
+            "date": "1775",
+            "source": "Roy Military Survey"
+          }
+        ],
+        "categories": ["topographic"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.756, 55.372]
+      },
+      "properties": {
+        "pn_id": "11",
+        "pn": "Almorness Point",
+        "parish": "Borgue",
+        "gridref": "NS221112",
+        "osgb_east": "239800.0",
+        "osgb_north": "608800.0",
+        "loc_certainty": "1",
+        "altitude": "15",
+        "notes": "Rocky headland extending into the Solway Firth.",
+        "elements": [
+          {
+            "element": "allmhór",
+            "language": "Gaelic",
+            "certainty": "2",
+            "role": "specific",
+            "order": "1"
+          },
+          {
+            "element": "ness",
+            "language": "Norse",
+            "certainty": "1",
+            "role": "generic",
+            "order": "2"
+          },
+          {
+            "element": "point",
+            "language": "English",
+            "certainty": "1",
+            "role": "generic",
+            "order": "3"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Almernose",
+            "date": "1455",
+            "source": "Charter Roll"
+          },
+          {
+            "historic_form": "Almorness",
+            "date": "1775",
+            "source": "Roy Military Survey"
+          }
+        ],
+        "categories": ["coastal", "topographic"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.683, 55.376]
+      },
+      "properties": {
+        "pn_id": "12",
+        "pn": "Dhoon Bay",
+        "parish": "Kirkcudbright",
+        "gridref": "NS291116",
+        "osgb_east": "245100.0",
+        "osgb_north": "609200.0",
+        "loc_certainty": "1",
+        "altitude": "5",
+        "notes": "Small sandy bay with rocky outcrops.",
+        "elements": [
+          {
+            "element": "dún",
+            "language": "Gaelic",
+            "certainty": "2",
+            "role": "specific",
+            "order": "1"
+          },
+          {
+            "element": "bay",
+            "language": "English",
+            "certainty": "1",
+            "role": "generic",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Doon Bay",
+            "date": "1832",
+            "source": "OS 1st ed."
+          }
+        ],
+        "categories": ["coastal", "waterway"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.665, 55.318]
+      },
+      "properties": {
+        "pn_id": "13",
+        "pn": "Glen Trool",
+        "parish": "Minnigaff",
+        "gridref": "NS305056",
+        "osgb_east": "246500.0",
+        "osgb_north": "602800.0",
+        "loc_certainty": "1",
+        "altitude": "185",
+        "notes": "Steep-sided valley with ancient oak woodland.",
+        "elements": [
+          {
+            "element": "gleann",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "generic",
+            "order": "1"
+          },
+          {
+            "element": "troigheal",
+            "language": "Gaelic",
+            "certainty": "2",
+            "role": "specific",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Glentrowell",
+            "date": "1507",
+            "source": "RMS"
+          },
+          {
+            "historic_form": "Glen Trool",
+            "date": "1775",
+            "source": "Roy Military Survey"
+          }
+        ],
+        "categories": ["topographic"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.692, 55.389]
+      },
+      "properties": {
+        "pn_id": "14",
+        "pn": "Maclellan's Castle",
+        "parish": "Kirkcudbright",
+        "gridref": "NS283129",
+        "osgb_east": "244300.0",
+        "osgb_north": "610600.0",
+        "loc_certainty": "1",
+        "altitude": "20",
+        "notes": "16th century tower house, now Historic Scotland property.",
+        "elements": [
+          {
+            "element": "MacGille",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "specific",
+            "order": "1"
+          },
+          {
+            "element": "Fhaolain",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "specific",
+            "order": "2"
+          },
+          {
+            "element": "castle",
+            "language": "English",
+            "certainty": "1",
+            "role": "generic",
+            "order": "3"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Castell of Makclellane",
+            "date": "1569",
+            "source": "RPC"
+          },
+          {
+            "historic_form": "Maclellan's Castle",
+            "date": "1832",
+            "source": "OS 1st ed."
+          }
+        ],
+        "categories": ["settlement", "fortification"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-4.721, 55.312]
+      },
+      "properties": {
+        "pn_id": "15",
+        "pn": "Cairn Hill",
+        "parish": "Borgue",
+        "gridref": "NS255050",
+        "osgb_east": "242500.0",
+        "osgb_north": "602000.0",
+        "loc_certainty": "1",
+        "altitude": "275",
+        "notes": "Hill topped with ancient burial cairn.",
+        "elements": [
+          {
+            "element": "càrn",
+            "language": "Gaelic",
+            "certainty": "1",
+            "role": "specific",
+            "order": "1"
+          },
+          {
+            "element": "hill",
+            "language": "English",
+            "certainty": "1",
+            "role": "generic",
+            "order": "2"
+          }
+        ],
+        "historic_forms": [
+          {
+            "historic_form": "Cairne hill",
+            "date": "1654",
+            "source": "Blaeu, Carrikt"
+          },
+          {
+            "historic_form": "Cairn Hill",
+            "date": "1775",
+            "source": "Roy Military Survey"
+          }
+        ],
+        "categories": ["topographic", "archaeological"]
+      }
+    }
+  ]
+}
