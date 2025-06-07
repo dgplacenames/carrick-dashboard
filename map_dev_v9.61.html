@@ -1,0 +1,3216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ainmean Charraige/Carrick Names</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        #map {
+            flex: 1;
+            height: 100vh;
+        }
+        
+        .sidebar {
+            width: 350px;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .sidebar-header h2 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+        }
+        
+        .sidebar-content {
+            padding: 20px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        
+        .filter-section h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-section h3:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        
+        .filter-toggle {
+            font-size: 12px;
+            color: #999;
+            transition: transform 0.3s ease;
+        }
+        
+        .filter-toggle.expanded {
+            transform: rotate(180deg);
+        }
+        
+        .filter-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .filter-content.expanded {
+            max-height: 200px;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .filter-btn.active.primary {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+        }
+        
+        .filter-btn.active.secondary {
+            background: #8fa4f3;
+            color: white;
+            border-color: #8fa4f3;
+        }
+        
+        .filter-btn.active.tertiary {
+            background: #b8c7f7;
+            color: white;
+            border-color: #b8c7f7;
+        }
+        
+        .filter-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            display: none;
+        }
+        
+        .timeline-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+            border-radius: 10px;
+            border: 1px solid #d0e1ff;
+        }
+        
+        .timeline-section h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .timeline-icon {
+            width: 16px;
+            height: 16px;
+            background: #667eea;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .range-slider {
+            position: relative;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(to right, #d0e1ff, #667eea);
+            border-radius: 3px;
+            margin: 15px 0;
+        }
+        
+        .range-slider input[type="range"] {
+            position: absolute;
+            top: -7px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: none;
+            pointer-events: none;
+            appearance: none;
+            outline: none;
+        }
+        
+        .range-slider input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: all;
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .range-slider input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
+        }
+        
+        .range-slider input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            pointer-events: all;
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.4);
+        }
+        
+        .range-slider .range-track {
+            position: absolute;
+            top: 0;
+            height: 6px;
+            background: #667eea;
+            border-radius: 3px;
+            z-index: 1;
+        }
+        
+        .range-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #333;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        
+        .timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .timeline-current {
+            text-align: center;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-stats {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        .place-list {
+            margin-top: 20px;
+        }
+        
+        .place-item {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .place-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+        
+        .place-item.selected {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+        
+        .place-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .place-parish {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .place-categories {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .category-tag {
+            padding: 2px 8px;
+            background: #e8f2ff;
+            color: #4a90e2;
+            border-radius: 12px;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+        
+        .clickable-tag {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .clickable-tag:hover {
+            background: #4a90e2;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .clickable-element {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+        
+        .clickable-element:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .filter-feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .clear-filters-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 10px;
+            transition: background 0.3s ease;
+        }
+        
+        .clear-filters-btn:hover {
+            background: #cc0000;
+        }
+        
+        .custom-popup {
+            max-width: 600px;
+            min-width: 500px;
+            max-height: 400px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .popup-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            margin: -10px -10px 0 -10px;
+            border-radius: 8px 8px 0 0;
+            flex-shrink: 0;
+        }
+        
+        .popup-tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin: 15px -10px 0 -10px;
+            flex-shrink: 0;
+        }
+        
+        .popup-content-area {
+            flex: 1;
+            overflow-y: auto;
+            margin: 0 -10px -10px -10px;
+            padding: 15px 10px 10px 10px;
+            max-height: 400px;
+        }
+        
+        .popup-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .popup-parish {
+            font-size: 12px;
+            opacity: 0.9;
+            margin: 5px 0 0 0;
+        }
+        
+        .popup-section {
+            margin-bottom: 15px;
+        }
+        
+        .popup-section h4 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            color: #333;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 4px;
+        }
+        
+        .etymology-item {
+            background: #f8f9fa;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .element-text {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .element-meta {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .historic-form {
+            background: #fff8e1;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            border-left: 3px solid #ff9800;
+        }
+        
+        .form-text {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-meta {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .info-item {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+        
+        .info-value {
+            font-weight: bold;
+            color: #333;
+            font-size: 12px;
+        }
+        
+        .leaflet-popup-content {
+            margin: 10px;
+        }
+        
+        .popup-tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .popup-tab {
+            flex: 1;
+            padding: 10px 15px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            border-radius: 6px 6px 0 0;
+            margin-right: 2px;
+        }
+        
+        .popup-tab:last-child {
+            margin-right: 0;
+        }
+        
+        .popup-tab.active {
+            background: #667eea;
+            color: white;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .popup-tab:hover:not(.active) {
+            background: #e8f2ff;
+            color: #4a90e2;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .place-name-tooltip {
+            background: rgba(102, 126, 234, 0.9) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 4px !important;
+            padding: 4px 8px !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+        }
+        
+        .place-name-tooltip::before {
+            border-top-color: rgba(102, 126, 234, 0.9) !important;
+        }
+        
+        .map-display-toggle {
+            position: absolute;
+            top: 20px;
+            left: 70px;
+            z-index: 1000;
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 2px solid #e0e0e0;
+            font-size: 12px;
+            font-weight: 500;
+            color: #333;
+            min-width: 140px;
+        }
+        
+        .map-display-toggle h4 {
+            margin: 0 0 8px 0;
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            cursor: pointer;
+            padding: 2px 0;
+            transition: all 0.2s ease;
+        }
+        
+        .radio-option:hover {
+            color: #667eea;
+        }
+        
+        .radio-option input[type="radio"] {
+            margin-right: 8px;
+            accent-color: #667eea;
+        }
+        
+        .radio-option:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Advanced Filter Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.visible {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .filter-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f8f9ff;
+        }
+        
+        .filter-group h3 {
+            margin: 0 0 15px 0;
+            color: #667eea;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-group-icon {
+            width: 16px;
+            height: 16px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .input-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .input-group label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .input-group input, .input-group select, .input-group textarea {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+        }
+        
+        .checkbox-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            accent-color: #667eea;
+        }
+        
+        .checkbox-item label {
+            font-size: 12px;
+            cursor: pointer;
+            margin: 0;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Results List Modal Styles */
+        .modal-place-list {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .modal-place-item {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .modal-place-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .modal-place-item.selected {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+        
+        .modal-place-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .modal-place-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .modal-place-details {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .modal-place-parish {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .modal-place-parish::before {
+            content: "📍";
+            font-size: 10px;
+        }
+        
+        .modal-place-categories {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .modal-category-tag {
+            padding: 2px 6px;
+            background: #e8f2ff;
+            color: #4a90e2;
+            border-radius: 10px;
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        
+        .modal-place-action {
+            font-size: 11px;
+            color: #667eea;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-place-item:hover .modal-place-action {
+            opacity: 1;
+        }
+        
+        /* Element Glossary Modal Styles */
+        .element-glossary-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .glossary-element-item {
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 100px;
+        }
+        
+        .glossary-element-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .glossary-element-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+        
+        .glossary-element-name {
+            font-weight: bold;
+            font-size: 15px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .glossary-element-details {
+            font-size: 11px;
+            color: #666;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+        }
+        
+        .glossary-element-language {
+            background: #e8f2ff;
+            color: #4a90e2;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .glossary-element-role {
+            color: #666;
+            font-style: italic;
+            font-size: 10px;
+        }
+        
+        .glossary-element-certainty {
+            color: #999;
+            font-size: 10px;
+        }
+        
+        .glossary-element-count {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            text-align: center;
+            align-self: center;
+        }
+        
+        .glossary-element-action {
+            font-size: 10px;
+            color: #667eea;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .glossary-element-item:hover .glossary-element-action {
+            opacity: 1;
+        }
+        
+        .glossary-no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Hide the original display mode toggle since it's now in layer control */
+        .map-display-toggle {
+            display: none;
+        }
+        
+        /* Ensure Leaflet layer control is properly styled */
+        .leaflet-control-layers {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .leaflet-control-layers-toggle {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMgNEgxN1Y2SDNWNFpNMyA5SDE3VjExSDNWOVpNMyAxNEgxN1YxNkgzVjE0WiIgZmlsbD0iIzMzMzMzMyIvPgo8L3N2Zz4K');
+            background-size: 20px 20px;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 36px;
+            height: 36px;
+        }
+        
+        .leaflet-control-layers-expanded {
+            padding: 6px 10px 6px 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="map"></div>
+        <div class="map-display-toggle" id="mapDisplayToggle">
+            <h4>Display Mode</h4>
+            <div class="radio-option">
+                <input type="radio" id="displayPoints" name="displayMode" value="points" checked>
+                <label for="displayPoints">Points</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="displayHeatmap" name="displayMode" value="heatmap">
+                <label for="displayHeatmap">Heat Map</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="displayBoth" name="displayMode" value="both">
+                <label for="displayBoth">Both</label>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Ainmean Charraige/Carrick Names</h2>
+                <p style="margin: 0; font-size: 14px; opacity: 0.9;">Development version</p>
+            </div>
+            <div class="sidebar-content">
+                <input type="text" class="search-box" id="searchBox" placeholder="Search place names...">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button onclick="openAdvancedFilters()" style="background: none; border: 1px solid #667eea; color: #667eea; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; transition: all 0.3s ease;">
+                        🔍 Advanced Search
+                    </button>
+                </div>
+                
+                <div class="timeline-section">
+                    <h3><span class="timeline-icon"></span>Historical Timeline</h3>
+                    <div class="range-slider">
+                        <input type="range" id="timelineSliderMin" min="1600" max="2000" value="1600" step="10">
+                        <input type="range" id="timelineSliderMax" min="1600" max="2000" value="2000" step="10">
+                        <div class="range-track" id="rangeTrack"></div>
+                    </div>
+                    <div class="range-values">
+                        <span id="minValue">1600</span>
+                        <span id="maxValue">2000</span>
+                    </div>
+                    <div class="timeline-labels">
+                        <span>1600</span>
+                        <span>1800</span>
+                        <span>2000</span>
+                    </div>
+                    <div class="timeline-current" id="timelineCurrent">
+                        Showing all periods (1600-2000)
+                    </div>
+                    <div class="timeline-stats" id="timelineStats">
+                        All places visible
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3 onclick="toggleFilterSection('category')">
+                        Filter by Category
+                        <span class="filter-toggle" id="categoryToggle">▼</span>
+                    </h3>
+                    <div class="filter-content" id="categoryContent">
+                        <div style="margin-bottom: 10px;">
+                            <label style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" id="categoryModeToggle" style="accent-color: #667eea;">
+                                <span>Exclusive mode</span>
+                                <span style="font-size: 10px; color: #999;">(removes other categories)</span>
+                            </label>
+                        </div>
+                        <div class="filter-buttons" id="categoryFilters">
+                            <div class="filter-btn active" data-category="all">All</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3 onclick="toggleFilterSection('language')">
+                        Filter by Language
+                        <span class="filter-toggle" id="languageToggle">▼</span>
+                    </h3>
+                    <div class="filter-content" id="languageContent">
+                        <div style="margin-bottom: 10px;">
+                            <label style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" id="languageModeToggle" style="accent-color: #667eea;">
+                                <span>Exclusive mode</span>
+                                <span style="font-size: 10px; color: #999;">(removes other languages)</span>
+                            </label>
+                        </div>
+                        <div class="filter-buttons" id="languageFilters">
+                            <div class="filter-btn active" data-language="all">All</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="openResultsList()" style="background: none; border: 1px solid #667eea; color: #667eea; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.3s ease; width: 100%; margin-bottom: 10px;">
+                        📋 Show List of Names (<span id="resultsCount">0</span>)
+                    </button>
+                    <button onclick="openElementGlossary()" style="background: none; border: 1px solid #667eea; color: #667eea; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.3s ease; width: 100%;">
+                        📚 Element Glossary
+                    </button>
+                </div>
+                
+                <div class="place-list" id="placeList" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- Element Glossary Modal -->
+        <div class="modal-overlay" id="elementGlossaryModal">
+            <div class="modal-content" style="max-width: 900px; height: 85vh; max-height: 700px; display: flex; flex-direction: column;">
+                <div class="modal-header">
+                    <h2>Element Glossary</h2>
+                    <button class="modal-close" onclick="closeElementGlossary()">×</button>
+                </div>
+                <div style="padding: 20px; flex-shrink: 0;">
+                    <div style="margin-bottom: 15px; padding: 10px; background: #f8f9ff; border-radius: 6px; border-left: 3px solid #667eea;">
+                        <div style="font-size: 14px; color: #333; font-weight: 500;">
+                            <span id="glossaryElementCount">0</span> unique etymological elements
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                            Click any element to filter place names containing it
+                        </div>
+                    </div>
+                    
+                    <!-- Filter controls for glossary -->
+                    <div style="margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px;">
+                        <div>
+                            <input type="text" id="glossarySearch" placeholder="Search elements..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px;">
+                        </div>
+                        <div>
+                            <select id="glossaryLanguageFilter" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px;">
+                                <option value="">All Languages</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select id="glossaryRoleFilter" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px;">
+                                <option value="">All Roles</option>
+                                <option value="generic">Generic</option>
+                                <option value="specific">Specific</option>
+                                <option value="qualifier">Qualifier</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select id="glossarySortOrder" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px;">
+                                <option value="alphabetical">A-Z Order</option>
+                                <option value="frequency">Most Used First</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 0 20px 20px 20px;">
+                    <div id="elementGlossaryList" class="element-glossary-list">
+                        <!-- Element items will be inserted here -->
+                    </div>
+                </div>
+                <div class="modal-footer" style="flex-shrink: 0;">
+                    <div>
+                        <button class="btn btn-secondary" onclick="clearGlossaryFilters()">Clear Filters</button>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary" onclick="closeElementGlossary()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results List Modal -->
+        <div class="modal-overlay" id="resultsListModal">
+            <div class="modal-content" style="max-width: 800px; height: 80vh; max-height: 600px; display: flex; flex-direction: column;">
+                <div class="modal-header">
+                    <h2>Place Names List</h2>
+                    <button class="modal-close" onclick="closeResultsList()">×</button>
+                </div>
+                <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 20px;">
+                    <div style="margin-bottom: 15px; padding: 10px; background: #f8f9ff; border-radius: 6px; border-left: 3px solid #667eea;">
+                        <div style="font-size: 14px; color: #333; font-weight: 500;">
+                            Showing <span id="modalResultsCount">0</span> place name<span id="modalResultsPlural">s</span>
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                            Click any name to view on map
+                        </div>
+                    </div>
+                    <div id="modalPlaceList" class="modal-place-list">
+                        <!-- Place items will be inserted here -->
+                    </div>
+                </div>
+                <div class="modal-footer" style="flex-shrink: 0;">
+                    <div></div>
+                    <div>
+                        <button class="btn btn-secondary" onclick="closeResultsList()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Advanced Filter Modal -->
+        <div class="modal-overlay" id="advancedFilterModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Advanced Search</h2>
+                    <button class="modal-close" onclick="closeAdvancedFilters()">×</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Text Search -->
+                    <div class="filter-group">
+                        <h3><span class="filter-group-icon"></span>Text Search</h3>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Place Name Contains</label>
+                                <input type="text" id="advPlaceName" placeholder="e.g., glen, burn, hill">
+                            </div>
+                            <div class="input-group">
+                                <label>Parish</label>
+                                <select id="advParish">
+                                    <option value="">Any Parish</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Etymology Element</label>
+                                <input type="text" id="advElement" placeholder="Search for specific elements">
+                            </div>
+                            <div class="input-group">
+                                <label>Historic Form Contains</label>
+                                <input type="text" id="advHistoricForm" placeholder="Search historic spellings">
+                            </div>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Notes Contains</label>
+                            <input type="text" id="advNotes" placeholder="Search in notes field">
+                        </div>
+                    </div>
+                    
+                    <!-- Location Filters -->
+                    <div class="filter-group">
+                        <h3><span class="filter-group-icon"></span>Location</h3>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Min Altitude (m)</label>
+                                <input type="number" id="advMinAltitude" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Max Altitude (m)</label>
+                                <input type="number" id="advMaxAltitude" placeholder="1000">
+                            </div>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Min Location Certainty</label>
+                                <select id="advMinCertainty">
+                                    <option value="">Any</option>
+                                    <option value="1">1+</option>
+                                    <option value="2">2+</option>
+                                    <option value="3">3+</option>
+                                    <option value="4">4+</option>
+                                    <option value="5">5 (Exact)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Grid Reference</label>
+                                <input type="text" id="advGridRef" placeholder="e.g., NS 123 456">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Etymology Filters -->
+                    <div class="filter-group">
+                        <h3><span class="filter-group-icon"></span>Etymology</h3>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Element Role</label>
+                                <select id="advElementRole">
+                                    <option value="">Any Role</option>
+                                    <option value="generic">Generic</option>
+                                    <option value="specific">Specific</option>
+                                    <option value="qualifier">Qualifier</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Min Element Certainty</label>
+                                <select id="advElementCertainty">
+                                    <option value="">Any</option>
+                                    <option value="1">1+</option>
+                                    <option value="2">2+</option>
+                                    <option value="3">3+</option>
+                                    <option value="4">4+</option>
+                                    <option value="5">5 (Certain)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label>Languages</label>
+                            <div class="checkbox-group" id="advLanguageCheckboxes">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Historical Filters -->
+                    <div class="filter-group">
+                        <h3><span class="filter-group-icon"></span>Historical Records</h3>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Earliest Record Year</label>
+                                <input type="number" id="advEarliestYear" placeholder="e.g., 1600">
+                            </div>
+                            <div class="input-group">
+                                <label>Latest Record Year</label>
+                                <input type="number" id="advLatestYear" placeholder="e.g., 2000">
+                            </div>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Source Contains</label>
+                                <input type="text" id="advSource" placeholder="Search in source names">
+                            </div>
+                            <div class="input-group">
+                                <label>Has Historic Forms</label>
+                                <select id="advHasHistoric">
+                                    <option value="">Either</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Categories -->
+                    <div class="filter-group">
+                        <h3><span class="filter-group-icon"></span>Categories</h3>
+                        <div>
+                            <div class="checkbox-group" id="advCategoryCheckboxes">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button class="btn btn-danger" onclick="clearAdvancedFilters()">Clear All</button>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" onclick="closeAdvancedFilters()">Cancel</button>
+                        <button class="btn btn-primary" onclick="applyAdvancedFilters()">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
+    <script>
+        // Load external GeoJSON data
+        let geojsonData = null;
+        
+        // Function to load data from external source
+        async function loadGeojsonData() {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/dgplacenames/carrick-dashboard/refs/heads/master/dummy_data.geojson');
+                if (!response.ok) {
+                    throw new Error('Failed to load data');
+                }
+                geojsonData = await response.json();
+                console.log(`Loaded ${geojsonData.features.length} place names`);
+                
+                // Initialize everything after data is loaded
+                filteredFeatures = geojsonData.features;
+                initializeTimeline();
+                initializeFilters();
+                addMarkersToMap(geojsonData.features);
+                updatePlaceList(geojsonData.features);
+                
+                // Handle initial hash
+                handleHashChange();
+                
+                // Fit map to show all markers
+                if (geojsonData.features.length > 0) {
+                    const group = new L.featureGroup(markers);
+                    map.fitBounds(group.getBounds().pad(0.1));
+                }
+            } catch (error) {
+                console.error('Error loading GeoJSON data:', error);
+                alert('Failed to load place name data. Please check your internet connection.');
+            }
+        }
+
+        // Initialize map
+        const map = L.map('map').setView([55.3431, -4.7060], 13);
+
+        // Define base layers
+        const baseLayers = {
+            "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }),
+            "OS 6 Inch First": L.tileLayer('https://mapseries-tilesets.s3.amazonaws.com/os/6inchfirst/{z}/{x}/{y}.png', {
+                attribution: 'Ordnance Survey',
+                maxZoom: 18
+            }),
+            "OS 10k 1888": L.tileLayer('https://api.maptiler.com/tiles/uk-osgb10k1888/{z}/{x}/{y}.jpg?key=lctZzs518h1OEqcsh2zL', {
+                attribution: '© MapTiler © Ordnance Survey',
+                maxZoom: 18
+            }),
+            "OS 25k 1937": L.tileLayer('https://api.maptiler.com/tiles/uk-osgb25k1937/{z}/{x}/{y}.jpg?key=lctZzs518h1OEqcsh2zL', {
+                attribution: '© MapTiler © Ordnance Survey',
+                maxZoom: 18
+            }),
+            "Geological": L.tileLayer('https://mapseries-tilesets.s3.amazonaws.com/geological/oneinchscot/{z}/{x}/{y}.png', {
+                attribution: 'Geological Survey',
+                maxZoom: 18
+            }),
+            "Roy Military Survey": L.tileLayer('https://mapseries-tilesets.s3.amazonaws.com/roy/lowlands/{z}/{x}/{y}.png', {
+                attribution: 'Roy Military Survey',
+                maxZoom: 18
+            })
+        };
+
+        // Add default layer with collapsed control (but we'll expand it initially)
+        baseLayers["OpenStreetMap"].addTo(map);
+
+        // Add scale control with both metric and imperial units
+        L.control.scale({
+            position: 'bottomleft',
+            metric: true,
+            imperial: true,
+            maxWidth: 150
+        }).addTo(map);
+
+        // Create layer control that starts collapsed but can be toggled
+        const layerControl = L.control.layers(baseLayers, null, {
+            collapsed: true,  // Allow collapsing
+            autoZIndex: true,
+            hideSingleBase: false
+        }).addTo(map);
+        
+        // Expand it initially so users can see the options
+        setTimeout(() => {
+            const controlElement = layerControl.getContainer();
+            if (controlElement) {
+                layerControl.expand();
+                
+                // Add custom display mode section to the layer control
+                const layersList = controlElement.querySelector('.leaflet-control-layers-list');
+                if (layersList) {
+                    // Add separator and display mode section
+                    const displayModeSection = document.createElement('div');
+                    displayModeSection.innerHTML = `
+                        <div style="border-top: 1px solid #ddd; margin: 8px 0; padding-top: 8px;">
+                            <div style="font-weight: bold; margin-bottom: 6px; font-size: 12px; color: #333;">Display Mode</div>
+                            <label style="display: flex; align-items: center; margin-bottom: 4px; font-size: 12px; cursor: pointer;">
+                                <input type="radio" name="displayModeLayer" value="points" checked style="margin-right: 6px; accent-color: #667eea;">
+                                <span>Points</span>
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 4px; font-size: 12px; cursor: pointer;">
+                                <input type="radio" name="displayModeLayer" value="heatmap" style="margin-right: 6px; accent-color: #667eea;">
+                                <span>Heat Map</span>
+                            </label>
+                            <label style="display: flex; align-items: center; margin-bottom: 0; font-size: 12px; cursor: pointer;">
+                                <input type="radio" name="displayModeLayer" value="both" style="margin-right: 6px; accent-color: #667eea;">
+                                <span>Both</span>
+                            </label>
+                        </div>
+                    `;
+                    layersList.appendChild(displayModeSection);
+                    
+                    // Add event listeners for the new display mode radios
+                    const displayRadiosLayer = displayModeSection.querySelectorAll('input[name="displayModeLayer"]');
+                    displayRadiosLayer.forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            displayMode = this.value;
+                            
+                            // Also update the hidden original radio buttons to keep them in sync
+                            const originalRadio = document.querySelector(`input[name="displayMode"][value="${this.value}"]`);
+                            if (originalRadio) {
+                                originalRadio.checked = true;
+                            }
+                            
+                            // Refresh the map display
+                            if (geojsonData) {
+                                addMarkersToMap(filteredFeatures);
+                            }
+                        });
+                    });
+                }
+            }
+        }, 100);
+
+        // Add zoom event listener for heatmap updates - BUT only when heatmap should be visible
+        map.on('zoomend', function() {
+            // Only update heatmap if it should be displayed in the current mode
+            if ((displayMode === 'heatmap' || displayMode === 'both') && geojsonData && heatmapLayer) {
+                // Remove existing heatmap and recreate with new zoom settings
+                map.removeLayer(heatmapLayer);
+                heatmapLayer = null;
+                createHeatmap(filteredFeatures);
+            }
+        });
+
+        // Store markers and data
+        let markers = [];
+        let filteredFeatures = [];
+        let heatmapLayer = null;
+        let displayMode = 'points'; // 'points', 'heatmap', or 'both'
+
+        // Timeline functionality
+        let timelineRange = { min: 1600, max: 2000 };
+        let currentTimelineMin = 1600;
+        let currentTimelineMax = 2000;
+
+        // Initialize timeline
+        function initializeTimeline() {
+            const allYears = [];
+            geojsonData.features.forEach(feature => {
+                if (feature.properties.historic_forms) {
+                    feature.properties.historic_forms.forEach(form => {
+                        const year = parseInt(form.date);
+                        if (!isNaN(year)) {
+                            allYears.push(year);
+                        }
+                    });
+                }
+            });
+
+            if (allYears.length > 0) {
+                timelineRange.min = Math.min(...allYears);
+                timelineRange.max = Math.max(...allYears, 2000);
+                
+                const sliderMin = document.getElementById('timelineSliderMin');
+                const sliderMax = document.getElementById('timelineSliderMax');
+                
+                sliderMin.min = timelineRange.min;
+                sliderMin.max = timelineRange.max;
+                sliderMin.value = timelineRange.min;
+                currentTimelineMin = timelineRange.min;
+                
+                sliderMax.min = timelineRange.min;
+                sliderMax.max = timelineRange.max;
+                sliderMax.value = timelineRange.max;
+                currentTimelineMax = timelineRange.max;
+                
+                // Update labels
+                const labels = document.querySelector('.timeline-labels');
+                labels.innerHTML = `
+                    <span>${timelineRange.min}</span>
+                    <span>${Math.round((timelineRange.min + timelineRange.max) / 2)}</span>
+                    <span>${timelineRange.max}</span>
+                `;
+            }
+
+            // Add event listeners
+            document.getElementById('timelineSliderMin').addEventListener('input', function(e) {
+                currentTimelineMin = parseInt(e.target.value);
+                if (currentTimelineMin > currentTimelineMax) {
+                    currentTimelineMax = currentTimelineMin;
+                    document.getElementById('timelineSliderMax').value = currentTimelineMax;
+                }
+                updateRangeTrack();
+                updateTimelineDisplay();
+                applyFilters();
+            });
+
+            document.getElementById('timelineSliderMax').addEventListener('input', function(e) {
+                currentTimelineMax = parseInt(e.target.value);
+                if (currentTimelineMax < currentTimelineMin) {
+                    currentTimelineMin = currentTimelineMax;
+                    document.getElementById('timelineSliderMin').value = currentTimelineMin;
+                }
+                updateRangeTrack();
+                updateTimelineDisplay();
+                applyFilters();
+            });
+
+            updateRangeTrack();
+            updateTimelineDisplay();
+        }
+
+        // Update the visual range track
+        function updateRangeTrack() {
+            const sliderMin = document.getElementById('timelineSliderMin');
+            const sliderMax = document.getElementById('timelineSliderMax');
+            const track = document.getElementById('rangeTrack');
+            const minValue = document.getElementById('minValue');
+            const maxValue = document.getElementById('maxValue');
+            
+            const range = timelineRange.max - timelineRange.min;
+            const leftPercent = ((currentTimelineMin - timelineRange.min) / range) * 100;
+            const rightPercent = ((currentTimelineMax - timelineRange.min) / range) * 100;
+            
+            track.style.left = leftPercent + '%';
+            track.style.width = (rightPercent - leftPercent) + '%';
+            
+            minValue.textContent = currentTimelineMin;
+            maxValue.textContent = currentTimelineMax;
+        }
+
+        // Update timeline display
+        function updateTimelineDisplay() {
+            const current = document.getElementById('timelineCurrent');
+            const stats = document.getElementById('timelineStats');
+            
+            if (currentTimelineMin <= timelineRange.min && currentTimelineMax >= timelineRange.max) {
+                current.textContent = `Showing all periods (${timelineRange.min}-${timelineRange.max})`;
+            } else {
+                current.textContent = `Showing records from ${currentTimelineMin} to ${currentTimelineMax}`;
+            }
+            
+            // Count places with historic forms in the selected period
+            const visibleCount = geojsonData.features.filter(feature => {
+                return passesTimelineFilter(feature);
+            }).length;
+            
+            stats.textContent = `${visibleCount} place${visibleCount !== 1 ? 's' : ''} visible`;
+        }
+
+        // Check if feature passes timeline filter
+        function passesTimelineFilter(feature) {
+            // If timeline covers full range, show all places
+            if (currentTimelineMin <= timelineRange.min && currentTimelineMax >= timelineRange.max) {
+                return true;
+            }
+            
+            // If no historic forms, show the place (could be contemporary)
+            if (!feature.properties.historic_forms || feature.properties.historic_forms.length === 0) {
+                return true;
+            }
+            
+            // Check if any historic form is within the timeline range
+            return feature.properties.historic_forms.some(form => {
+                const year = parseInt(form.date);
+                return !isNaN(year) && year >= currentTimelineMin && year <= currentTimelineMax;
+            });
+        }
+
+        // Create custom marker icon
+        const createCustomIcon = (categories) => {
+            const color = getColorByCategory(categories);
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="background: ${color}; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></div>`,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+        };
+
+        // Get color based on categories
+        function getColorByCategory(categories) {
+            if (!categories || categories.length === 0) return '#667eea';
+            const categoryColors = {
+                'waterway': '#2196F3',
+                'size': '#4CAF50',
+                'settlement': '#FF9800',
+                'topographic': '#9C27B0',
+                'religious': '#795548'
+            };
+            return categoryColors[categories[0]] || '#667eea';
+        }
+
+        // Create popup content
+        function createPopupContent(properties) {
+            let etymologyHtml = '';
+            if (properties.elements && properties.elements.length > 0) {
+                etymologyHtml = properties.elements.map(elem => `
+                    <div class="etymology-item clickable-element" onclick="filterByElement('${elem.element}')" title="Click to filter by element '${elem.element}'">
+                        <div class="element-text">"${elem.element}"</div>
+                        <div class="element-meta">
+                            ${elem.language} • ${elem.role} • certainty: ${elem.certainty}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            let historicHtml = '';
+            if (properties.historic_forms && properties.historic_forms.length > 0) {
+                historicHtml = properties.historic_forms.map(form => `
+                    <div class="historic-form">
+                        <div class="form-text">"${form.historic_form}"</div>
+                        <div class="form-meta">
+                            ${form.date} • ${form.source}${form.ref ? ' • ' + form.ref : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Generate citations in multiple styles
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const citationDate = currentDate.toLocaleDateString('en-GB', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            const currentUrl = window.location.href.split('#')[0] + '#' + properties.pn_id;
+            
+            const citations = {
+                apa: `Place-name record ${properties.pn_id}: '${properties.pn}'. ${currentYear}. In <i>Ainmean Charraige/Carrick Names</i>. Retrieved ${citationDate}, from ${currentUrl}`,
+                mla: `"Place-name record ${properties.pn_id}: '${properties.pn}'." <i>Ainmean Charraige/Carrick Names</i>. ${currentYear}. Web. ${citationDate}. ${currentUrl}`,
+                chicago: `<i>Ainmean Charraige/Carrick Names</i>, s.v., "Place-name record ${properties.pn_id}: '${properties.pn}'," accessed ${citationDate}, ${currentUrl}`
+            };
+            
+            // Escape citations for HTML attributes
+            const escapedCitations = {
+                apa: citations.apa.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
+                mla: citations.mla.replace(/'/g, '&#39;').replace(/"/g, '&quot;'),
+                chicago: citations.chicago.replace(/'/g, '&#39;').replace(/"/g, '&quot;')
+            };
+
+            const popupId = `popup-${properties.pn_id}`;
+            const hasHistoric = properties.historic_forms && properties.historic_forms.length > 0;
+
+            return `
+                <div class="custom-popup">
+                    <div class="popup-header">
+                        <h3 class="popup-title">${properties.pn}</h3>
+                        <p class="popup-parish">${properties.parish} Parish</p>
+                    </div>
+                    
+                    <div class="popup-tabs">
+                        <button class="popup-tab active" onclick="switchTab('${popupId}', 'info')">
+                            Information
+                        </button>
+                        ${hasHistoric ? `
+                            <button class="popup-tab" onclick="switchTab('${popupId}', 'history')">
+                                Historic Forms
+                            </button>
+                        ` : ''}
+                        <button class="popup-tab" onclick="switchTab('${popupId}', 'cite')">
+                            Cite
+                        </button>
+                    </div>
+                    
+                    <div class="popup-content-area">
+                        <div id="${popupId}-info" class="tab-content active">
+                            ${etymologyHtml ? `
+                                <div class="popup-section">
+                                    <h4>Etymology <small style="color: #999;">(click elements to filter)</small></h4>
+                                    ${etymologyHtml}
+                                </div>
+                            ` : ''}
+                            
+                            <div class="popup-section">
+                                <h4>Location Details</h4>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="info-label">Grid Ref</div>
+                                        <div class="info-value">${properties.gridref}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Altitude</div>
+                                        <div class="info-value">${properties.altitude}m</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Certainty</div>
+                                        <div class="info-value">${properties.loc_certainty}/5</div>
+                                    </div>
+                                    <div class="info-item clickable-element" onclick="showCategoryDetails('${properties.categories ? properties.categories.join(',') : ''}')" title="Click to see category details">
+                                        <div class="info-label">Categories</div>
+                                        <div class="info-value">${properties.categories ? properties.categories.map(cat => 
+                                            `<span class="clickable-tag" onclick="event.stopPropagation(); filterByClickableCategory('${cat}')" title="Click to filter by ${cat}">${cat}</span>`
+                                        ).join(', ') : 'None'}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            ${properties.notes ? `
+                                <div class="popup-section">
+                                    <h4>Notes</h4>
+                                    <p style="font-size: 12px; color: #666; margin: 0;">${properties.notes}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        ${hasHistoric ? `
+                            <div id="${popupId}-history" class="tab-content">
+                                <div class="popup-section">
+                                    <h4>Historical Evolution</h4>
+                                    ${historicHtml}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div id="${popupId}-cite" class="tab-content">
+                            <div class="popup-section">
+                                <h4>Citation</h4>
+                                
+                                <div style="margin-bottom: 15px;">
+                                    <h5 style="margin: 0 0 8px 0; color: #667eea; font-size: 13px;">APA Style:</h5>
+                                    <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border-left: 3px solid #667eea; font-size: 12px; line-height: 1.4; color: #333; margin-bottom: 8px;">
+                                        ${citations.apa}
+                                    </div>
+                                    <button onclick="copyCitation('${escapedCitations.apa}')" 
+                                            style="padding: 4px 8px; background: #667eea; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
+                                        Copy APA
+                                    </button>
+                                </div>
+                                
+                                <div style="margin-bottom: 15px;">
+                                    <h5 style="margin: 0 0 8px 0; color: #667eea; font-size: 13px;">MLA Style:</h5>
+                                    <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border-left: 3px solid #667eea; font-size: 12px; line-height: 1.4; color: #333; margin-bottom: 8px;">
+                                        ${citations.mla}
+                                    </div>
+                                    <button onclick="copyCitation('${escapedCitations.mla}')" 
+                                            style="padding: 4px 8px; background: #667eea; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
+                                        Copy MLA
+                                    </button>
+                                </div>
+                                
+                                <div style="margin-bottom: 15px;">
+                                    <h5 style="margin: 0 0 8px 0; color: #667eea; font-size: 13px;">Chicago Style:</h5>
+                                    <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border-left: 3px solid #667eea; font-size: 12px; line-height: 1.4; color: #333; margin-bottom: 8px;">
+                                        ${citations.chicago}
+                                    </div>
+                                    <button onclick="copyCitation('${escapedCitations.chicago}')" 
+                                            style="padding: 4px 8px; background: #667eea; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
+                                        Copy Chicago
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add markers to map
+        function addMarkersToMap(features) {
+            // Always clear existing markers first
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // Always clear existing heatmap first - this is crucial!
+            if (heatmapLayer) {
+                map.removeLayer(heatmapLayer);
+                heatmapLayer = null;
+            }
+
+            // Create heat map ONLY if needed
+            if (displayMode === 'heatmap' || displayMode === 'both') {
+                createHeatmap(features);
+            }
+            
+            // Create markers ONLY if needed
+            if (displayMode === 'points' || displayMode === 'both') {
+                features.forEach((feature, index) => {
+                    const [lng, lat] = feature.geometry.coordinates;
+                    const marker = L.marker([lat, lng], {
+                        icon: createCustomIcon(feature.properties.categories)
+                    }).addTo(map);
+
+                    marker.bindPopup(createPopupContent(feature.properties), {
+                        maxWidth: 600,
+                        className: 'custom-popup-wrapper'
+                    });
+
+                    // Add tooltip with place name on hover
+                    marker.bindTooltip(feature.properties.pn, {
+                        permanent: false,
+                        direction: 'top',
+                        offset: [0, -20],
+                        className: 'place-name-tooltip'
+                    });
+
+                    // Update hash when popup opens
+                    marker.on('popupopen', function() {
+                        updateHash(feature.properties.pn_id);
+                    });
+
+                    marker.featureIndex = index;
+                    markers.push(marker);
+                });
+            }
+            
+            console.log(`Display mode: ${displayMode}, Markers: ${markers.length}, Heatmap: ${heatmapLayer ? 'visible' : 'hidden'}`);
+        }
+
+        // Create heatmap with zoom and feature count adjustments
+        function createHeatmap(features) {
+            console.log(`Creating heatmap for display mode: ${displayMode}`);
+            
+            const heatPoints = features.map(feature => {
+                const [lng, lat] = feature.geometry.coordinates;
+                return [lat, lng, 1]; // Each place name contributes equally to density
+            });
+            
+            if (heatPoints.length > 0) {
+                const pointCount = heatPoints.length;
+                const currentZoom = map.getZoom();
+                
+                // Base settings adjusted by feature count
+                let radius, blur, maxIntensity;
+                
+                if (pointCount <= 5) {
+                    radius = 50;
+                    blur = 25;
+                    maxIntensity = 0.6;
+                } else if (pointCount <= 20) {
+                    radius = 40;
+                    blur = 20;
+                    maxIntensity = 0.8;
+                } else if (pointCount <= 50) {
+                    radius = 30;
+                    blur = 15;
+                    maxIntensity = 1.0;
+                } else {
+                    radius = 25;
+                    blur = 12;
+                    maxIntensity = 1.2;
+                }
+                
+                // Adjust settings based on zoom level (lower zoom = zoomed out = higher intensity)
+                const zoomFactor = Math.max(0.5, (15 - currentZoom) / 10); // Higher factor when zoomed out
+                maxIntensity *= (1 + zoomFactor);
+                radius *= (1 + zoomFactor * 0.5);
+                
+                heatmapLayer = L.heatLayer(heatPoints, {
+                    radius: Math.round(radius),
+                    blur: blur,
+                    maxZoom: 15,
+                    max: maxIntensity,
+                    gradient: {
+                        0.0: '#3288bd',
+                        0.2: '#66c2a5', 
+                        0.4: '#abdda4',
+                        0.6: '#e6f598',
+                        0.8: '#fee08b',
+                        1.0: '#f46d43'
+                    }
+                }).addTo(map);
+                
+                console.log(`Heat map created and added to map for ${heatPoints.length} place names (zoom: ${currentZoom}, radius: ${Math.round(radius)}, max: ${maxIntensity.toFixed(2)})`);
+            } else {
+                console.log('No points to create heatmap');
+            }
+        }
+
+        // Update place list in sidebar (now hidden, but still updated for internal use)
+        function updatePlaceList(features) {
+            // Update the results count in the button
+            const resultsCount = document.getElementById('resultsCount');
+            resultsCount.textContent = features.length;
+            
+            // Still update the hidden list for internal use
+            const placeList = document.getElementById('placeList');
+            placeList.innerHTML = features.map((feature, index) => `
+                <div class="place-item" data-index="${index}" onclick="selectPlace(${index})">
+                    <div class="place-name">${feature.properties.pn}</div>
+                    <div class="place-parish">${feature.properties.parish} Parish</div>
+                    <div class="place-categories">
+                        ${feature.properties.categories ? feature.properties.categories.map(cat => 
+                            `<span class="category-tag clickable-tag" onclick="filterByClickableCategory('${cat}')" title="Click to filter by ${cat}">${cat}</span>`
+                        ).join('') : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            // Update modal place list if it's open
+            updateModalPlaceList(features);
+        }
+
+        // Update modal place list
+        function updateModalPlaceList(features) {
+            const modalPlaceList = document.getElementById('modalPlaceList');
+            const modalResultsCount = document.getElementById('modalResultsCount');
+            const modalResultsPlural = document.getElementById('modalResultsPlural');
+            
+            modalResultsCount.textContent = features.length;
+            modalResultsPlural.textContent = features.length === 1 ? '' : 's';
+            
+            modalPlaceList.innerHTML = features.map((feature, index) => `
+                <div class="modal-place-item" data-index="${index}" onclick="selectPlaceFromModal(${index})">
+                    <div class="modal-place-info">
+                        <div class="modal-place-name">${feature.properties.pn}</div>
+                        <div class="modal-place-details">
+                            <div class="modal-place-parish">${feature.properties.parish} Parish</div>
+                            ${feature.properties.gridref ? `<div>Grid: ${feature.properties.gridref}</div>` : ''}
+                            ${feature.properties.altitude ? `<div>Alt: ${feature.properties.altitude}m</div>` : ''}
+                        </div>
+                        ${feature.properties.categories && feature.properties.categories.length > 0 ? `
+                            <div class="modal-place-categories">
+                                ${feature.properties.categories.map(cat => 
+                                    `<span class="modal-category-tag">${cat}</span>`
+                                ).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="modal-place-action">
+                        View on map →
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Select place and zoom to it (works from both sidebar and modal)
+        function selectPlace(index) {
+            const feature = filteredFeatures[index];
+            const [lng, lat] = feature.geometry.coordinates;
+            
+            // Zoom to marker
+            map.setView([lat, lng], 16);
+            
+            // Open popup
+            const marker = markers.find(m => m.featureIndex === index);
+            if (marker) {
+                marker.openPopup();
+            }
+            
+            // Update sidebar selection (if visible)
+            document.querySelectorAll('.place-item').forEach(item => item.classList.remove('selected'));
+            const sidebarItem = document.querySelector(`[data-index="${index}"]`);
+            if (sidebarItem) {
+                sidebarItem.classList.add('selected');
+            }
+        }
+
+        // Select place from modal and close modal
+        function selectPlaceFromModal(index) {
+            selectPlace(index);
+            closeResultsList();
+        }
+
+        // Results List Modal Functions
+        function openResultsList() {
+            const modal = document.getElementById('resultsListModal');
+            modal.classList.add('visible');
+            updateModalPlaceList(filteredFeatures);
+        }
+
+        function closeResultsList() {
+            const modal = document.getElementById('resultsListModal');
+            modal.classList.remove('visible');
+        }
+
+        // Initialize filters
+        function initializeFilters() {
+            const categories = new Set();
+            const languages = new Set();
+            
+            geojsonData.features.forEach(feature => {
+                if (feature.properties.categories) {
+                    feature.properties.categories.forEach(cat => categories.add(cat));
+                }
+                if (feature.properties.elements) {
+                    feature.properties.elements.forEach(elem => languages.add(elem.language.toLowerCase()));
+                }
+            });
+            
+            const categoryFilters = document.getElementById('categoryFilters');
+            // Sort categories alphabetically
+            const sortedCategories = Array.from(categories).sort();
+            sortedCategories.forEach(category => {
+                const btn = document.createElement('div');
+                btn.className = 'filter-btn';
+                btn.textContent = category;
+                btn.dataset.category = category;
+                btn.onclick = () => filterByCategory(category);
+                categoryFilters.appendChild(btn);
+            });
+            
+            // Add click handler for "All" category button
+            document.querySelector('[data-category="all"]').onclick = () => filterByCategory('all');
+            
+            const languageFilters = document.getElementById('languageFilters');
+            // Sort languages alphabetically
+            const sortedLanguages = Array.from(languages).sort();
+            sortedLanguages.forEach(language => {
+                const btn = document.createElement('div');
+                btn.className = 'filter-btn';
+                btn.textContent = language.charAt(0).toUpperCase() + language.slice(1);
+                btn.dataset.language = language;
+                btn.onclick = () => filterByLanguage(language);
+                languageFilters.appendChild(btn);
+            });
+            
+            // Add click handler for "All" language button
+            document.querySelector('[data-language="all"]').onclick = () => filterByLanguage('all');
+        }
+
+        // Store selection order for exclusive mode
+        let categorySelectionOrder = [];
+        let languageSelectionOrder = [];
+
+        // FIXED: Filter functions with proper exclusive mode behavior
+        function filterByCategory(category) {
+            const btn = document.querySelector(`[data-category="${category}"]`);
+            const isExclusive = document.getElementById('categoryModeToggle').checked;
+            
+            if (category === 'all') {
+                // Clear all selections and reset
+                document.querySelectorAll('#categoryFilters .filter-btn').forEach(b => {
+                    b.classList.remove('active', 'primary', 'secondary', 'tertiary');
+                });
+                btn.classList.add('active');
+                categorySelectionOrder = [];
+                
+                // Reset all category options to be visible
+                resetCategoryOptions();
+            } else if (isExclusive) {
+                // Exclusive mode: accumulative AND filtering
+                if (btn.classList.contains('active')) {
+                    // Remove this category from selection
+                    const index = categorySelectionOrder.indexOf(category);
+                    if (index > -1) {
+                        categorySelectionOrder.splice(index, 1);
+                        btn.classList.remove('active', 'primary', 'secondary', 'tertiary');
+                    }
+                } else {
+                    // Add this category to selection
+                    categorySelectionOrder.push(category);
+                    btn.classList.add('active');
+                }
+                
+                // Clear "All" if we have selections
+                if (categorySelectionOrder.length > 0) {
+                    document.querySelector('[data-category="all"]').classList.remove('active');
+                }
+                
+                // Update visual hierarchy and filter options
+                updateCategorySelectionHierarchy();
+                filterCategoryOptionsExclusive();
+                
+                // If no categories selected, activate "All"
+                if (categorySelectionOrder.length === 0) {
+                    document.querySelector('[data-category="all"]').classList.add('active');
+                    resetCategoryOptions();
+                }
+            } else {
+                // Inclusive mode: existing behavior
+                document.querySelector('[data-category="all"]').classList.remove('active');
+                btn.classList.toggle('active');
+                
+                const hasActiveCategories = document.querySelectorAll('#categoryFilters .filter-btn.active:not([data-category="all"])').length > 0;
+                if (!hasActiveCategories) {
+                    document.querySelector('[data-category="all"]').classList.add('active');
+                }
+            }
+            
+            applyFilters();
+        }
+
+        function filterByLanguage(language) {
+            const btn = document.querySelector(`[data-language="${language}"]`);
+            const isExclusive = document.getElementById('languageModeToggle').checked;
+            
+            if (language === 'all') {
+                // Clear all selections and reset
+                document.querySelectorAll('#languageFilters .filter-btn').forEach(b => {
+                    b.classList.remove('active', 'primary', 'secondary', 'tertiary');
+                });
+                btn.classList.add('active');
+                languageSelectionOrder = [];
+                
+                // Reset all language options to be visible
+                resetLanguageOptions();
+            } else if (isExclusive) {
+                // Exclusive mode: accumulative AND filtering
+                if (btn.classList.contains('active')) {
+                    // Remove this language from selection
+                    const index = languageSelectionOrder.indexOf(language);
+                    if (index > -1) {
+                        languageSelectionOrder.splice(index, 1);
+                        btn.classList.remove('active', 'primary', 'secondary', 'tertiary');
+                    }
+                } else {
+                    // Add this language to selection
+                    languageSelectionOrder.push(language);
+                    btn.classList.add('active');
+                }
+                
+                // Clear "All" if we have selections
+                if (languageSelectionOrder.length > 0) {
+                    document.querySelector('[data-language="all"]').classList.remove('active');
+                }
+                
+                // Update visual hierarchy and filter options
+                updateLanguageSelectionHierarchy();
+                filterLanguageOptionsExclusive();
+                
+                // If no languages selected, activate "All"
+                if (languageSelectionOrder.length === 0) {
+                    document.querySelector('[data-language="all"]').classList.add('active');
+                    resetLanguageOptions();
+                }
+            } else {
+                // Inclusive mode: existing behavior
+                document.querySelector('[data-language="all"]').classList.remove('active');
+                btn.classList.toggle('active');
+                
+                const hasActiveLanguages = document.querySelectorAll('#languageFilters .filter-btn.active:not([data-language="all"])').length > 0;
+                if (!hasActiveLanguages) {
+                    document.querySelector('[data-language="all"]').classList.add('active');
+                }
+            }
+            
+            applyFilters();
+        }
+
+        // Update visual hierarchy for category selections
+        function updateCategorySelectionHierarchy() {
+            categorySelectionOrder.forEach((category, index) => {
+                const btn = document.querySelector(`[data-category="${category}"]`);
+                if (btn) {
+                    btn.classList.remove('primary', 'secondary', 'tertiary');
+                    if (index === 0) {
+                        btn.classList.add('primary');
+                    } else if (index === 1) {
+                        btn.classList.add('secondary');
+                    } else {
+                        btn.classList.add('tertiary');
+                    }
+                }
+            });
+        }
+
+        // Update visual hierarchy for language selections
+        function updateLanguageSelectionHierarchy() {
+            languageSelectionOrder.forEach((language, index) => {
+                const btn = document.querySelector(`[data-language="${language}"]`);
+                if (btn) {
+                    btn.classList.remove('primary', 'secondary', 'tertiary');
+                    if (index === 0) {
+                        btn.classList.add('primary');
+                    } else if (index === 1) {
+                        btn.classList.add('secondary');
+                    } else {
+                        btn.classList.add('tertiary');
+                    }
+                }
+            });
+        }
+
+        // Filter category options for exclusive mode (accumulative AND)
+        function filterCategoryOptionsExclusive() {
+            if (categorySelectionOrder.length === 0) {
+                resetCategoryOptions();
+                return;
+            }
+            
+            console.log(`Filtering category options for exclusive AND: ${categorySelectionOrder.join(' + ')}`);
+            
+            // Find features that have ALL selected categories
+            const featuresWithAllCategories = geojsonData.features.filter(feature => {
+                if (!feature.properties.categories) return false;
+                return categorySelectionOrder.every(selectedCat => 
+                    feature.properties.categories.includes(selectedCat)
+                );
+            });
+            
+            console.log(`Found ${featuresWithAllCategories.length} features with ALL categories: ${categorySelectionOrder.join(', ')}`);
+            
+            // Find all categories that co-occur with this combination
+            const cooccurringCategories = new Set();
+            // Always include already selected categories
+            categorySelectionOrder.forEach(cat => cooccurringCategories.add(cat));
+            
+            featuresWithAllCategories.forEach(feature => {
+                if (feature.properties.categories) {
+                    feature.properties.categories.forEach(cat => {
+                        cooccurringCategories.add(cat);
+                    });
+                }
+            });
+            
+            console.log(`Available categories for combination:`, Array.from(cooccurringCategories));
+            
+            // Show/hide category buttons based on co-occurrence
+            document.querySelectorAll('#categoryFilters .filter-btn:not([data-category="all"])').forEach(btn => {
+                const category = btn.dataset.category;
+                if (cooccurringCategories.has(category)) {
+                    btn.classList.remove('disabled');
+                    btn.style.display = 'inline-block';
+                    btn.style.opacity = '1';
+                } else {
+                    btn.classList.add('disabled');
+                    btn.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter language options for exclusive mode (accumulative AND)
+        function filterLanguageOptionsExclusive() {
+            if (languageSelectionOrder.length === 0) {
+                resetLanguageOptions();
+                return;
+            }
+            
+            console.log(`Filtering language options for exclusive AND: ${languageSelectionOrder.join(' + ')}`);
+            
+            // Find features that have elements with ALL selected languages
+            const featuresWithAllLanguages = geojsonData.features.filter(feature => {
+                if (!feature.properties.elements) return false;
+                return languageSelectionOrder.every(selectedLang => 
+                    feature.properties.elements.some(elem => 
+                        elem.language.toLowerCase() === selectedLang.toLowerCase()
+                    )
+                );
+            });
+            
+            console.log(`Found ${featuresWithAllLanguages.length} features with ALL languages: ${languageSelectionOrder.join(', ')}`);
+            
+            // Find all languages that co-occur with this combination
+            const cooccurringLanguages = new Set();
+            // Always include already selected languages
+            languageSelectionOrder.forEach(lang => cooccurringLanguages.add(lang.toLowerCase()));
+            
+            featuresWithAllLanguages.forEach(feature => {
+                if (feature.properties.elements) {
+                    feature.properties.elements.forEach(elem => {
+                        cooccurringLanguages.add(elem.language.toLowerCase());
+                    });
+                }
+            });
+            
+            console.log(`Available languages for combination:`, Array.from(cooccurringLanguages));
+            
+            // Show/hide language buttons based on co-occurrence
+            document.querySelectorAll('#languageFilters .filter-btn:not([data-language="all"])').forEach(btn => {
+                const language = btn.dataset.language;
+                if (cooccurringLanguages.has(language)) {
+                    btn.classList.remove('disabled');
+                    btn.style.display = 'inline-block';
+                    btn.style.opacity = '1';
+                } else {
+                    btn.classList.add('disabled');
+                    btn.style.display = 'none';
+                }
+            });
+        }
+
+        // FIXED: Filter category options based on co-occurrence with selected category
+        function filterCategoryOptions(selectedCategory) {
+            console.log(`Filtering category options for: ${selectedCategory}`);
+            
+            // Find all features that have the selected category
+            const featuresWithCategory = geojsonData.features.filter(feature => 
+                feature.properties.categories && 
+                feature.properties.categories.includes(selectedCategory)
+            );
+            
+            console.log(`Found ${featuresWithCategory.length} features with category ${selectedCategory}`);
+            
+            // Find all categories that co-occur with the selected category
+            const cooccurringCategories = new Set();
+            cooccurringCategories.add(selectedCategory); // Always include the selected category itself
+            
+            featuresWithCategory.forEach(feature => {
+                if (feature.properties.categories) {
+                    feature.properties.categories.forEach(cat => {
+                        cooccurringCategories.add(cat);
+                    });
+                }
+            });
+            
+            console.log(`Co-occurring categories:`, Array.from(cooccurringCategories));
+            
+            // Show/hide category buttons based on co-occurrence
+            document.querySelectorAll('#categoryFilters .filter-btn:not([data-category="all"])').forEach(btn => {
+                const category = btn.dataset.category;
+                if (cooccurringCategories.has(category)) {
+                    btn.classList.remove('disabled');
+                    btn.style.display = 'inline-block';
+                } else {
+                    btn.classList.add('disabled');
+                    btn.style.display = 'none';
+                }
+            });
+        }
+
+        // FIXED: Filter language options based on co-occurrence with selected language
+        function filterLanguageOptions(selectedLanguage) {
+            console.log(`Filtering language options for: ${selectedLanguage}`);
+            
+            // Find all features that have elements with the selected language
+            const featuresWithLanguage = geojsonData.features.filter(feature => 
+                feature.properties.elements && 
+                feature.properties.elements.some(elem => 
+                    elem.language.toLowerCase() === selectedLanguage.toLowerCase()
+                )
+            );
+            
+            console.log(`Found ${featuresWithLanguage.length} features with language ${selectedLanguage}`);
+            
+            // Find all languages that co-occur with the selected language
+            const cooccurringLanguages = new Set();
+            cooccurringLanguages.add(selectedLanguage.toLowerCase()); // Always include the selected language itself
+            
+            featuresWithLanguage.forEach(feature => {
+                if (feature.properties.elements) {
+                    feature.properties.elements.forEach(elem => {
+                        cooccurringLanguages.add(elem.language.toLowerCase());
+                    });
+                }
+            });
+            
+            console.log(`Co-occurring languages:`, Array.from(cooccurringLanguages));
+            
+            // Show/hide language buttons based on co-occurrence
+            document.querySelectorAll('#languageFilters .filter-btn:not([data-language="all"])').forEach(btn => {
+                const language = btn.dataset.language;
+                if (cooccurringLanguages.has(language)) {
+                    btn.classList.remove('disabled');
+                    btn.style.display = 'inline-block';
+                } else {
+                    btn.classList.add('disabled');
+                    btn.style.display = 'none';
+                }
+            });
+        }
+
+        // FIXED: Reset category options to show all
+        function resetCategoryOptions() {
+            console.log('Resetting category options');
+            document.querySelectorAll('#categoryFilters .filter-btn').forEach(btn => {
+                btn.classList.remove('disabled');
+                btn.style.display = 'inline-block';
+            });
+        }
+
+        // FIXED: Reset language options to show all
+        function resetLanguageOptions() {
+            console.log('Resetting language options');
+            document.querySelectorAll('#languageFilters .filter-btn').forEach(btn => {
+                btn.classList.remove('disabled');
+                btn.style.display = 'inline-block';
+            });
+        }
+
+        function applyFilters() {
+            // Get active categories (excluding "all")
+            const activeCategories = Array.from(document.querySelectorAll('#categoryFilters .filter-btn.active:not([data-category="all"])'))
+                .map(btn => btn.dataset.category);
+            const showAllCategories = document.querySelector('[data-category="all"]').classList.contains('active');
+            const isExclusiveCategories = document.getElementById('categoryModeToggle').checked;
+            
+            // Get active languages (excluding "all")
+            const activeLanguages = Array.from(document.querySelectorAll('#languageFilters .filter-btn.active:not([data-language="all"])'))
+                .map(btn => btn.dataset.language);
+            const showAllLanguages = document.querySelector('[data-language="all"]').classList.contains('active');
+            const isExclusiveLanguages = document.getElementById('languageModeToggle').checked;
+            
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            
+            filteredFeatures = geojsonData.features.filter(feature => {
+                let matchesCategory;
+                if (showAllCategories || activeCategories.length === 0) {
+                    matchesCategory = true;
+                } else if (isExclusiveCategories) {
+                    // In exclusive mode, feature must have ALL selected categories
+                    matchesCategory = feature.properties.categories && 
+                        activeCategories.every(cat => feature.properties.categories.includes(cat));
+                } else {
+                    // In inclusive mode, feature must have ANY of the selected categories
+                    matchesCategory = feature.properties.categories && 
+                        feature.properties.categories.some(cat => activeCategories.includes(cat));
+                }
+                
+                let matchesLanguage;
+                if (showAllLanguages || activeLanguages.length === 0) {
+                    matchesLanguage = true;
+                } else if (isExclusiveLanguages) {
+                    // In exclusive mode, feature must have elements with ALL selected languages
+                    matchesLanguage = feature.properties.elements && 
+                        activeLanguages.every(lang => 
+                            feature.properties.elements.some(elem => 
+                                elem.language.toLowerCase() === lang.toLowerCase()
+                            )
+                        );
+                } else {
+                    // In inclusive mode, feature must have elements with ANY of the selected languages
+                    matchesLanguage = feature.properties.elements && 
+                        feature.properties.elements.some(elem => 
+                            activeLanguages.includes(elem.language.toLowerCase())
+                        );
+                }
+                
+                const matchesSearch = !searchTerm || 
+                    feature.properties.pn.toLowerCase().includes(searchTerm) ||
+                    feature.properties.parish.toLowerCase().includes(searchTerm);
+                
+                const matchesTimeline = passesTimelineFilter(feature);
+                
+                return matchesCategory && matchesLanguage && matchesSearch && matchesTimeline;
+            });
+            
+            addMarkersToMap(filteredFeatures);
+            updatePlaceList(filteredFeatures);
+            updateTimelineDisplay();
+            
+            // Log current filter state for debugging
+            if (isExclusiveCategories && activeCategories.length > 0) {
+                console.log(`Exclusive category filter: ${activeCategories.join(' AND ')}, showing ${filteredFeatures.length} places`);
+            }
+            if (isExclusiveLanguages && activeLanguages.length > 0) {
+                console.log(`Exclusive language filter: ${activeLanguages.join(' AND ')}, showing ${filteredFeatures.length} places`);
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchBox').addEventListener('input', applyFilters);
+
+        // Tab switching function
+        function switchTab(popupId, tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll(`[id^="${popupId}-"]`);
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.popup-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(`${popupId}-${tabName}`).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Filter by clickable category
+        function filterByClickableCategory(category) {
+            // Update the category filter UI
+            document.querySelectorAll('#categoryFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+            const categoryBtn = document.querySelector(`[data-category="${category}"]`);
+            if (categoryBtn) {
+                categoryBtn.classList.add('active');
+            }
+            
+            // Clear other filters
+            document.querySelectorAll('#languageFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-language="all"]').classList.add('active');
+            document.getElementById('searchBox').value = '';
+            
+            // Apply the filter
+            applyFilters();
+            
+            // Close popup
+            map.closePopup();
+            
+            // Show feedback
+            showFilterFeedback(`Filtered by category: ${category}`);
+        }
+
+        // Filter by element
+        function filterByElement(element) {
+            // Update search box
+            document.getElementById('searchBox').value = element;
+            
+            // Clear other filters
+            document.querySelectorAll('#categoryFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-category="all"]').classList.add('active');
+            document.querySelectorAll('#languageFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-language="all"]').classList.add('active');
+            
+            // Apply element-specific filter
+            applyElementFilter(element);
+            
+            // Close popup
+            map.closePopup();
+            
+            // Show feedback
+            showFilterFeedback(`Filtered by element: "${element}"`);
+        }
+
+        // Apply element-specific filter
+        function applyElementFilter(element) {
+            filteredFeatures = geojsonData.features.filter(feature => {
+                const matchesElement = feature.properties.elements && 
+                       feature.properties.elements.some(elem => 
+                           elem.element.toLowerCase() === element.toLowerCase());
+                const matchesTimeline = passesTimelineFilter(feature);
+                return matchesElement && matchesTimeline;
+            });
+            
+            addMarkersToMap(filteredFeatures);
+            updatePlaceList(filteredFeatures);
+            updateTimelineDisplay();
+        }
+
+        // Show category details
+        function showCategoryDetails(categoriesStr) {
+            if (categoriesStr) {
+                const categories = categoriesStr.split(',');
+                showFilterFeedback(`Categories: ${categories.join(', ')}`);
+            }
+        }
+
+        // Show filter feedback
+        function showFilterFeedback(message) {
+            // Remove existing feedback
+            const existingFeedback = document.querySelector('.filter-feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
+            
+            // Create new feedback
+            const feedback = document.createElement('div');
+            feedback.className = 'filter-feedback';
+            feedback.innerHTML = `
+                ${message}
+                <button class="clear-filters-btn" onclick="clearAllFilters()">Clear All</button>
+            `;
+            document.body.appendChild(feedback);
+            
+            // Auto-remove after 4 seconds
+            setTimeout(() => {
+                if (feedback.parentNode) {
+                    feedback.remove();
+                }
+            }, 4000);
+        }
+
+        // Clear all filters
+        function clearAllFilters() {
+            // Reset all filter buttons and selection orders
+            document.querySelectorAll('#categoryFilters .filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'primary', 'secondary', 'tertiary');
+            });
+            document.querySelector('[data-category="all"]').classList.add('active');
+            categorySelectionOrder = [];
+            
+            document.querySelectorAll('#languageFilters .filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'primary', 'secondary', 'tertiary');
+            });
+            document.querySelector('[data-language="all"]').classList.add('active');
+            languageSelectionOrder = [];
+            
+            // Reset filter options visibility
+            resetCategoryOptions();
+            resetLanguageOptions();
+            
+            // Reset exclusive mode checkboxes
+            document.getElementById('categoryModeToggle').checked = false;
+            document.getElementById('languageModeToggle').checked = false;
+            
+            // Clear search
+            document.getElementById('searchBox').value = '';
+            
+            // Reset timeline
+            document.getElementById('timelineSliderMin').value = timelineRange.min;
+            document.getElementById('timelineSliderMax').value = timelineRange.max;
+            currentTimelineMin = timelineRange.min;
+            currentTimelineMax = timelineRange.max;
+            
+            // Reset filtered features
+            filteredFeatures = geojsonData.features;
+            addMarkersToMap(filteredFeatures);
+            updatePlaceList(filteredFeatures);
+            updateRangeTrack();
+            updateTimelineDisplay();
+            
+            // Remove feedback
+            const feedback = document.querySelector('.filter-feedback');
+            if (feedback) {
+                feedback.remove();
+            }
+        }
+
+        // Toggle filter section
+        function toggleFilterSection(sectionName) {
+            const content = document.getElementById(sectionName + 'Content');
+            const toggle = document.getElementById(sectionName + 'Toggle');
+            
+            const isExpanded = content.classList.contains('expanded');
+            
+            if (isExpanded) {
+                content.classList.remove('expanded');
+                toggle.classList.remove('expanded');
+            } else {
+                content.classList.add('expanded');
+                toggle.classList.add('expanded');
+            }
+        }
+
+        // Copy citation function
+        function copyCitation(citation) {
+            const decodedCitation = citation.replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+            navigator.clipboard.writeText(decodedCitation).then(() => showCopiedFeedback());
+        }
+
+        // Show "copied" feedback for citation
+        function showCopiedFeedback() {
+            showFilterFeedback('Citation copied to clipboard!');
+        }
+
+        // Hash navigation functionality
+        function handleHashChange() {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                const feature = geojsonData.features.find(f => f.properties.pn_id === hash);
+                if (feature) {
+                    const [lng, lat] = feature.geometry.coordinates;
+                    map.setView([lat, lng], 16);
+                    
+                    const marker = markers.find(m => {
+                        const markerFeature = geojsonData.features[m.featureIndex];
+                        return markerFeature && markerFeature.properties.pn_id === hash;
+                    });
+                    if (marker) {
+                        marker.openPopup();
+                    }
+                }
+            }
+        }
+
+        // Update hash when popup opens
+        function updateHash(pn_id) {
+            try {
+                window.history.replaceState(null, null, `#${pn_id}`);
+            } catch (e) {
+                // Fallback for environments that don't support history API
+                window.location.hash = pn_id;
+            }
+        }
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', handleHashChange);
+
+        // Advanced Filter Modal Functions
+        function openAdvancedFilters() {
+            const modal = document.getElementById('advancedFilterModal');
+            modal.classList.add('visible');
+            populateAdvancedFilterOptions();
+        }
+
+        function closeAdvancedFilters() {
+            const modal = document.getElementById('advancedFilterModal');
+            modal.classList.remove('visible');
+        }
+
+        function populateAdvancedFilterOptions() {
+            // Populate parish dropdown
+            const parishes = new Set();
+            const languages = new Set();
+            const categories = new Set();
+            
+            geojsonData.features.forEach(feature => {
+                parishes.add(feature.properties.parish);
+                
+                if (feature.properties.elements) {
+                    feature.properties.elements.forEach(elem => languages.add(elem.language));
+                }
+                
+                if (feature.properties.categories) {
+                    feature.properties.categories.forEach(cat => categories.add(cat));
+                }
+            });
+
+            // Populate parish dropdown
+            const parishSelect = document.getElementById('advParish');
+            parishSelect.innerHTML = '<option value="">Any Parish</option>';
+            Array.from(parishes).sort().forEach(parish => {
+                const option = document.createElement('option');
+                option.value = parish;
+                option.textContent = parish;
+                parishSelect.appendChild(option);
+            });
+
+            // Populate language checkboxes
+            const languageContainer = document.getElementById('advLanguageCheckboxes');
+            languageContainer.innerHTML = '';
+            Array.from(languages).sort().forEach(lang => {
+                const div = document.createElement('div');
+                div.className = 'checkbox-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="lang-${lang}" value="${lang}">
+                    <label for="lang-${lang}">${lang}</label>
+                `;
+                languageContainer.appendChild(div);
+            });
+
+            // Populate category checkboxes
+            const categoryContainer = document.getElementById('advCategoryCheckboxes');
+            categoryContainer.innerHTML = '';
+            Array.from(categories).sort().forEach(cat => {
+                const div = document.createElement('div');
+                div.className = 'checkbox-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="cat-${cat}" value="${cat}">
+                    <label for="cat-${cat}">${cat}</label>
+                `;
+                categoryContainer.appendChild(div);
+            });
+        }
+
+        function applyAdvancedFilters() {
+            const filters = {
+                placeName: document.getElementById('advPlaceName').value.toLowerCase(),
+                parish: document.getElementById('advParish').value,
+                element: document.getElementById('advElement').value.toLowerCase(),
+                historicForm: document.getElementById('advHistoricForm').value.toLowerCase(),
+                notes: document.getElementById('advNotes').value.toLowerCase(),
+                minAltitude: document.getElementById('advMinAltitude').value,
+                maxAltitude: document.getElementById('advMaxAltitude').value,
+                minCertainty: document.getElementById('advMinCertainty').value,
+                gridRef: document.getElementById('advGridRef').value.toLowerCase(),
+                elementRole: document.getElementById('advElementRole').value,
+                elementCertainty: document.getElementById('advElementCertainty').value,
+                earliestYear: document.getElementById('advEarliestYear').value,
+                latestYear: document.getElementById('advLatestYear').value,
+                source: document.getElementById('advSource').value.toLowerCase(),
+                hasHistoric: document.getElementById('advHasHistoric').value,
+                languages: Array.from(document.querySelectorAll('#advLanguageCheckboxes input:checked')).map(cb => cb.value),
+                categories: Array.from(document.querySelectorAll('#advCategoryCheckboxes input:checked')).map(cb => cb.value)
+            };
+
+            filteredFeatures = geojsonData.features.filter(feature => {
+                const props = feature.properties;
+
+                // Text filters
+                if (filters.placeName && !props.pn.toLowerCase().includes(filters.placeName)) return false;
+                if (filters.parish && props.parish !== filters.parish) return false;
+                if (filters.notes && (!props.notes || !props.notes.toLowerCase().includes(filters.notes))) return false;
+                if (filters.gridRef && !props.gridref.toLowerCase().includes(filters.gridRef)) return false;
+
+                // Location filters
+                if (filters.minAltitude && props.altitude < parseInt(filters.minAltitude)) return false;
+                if (filters.maxAltitude && props.altitude > parseInt(filters.maxAltitude)) return false;
+                if (filters.minCertainty && props.loc_certainty < parseInt(filters.minCertainty)) return false;
+
+                // Element filters
+                if (filters.element || filters.elementRole || filters.elementCertainty || filters.languages.length > 0) {
+                    if (!props.elements || props.elements.length === 0) return false;
+                    
+                    const matchingElements = props.elements.filter(elem => {
+                        if (filters.element && !elem.element.toLowerCase().includes(filters.element)) return false;
+                        if (filters.elementRole && elem.role !== filters.elementRole) return false;
+                        if (filters.elementCertainty && elem.certainty < parseInt(filters.elementCertainty)) return false;
+                        if (filters.languages.length > 0 && !filters.languages.includes(elem.language)) return false;
+                        return true;
+                    });
+                    
+                    if (matchingElements.length === 0) return false;
+                }
+
+                // Historic form filters
+                if (filters.historicForm || filters.earliestYear || filters.latestYear || filters.source || filters.hasHistoric) {
+                    const hasHistoricForms = props.historic_forms && props.historic_forms.length > 0;
+                    
+                    if (filters.hasHistoric === 'yes' && !hasHistoricForms) return false;
+                    if (filters.hasHistoric === 'no' && hasHistoricForms) return false;
+                    
+                    if (hasHistoricForms) {
+                        if (filters.historicForm) {
+                            const matchingForms = props.historic_forms.filter(form => 
+                                form.historic_form.toLowerCase().includes(filters.historicForm)
+                            );
+                            if (matchingForms.length === 0) return false;
+                        }
+                        
+                        if (filters.source) {
+                            const matchingSources = props.historic_forms.filter(form => 
+                                form.source.toLowerCase().includes(filters.source)
+                            );
+                            if (matchingSources.length === 0) return false;
+                        }
+                        
+                        if (filters.earliestYear || filters.latestYear) {
+                            const years = props.historic_forms.map(form => parseInt(form.date)).filter(year => !isNaN(year));
+                            if (years.length > 0) {
+                                const minYear = Math.min(...years);
+                                const maxYear = Math.max(...years);
+                                if (filters.earliestYear && minYear < parseInt(filters.earliestYear)) return false;
+                                if (filters.latestYear && maxYear > parseInt(filters.latestYear)) return false;
+                            }
+                        }
+                    }
+                }
+
+                // Category filters
+                if (filters.categories.length > 0) {
+                    if (!props.categories || props.categories.length === 0) return false;
+                    const hasMatchingCategory = filters.categories.some(cat => props.categories.includes(cat));
+                    if (!hasMatchingCategory) return false;
+                }
+
+                return true;
+            });
+
+            addMarkersToMap(filteredFeatures);
+            updatePlaceList(filteredFeatures);
+            closeAdvancedFilters();
+
+            // Show feedback
+            showFilterFeedback(`Advanced filter applied: ${filteredFeatures.length} place${filteredFeatures.length !== 1 ? 's' : ''} found`);
+        }
+
+        function clearAdvancedFilters() {
+            // Clear all form inputs
+            document.getElementById('advPlaceName').value = '';
+            document.getElementById('advParish').value = '';
+            document.getElementById('advElement').value = '';
+            document.getElementById('advHistoricForm').value = '';
+            document.getElementById('advNotes').value = '';
+            document.getElementById('advMinAltitude').value = '';
+            document.getElementById('advMaxAltitude').value = '';
+            document.getElementById('advMinCertainty').value = '';
+            document.getElementById('advGridRef').value = '';
+            document.getElementById('advElementRole').value = '';
+            document.getElementById('advElementCertainty').value = '';
+            document.getElementById('advEarliestYear').value = '';
+            document.getElementById('advLatestYear').value = '';
+            document.getElementById('advSource').value = '';
+            document.getElementById('advHasHistoric').value = '';
+            
+            // Clear checkboxes
+            document.querySelectorAll('#advLanguageCheckboxes input').forEach(cb => cb.checked = false);
+            document.querySelectorAll('#advCategoryCheckboxes input').forEach(cb => cb.checked = false);
+            
+            // Also clear main filters and reset display
+            clearAllFilters();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('advancedFilterModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAdvancedFilters();
+            }
+        });
+
+        // Close results list modal when clicking outside
+        document.getElementById('resultsListModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeResultsList();
+            }
+        });
+
+        // Element Glossary Modal Functions
+        function openElementGlossary() {
+            const modal = document.getElementById('elementGlossaryModal');
+            modal.classList.add('visible');
+            populateElementGlossary();
+            setupGlossaryFilters();
+        }
+
+        function closeElementGlossary() {
+            const modal = document.getElementById('elementGlossaryModal');
+            modal.classList.remove('visible');
+        }
+
+        function populateElementGlossary() {
+            // Collect all elements with their details and counts
+            const elementMap = new Map();
+            const languages = new Set();
+            
+            geojsonData.features.forEach(feature => {
+                if (feature.properties.elements) {
+                    feature.properties.elements.forEach(elem => {
+                        const key = elem.element.toLowerCase();
+                        languages.add(elem.language);
+                        
+                        if (!elementMap.has(key)) {
+                            elementMap.set(key, {
+                                element: elem.element,
+                                language: elem.language,
+                                role: elem.role,
+                                certainty: elem.certainty,
+                                count: 0,
+                                placeNames: new Set()
+                            });
+                        }
+                        
+                        const elementData = elementMap.get(key);
+                        elementData.count++;
+                        elementData.placeNames.add(feature.properties.pn);
+                        
+                        // Update with highest certainty and most common language/role if different
+                        if (elem.certainty > elementData.certainty) {
+                            elementData.certainty = elem.certainty;
+                        }
+                    });
+                }
+            });
+
+            // Populate language filter
+            const languageFilter = document.getElementById('glossaryLanguageFilter');
+            languageFilter.innerHTML = '<option value="">All Languages</option>';
+            Array.from(languages).sort().forEach(lang => {
+                const option = document.createElement('option');
+                option.value = lang;
+                option.textContent = lang;
+                languageFilter.appendChild(option);
+            });
+
+            // Store elements for filtering
+            window.allGlossaryElements = Array.from(elementMap.values());
+            
+            // Display elements
+            displayGlossaryElements(window.allGlossaryElements);
+        }
+
+        function displayGlossaryElements(elements) {
+            const container = document.getElementById('elementGlossaryList');
+            const countElement = document.getElementById('glossaryElementCount');
+            const sortOrder = document.getElementById('glossarySortOrder')?.value || 'alphabetical';
+            
+            // Sort based on selected order
+            let sortedElements;
+            if (sortOrder === 'frequency') {
+                // Sort by count (descending) then alphabetically
+                sortedElements = elements.sort((a, b) => {
+                    if (b.count !== a.count) return b.count - a.count;
+                    return a.element.localeCompare(b.element);
+                });
+            } else {
+                // Sort alphabetically by element name
+                sortedElements = elements.sort((a, b) => {
+                    return a.element.localeCompare(b.element);
+                });
+            }
+            
+            countElement.textContent = sortedElements.length;
+
+            if (sortedElements.length === 0) {
+                container.innerHTML = '<div class="glossary-no-results">No elements found matching your filters</div>';
+                return;
+            }
+
+            container.innerHTML = sortedElements.map(elementData => `
+                <div class="glossary-element-item" onclick="filterByGlossaryElement('${elementData.element}')">
+                    <div class="glossary-element-info">
+                        <div class="glossary-element-name">${elementData.element}</div>
+                        <div class="glossary-element-details">
+                            <div class="glossary-element-language">${elementData.language}</div>
+                            <div class="glossary-element-role">${elementData.role}</div>
+                        </div>
+                    </div>
+                    <div class="glossary-element-count">${elementData.count}</div>
+                    <div class="glossary-element-action">Click to filter →</div>
+                </div>
+            `).join('');
+        }
+
+        function setupGlossaryFilters() {
+            const searchInput = document.getElementById('glossarySearch');
+            const languageFilter = document.getElementById('glossaryLanguageFilter');
+            const roleFilter = document.getElementById('glossaryRoleFilter');
+            const sortOrderFilter = document.getElementById('glossarySortOrder');
+
+            function applyGlossaryFilters() {
+                if (!window.allGlossaryElements) return;
+
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedLanguage = languageFilter.value;
+                const selectedRole = roleFilter.value;
+
+                const filteredElements = window.allGlossaryElements.filter(elementData => {
+                    const matchesSearch = !searchTerm || elementData.element.toLowerCase().includes(searchTerm);
+                    const matchesLanguage = !selectedLanguage || elementData.language === selectedLanguage;
+                    const matchesRole = !selectedRole || elementData.role === selectedRole;
+                    
+                    return matchesSearch && matchesLanguage && matchesRole;
+                });
+
+                displayGlossaryElements(filteredElements);
+            }
+
+            searchInput.addEventListener('input', applyGlossaryFilters);
+            languageFilter.addEventListener('change', applyGlossaryFilters);
+            roleFilter.addEventListener('change', applyGlossaryFilters);
+            sortOrderFilter.addEventListener('change', applyGlossaryFilters);
+        }
+
+        function clearGlossaryFilters() {
+            document.getElementById('glossarySearch').value = '';
+            document.getElementById('glossaryLanguageFilter').value = '';
+            document.getElementById('glossaryRoleFilter').value = '';
+            document.getElementById('glossarySortOrder').value = 'alphabetical';
+            
+            if (window.allGlossaryElements) {
+                displayGlossaryElements(window.allGlossaryElements);
+            }
+        }
+
+        function filterByGlossaryElement(element) {
+            // Close the glossary modal
+            closeElementGlossary();
+            
+            // Apply element filter to main search
+            document.getElementById('searchBox').value = element;
+            
+            // Clear other filters
+            document.querySelectorAll('#categoryFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-category="all"]').classList.add('active');
+            document.querySelectorAll('#languageFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-language="all"]').classList.add('active');
+            
+            // Apply element-specific filter
+            applyElementFilter(element);
+            
+            // Show feedback
+            showFilterFeedback(`Filtered by element: "${element}"`);
+        }
+
+        // Close element glossary modal when clicking outside
+        document.getElementById('elementGlossaryModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeElementGlossary();
+            }
+        });
+
+        // ADDED: Event listeners for exclusive mode checkboxes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners for exclusive mode toggles
+            document.getElementById('categoryModeToggle').addEventListener('change', function() {
+                if (!this.checked) {
+                    // When turning off exclusive mode, reset selection hierarchy and show all options
+                    categorySelectionOrder = [];
+                    document.querySelectorAll('#categoryFilters .filter-btn').forEach(btn => {
+                        btn.classList.remove('primary', 'secondary', 'tertiary');
+                    });
+                    resetCategoryOptions();
+                    applyFilters();
+                } else {
+                    // When turning on exclusive mode, if there are active categories, set up the hierarchy
+                    const activeCategories = Array.from(document.querySelectorAll('#categoryFilters .filter-btn.active:not([data-category="all"])'));
+                    categorySelectionOrder = activeCategories.map(btn => btn.dataset.category);
+                    updateCategorySelectionHierarchy();
+                    if (categorySelectionOrder.length > 0) {
+                        filterCategoryOptionsExclusive();
+                    }
+                }
+            });
+
+            document.getElementById('languageModeToggle').addEventListener('change', function() {
+                if (!this.checked) {
+                    // When turning off exclusive mode, reset selection hierarchy and show all options
+                    languageSelectionOrder = [];
+                    document.querySelectorAll('#languageFilters .filter-btn').forEach(btn => {
+                        btn.classList.remove('primary', 'secondary', 'tertiary');
+                    });
+                    resetLanguageOptions();
+                    applyFilters();
+                } else {
+                    // When turning on exclusive mode, if there are active languages, set up the hierarchy
+                    const activeLanguages = Array.from(document.querySelectorAll('#languageFilters .filter-btn.active:not([data-language="all"])'));
+                    languageSelectionOrder = activeLanguages.map(btn => btn.dataset.language);
+                    updateLanguageSelectionHierarchy();
+                    if (languageSelectionOrder.length > 0) {
+                        filterLanguageOptionsExclusive();
+                    }
+                }
+            });
+
+            // Load data and initialize everything
+            loadGeojsonData();
+            
+            // Add display mode toggle functionality
+            const displayRadios = document.querySelectorAll('input[name="displayMode"]');
+            displayRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    displayMode = this.value;
+                    
+                    // Refresh the map display
+                    if (geojsonData) {
+                        addMarkersToMap(filteredFeatures);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
